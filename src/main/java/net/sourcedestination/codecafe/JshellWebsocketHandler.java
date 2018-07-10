@@ -1,23 +1,62 @@
 package net.sourcedestination.codecafe;
 
+import jdk.jshell.tool.JavaShellToolBuilder;
 import org.springframework.web.socket.*;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class JshellWebsocketHandler implements WebSocketHandler {
 
     Logger logger = Logger.getLogger(JshellWebsocketHandler.class.getCanonicalName());
 
+    Map<String,Thread> jshellThreads = new ConcurrentHashMap<>();
+    Map<String,Thread> jshellReadingThreads = new ConcurrentHashMap<>();
+    Map<String,PipedOutputStream> sendPipes = new ConcurrentHashMap<>();
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
-        session.sendMessage(new TextMessage("HI\n> ")); // (TODO: remove testing code)
+        logger.info("openned session: " + session.getId());
+        PipedInputStream inFromWs = new PipedInputStream();
+        PipedOutputStream wsPrintsInToThis = new PipedOutputStream(inFromWs);
+        PipedInputStream inFromJs = new PipedInputStream();
+        PipedOutputStream jsPrintsInToThis = new PipedOutputStream(inFromJs);
+        PrintStream ps = new PrintStream(jsPrintsInToThis);
+        Thread jsrthread = new Thread(() -> {
+            try {
+                while (true) {
+                    var c = inFromJs.read();
+                    logger.info("message for " + session.getId()+": " + (char)c);
+                    session.sendMessage(new TextMessage(""+((char)c)));
+                }
+            } catch(Exception e) { logger.log(Level.INFO, "error in jsrthread", e); }
+        });
+        Thread jsthread = new Thread(() -> {
+            try {
+                JavaShellToolBuilder.builder()
+                        .in(inFromWs, inFromWs)
+                        .err(ps)
+                        .out(ps)
+                        .promptCapture(false)
+                        .run();
+            } catch(Exception e) { logger.log(Level.INFO, "error in jsthread", e); }
+        });
+        jshellThreads.put(session.getId(), jsthread);
+        jshellReadingThreads.put(session.getId(), jsrthread);
+        sendPipes.put(session.getId(), wsPrintsInToThis);
+        jsthread.start();
+        jsrthread.start();
+        wsPrintsInToThis.write("/help\n".getBytes());
     }
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws IOException {
-        logger.info(message.getPayload().toString());
-        session.sendMessage(new TextMessage("no. \n> ")); // welcome the user (TODO: remove testing code)
+        logger.info("incoming from web session " + session.getId()+": " + message.getPayload());
+        sendPipes.get(session.getId()).write((message.getPayload()+"\n").getBytes());
+        logger.info("message sent to jshell");
     }
 
     @Override
