@@ -4,6 +4,7 @@ import jdk.jshell.tool.JavaShellToolBuilder;
 import org.springframework.web.socket.*;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -52,11 +53,18 @@ public class JshellWebsocketHandler implements WebSocketHandler {
         wsPrintsInToThis.write("/help\n".getBytes());
     }
 
+    private void writeToClient(String id, byte[] message) throws IOException {
+        sendPipes.get(id).write(message);
+        logger.info("message: " + Arrays.toString(message) +  " sent to jshell");
+    }
+
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws IOException {
+        byte[] b = "a[27;9R\n\n".getBytes();
+        b[0] = 27; // esc
+        writeToClient(session.getId(), b);
         logger.info("incoming from web session " + session.getId()+": " + message.getPayload());
-        sendPipes.get(session.getId()).write((message.getPayload()+"\n").getBytes());
-        logger.info("message sent to jshell");
+        writeToClient(session.getId(), (message.getPayload()+"\n").getBytes());
     }
 
     @Override
