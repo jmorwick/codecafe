@@ -3,12 +3,20 @@ $( document ).ready(function() {
     var socket = new WebSocket('ws://' + window.location.host + '/jshell/ex1');
     var termhome = $('#term-home')
     var terminput = $('#term-input')
+    var varshome = $('#term-vars')
 
-    socket.onopen = function() {
-    };
+    var socket2;
+
     socket.onmessage = function(message) {
-        termhome.append(message.data) // print message to terminal
-        termhome.scrollTop(termhome[0].scrollHeight - termhome.height()) // scroll to bottom
+        if(socket2 == null) { // handshake
+            socket2 = new WebSocket('ws://' + window.location.host + '/vars/'+message.data);
+            socket2.onmessage = function(message) {
+                varshome.val(message.data)
+            }
+        } else {
+            termhome.append(message.data) // print message to terminal
+            termhome.scrollTop(termhome[0].scrollHeight - termhome.height()) // scroll to bottom
+        }
     };
     terminput.keyup(function(e) {
         if(e.keyCode == 13) {  // return was pressed
@@ -18,4 +26,7 @@ $( document ).ready(function() {
             terminput.val('')                      // clear input
         }
     });
+
+
 })
+

@@ -13,10 +13,13 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
     @Autowired
     private JshellWebsocketHandler jshellHandler;
 
+    @Autowired
+    private VariableDefinitionsWebsocketHandler varsHandler;
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(jshellHandler, "/jshell/**");
-        //registry.addHandler(JshellWebsocketHandler(), "/vars/**");
+        registry.addHandler(varsHandler, "/vars/**");
         // TODO: add URL params for lesson identification
         // lessons may have restrictions on code used, pre-loaded code, or listeners for certain events
     }
