@@ -15,6 +15,10 @@ public class JshellWebsocketHandler implements WebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
+
+        var path = session.getUri().getPath();
+        var lessonId = path.substring(path.lastIndexOf('/')+1);
+        logger.info("Connection " + session.getId() + " to lesson " + lessonId);
         jshellTerms.put(session.getId(), new JShellEvalTerminal(
                 msg -> {
                     try {
@@ -41,7 +45,11 @@ public class JshellWebsocketHandler implements WebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        jshellTerms.get(session.getId()).stop();
+        logger.info("Session #" + session.getId() + " closed");
 
+        // TODO: maintain session between reloads for logged in users.
+        // TODO: Only close sessions on logouts / save progress and reload when user logs back in
     }
 
     @Override

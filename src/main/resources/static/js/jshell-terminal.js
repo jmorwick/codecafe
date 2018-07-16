@@ -1,6 +1,6 @@
 $( document ).ready(function() {
 
-    var socket = new WebSocket('ws://' + window.location.host + '/jshell');
+    var socket = new WebSocket('ws://' + window.location.host + '/jshell/ex1');
     var termhome = $('#term-home')
     var terminput = $('#term-input')
 

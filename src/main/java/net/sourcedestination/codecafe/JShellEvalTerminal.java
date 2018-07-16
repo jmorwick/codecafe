@@ -17,7 +17,11 @@ public class JShellEvalTerminal {
     }
 
     public void receiveMessage(String message) {
+
+        // TODO: log message and result
+
         var output = jshell.eval(message); // TODO: execute in a separate thread and tiemout if it takes too long
+        jshell.sourceCodeAnalysis().sourceToSnippets(message);
 
         for(var s : output) {
             if (s.status() == Snippet.Status.REJECTED) {
@@ -29,5 +33,9 @@ public class JShellEvalTerminal {
             }
         }
         out.accept("\n> ");
+    }
+
+    public void stop() {
+        jshell.stop();
     }
 }
