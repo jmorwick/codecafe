@@ -1,8 +1,7 @@
 package net.sourcedestination.codecafe;
 
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -11,14 +10,13 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketsConfiguration implements WebSocketConfigurer {
 
-    @Bean
-    public WebSocketHandler JshellWebsocketHandler() {
-        return new JshellWebsocketHandler();
-    }
+    @Autowired
+    private JshellWebsocketHandler jshellHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(JshellWebsocketHandler(), "/jshell/**");
+        registry.addHandler(jshellHandler, "/jshell/**");
+        //registry.addHandler(JshellWebsocketHandler(), "/vars/**");
         // TODO: add URL params for lesson identification
         // lessons may have restrictions on code used, pre-loaded code, or listeners for certain events
     }

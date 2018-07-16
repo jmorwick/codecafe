@@ -1,5 +1,7 @@
 package net.sourcedestination.codecafe;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 
 import java.io.*;
@@ -7,9 +9,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+@Component
 public class JshellWebsocketHandler implements WebSocketHandler {
 
     Logger logger = Logger.getLogger(JshellWebsocketHandler.class.getCanonicalName());
+
+    @Autowired
+    private JshellWebsocketHandler jshellHandler;
 
     Map<String,JShellEvalTerminal> jshellTerms = new ConcurrentHashMap<>();
 
