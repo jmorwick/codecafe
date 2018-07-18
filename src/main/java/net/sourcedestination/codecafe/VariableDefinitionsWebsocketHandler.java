@@ -22,10 +22,8 @@ public class VariableDefinitionsWebsocketHandler implements WebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
-        var path = session.getUri().getPath();
-        var jshellSession = path.substring(path.lastIndexOf('/')+1);
-        logger.info("Connection " + session.getId() + " to var definitions from session " + jshellSession);
-        jshellHandler.attachVariableListener(jshellSession, vars -> {
+        logger.info("asgasgasgasg" + session.getPrincipal().getName());
+        jshellHandler.attachVariableListener(session, vars -> {
             try {
                 logger.info(session.getId() + ": sending vars: " + formatVarsList(vars));
                 session.sendMessage(new TextMessage(formatVarsList(vars)));

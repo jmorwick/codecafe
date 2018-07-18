@@ -13,12 +13,16 @@ import java.util.stream.Collectors;
 public class JShellEvalTerminal {
 
     private final JShell jshell;
-    private final Consumer<String> out;
+    private final Set<Consumer<String>> out = new HashSet<>();  // TODO: eliminate and add other snippet / evaluation listeners
     private final Set<Consumer<Map<VarSnippet, String>>> varListeners = new HashSet<>();
 
     public JShellEvalTerminal(Consumer<String> out) {
         this.jshell = JShell.create();
-        this.out = out;
+        this.out.add(out);
+    }
+
+    public void updateConsumer(Consumer<String> out) {
+        this.out.add(out);
     }
 
     public void receiveMessage(String message) {
@@ -30,10 +34,10 @@ public class JShellEvalTerminal {
 
         for(var s : output) {
             if (s.status() == Snippet.Status.REJECTED) {
-                out.accept("Error: " + s.exception());
+                out.forEach(o -> o.accept("Error: " + s.exception()));
                 // TODO: get error messages working appropriately
             } else {
-                out.accept("Result: " + s.value());
+                out.forEach(o -> o.accept("Result: " + s.value()));
                 // TODO: only output return values, no void or definition stuff
 
                 // TODO: limit updates to only when variable values change or new variables are defined
@@ -43,7 +47,7 @@ public class JShellEvalTerminal {
                         ));
             }
         }
-        out.accept("\n> ");
+        out.forEach(o -> o.accept("\n> "));
     }
 
     public void stop() {

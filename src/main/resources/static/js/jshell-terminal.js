@@ -8,15 +8,15 @@ $( document ).ready(function() {
     var socket2;
 
     socket.onmessage = function(message) {
-        if(socket2 == null) { // handshake
-            socket2 = new WebSocket('ws://' + window.location.host + '/vars/'+message.data);
+        if(socket2 == null) {
+            socket2 = new WebSocket('ws://' + window.location.host + '/vars/ex1');
             socket2.onmessage = function(message) {
                 varshome.val(message.data)
             }
-        } else {
-            termhome.append(message.data) // print message to terminal
-            termhome.scrollTop(termhome[0].scrollHeight - termhome.height()) // scroll to bottom
         }
+        termhome.append(message.data) // print message to terminal
+        termhome.scrollTop(termhome[0].scrollHeight - termhome.height()) // scroll to bottom
+
     };
     terminput.keyup(function(e) {
         if(e.keyCode == 13) {  // return was pressed
