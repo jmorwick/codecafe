@@ -5,6 +5,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 public class CodeCafeSecurity extends WebSecurityConfigurerAdapter {
@@ -16,14 +18,13 @@ public class CodeCafeSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/css/**", "/index").permitAll()
                 .antMatchers("/user/**").hasRole("USER")
                 .and()
-                .formLogin()
-                .loginPage("/login").failureUrl("/login-error");
+                .formLogin();
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER");
+        PasswordEncoder pe = new BCryptPasswordEncoder();
+        auth.inMemoryAuthentication().passwordEncoder(pe)
+                .withUser("user").password(pe.encode("password")).roles("USER");
     }
 }
