@@ -1,5 +1,7 @@
 package net.sourcedestination.codecafe;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.*;
@@ -7,7 +9,10 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSocket
@@ -71,7 +76,16 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                 new LessonWebsocketHandler(lessons, "method listener",
                         (tool, session) -> tool.attachMethodListener(
                                 (methodSnippets) -> {
-                                    // TODO: send method definitions
+                                    GsonBuilder builder = new GsonBuilder();
+                                    Gson gson = builder.create();
+                                    try {
+                                        session.sendMessage(new TextMessage(
+                                                gson.toJson(methodSnippets.stream()
+                                                        .map(ms -> List.of(ms.id(), ms.signature(), ms.source()))
+                                                        .collect(Collectors.toList()))));
+                                    } catch(IOException e) {
+                                        // TODO: log error
+                                    }
                                     // TODO: only send methods that changed
                                 }
                         )

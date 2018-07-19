@@ -3,6 +3,7 @@ $( document ).ready(function() {
     var socket = new WebSocket('ws://' + window.location.host + '/lessons/ex1/history');
     var socket2 = new WebSocket('ws://' + window.location.host + '/lessons/ex1/variables');
     var socket3 = new WebSocket('ws://' + window.location.host + '/lessons/ex1/errors');
+    var socket4 = new WebSocket('ws://' + window.location.host + '/lessons/ex1/methods');
 
     socket.onmessage = function(message) {
         $('#term-home').append(message.data); // print message to terminal
@@ -14,6 +15,9 @@ $( document ).ready(function() {
     };
     socket3.onmessage = function(message) {
         $('#errmsg').val(message.data);
+    };
+    socket4.onmessage = function(message) {
+        $('#methods').val(message.data);
     };
 
     $('#code1').keyup(function(e) {

@@ -31,6 +31,8 @@ public class JShellLessonTool {
     }
 
     public void evaluateCodeSnippet(String code) {
+        // TODO: check for and replace an existing method if its being redefined
+        // TODO: analyze snippet and check for errors before executing
         CompletableFuture.supplyAsync(() -> jshell.eval(code))
                 .orTimeout(timeout, TimeUnit.MILLISECONDS)
                 .thenAccept(results -> { // update history listeners
