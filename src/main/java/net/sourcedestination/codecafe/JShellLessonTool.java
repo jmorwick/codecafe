@@ -1,15 +1,17 @@
 package net.sourcedestination.codecafe;
 
 import jdk.jshell.*;
+import net.sourcedestination.funcles.consumer.Consumer2;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public class JShellEvalTerminal {
+public class JShellLessonTool {
+    private final Logger logger = Logger.getLogger(JShellLessonTool.class.getCanonicalName());
 
     private final JShell jshell;
     private final long timeout;
@@ -17,25 +19,24 @@ public class JShellEvalTerminal {
 
     private final Set<Consumer<SnippetEvent>> historyListeners = new HashSet<>();
     private final Set<Consumer<Map<VarSnippet, String>>> varListeners = new HashSet<>();
-    private final Set<BiConsumer<String,String>> errorListeners = new HashSet<>();
+    private final Set<Consumer2<String,String>> errorListeners = new HashSet<>();
     private final Set<Consumer<List<MethodSnippet>>> methodListeners = new HashSet<>();
     private final Set<Consumer<String>> stdoutListeners = new HashSet<>();
     // TODO: add test listeners
 
-    public JShellEvalTerminal(long timeout) {
+    public JShellLessonTool(String username, String lesson, long timeout) {
         this.jshell = JShell.create();
         // TODO: create I/O pipes
         this.timeout = timeout;
     }
 
-    public void receiveMessage(String message) {
-
-        CompletableFuture.supplyAsync(() -> jshell.eval(message))
+    public void evaluateCodeSnippet(String code) {
+        CompletableFuture.supplyAsync(() -> jshell.eval(code))
                 .orTimeout(timeout, TimeUnit.MILLISECONDS)
                 .thenAccept(results -> { // update history listeners
                     results.forEach(s -> {
                         if (s.status() == Snippet.Status.REJECTED) {
-                            errorListeners.forEach(o -> o.accept(message, ""+s.exception()));
+                            errorListeners.forEach(o -> o.accept(code, ""+s.exception()));
                             // TODO: get error messages working appropriately
                         } else {
                             historyListeners.forEach(o -> o.accept(s));
@@ -54,13 +55,9 @@ public class JShellEvalTerminal {
                 })
                 .exceptionally(e -> {
                     jshell.stop();
-                    errorListeners.forEach(o -> o.accept(message, "Last statement went over time"));
+                    errorListeners.forEach(o -> o.accept(code, "Last statement went over time"));
                     return null;
                 });
-    }
-
-    public void stop() {
-        jshell.stop();
     }
 
     public void attachHistoryListener(Consumer<SnippetEvent> callback) {
@@ -69,7 +66,7 @@ public class JShellEvalTerminal {
     public void attachVariableListener(Consumer<Map<VarSnippet, String>> callback) {
         varListeners.add(callback);
     }
-    public void attachErrorListener(BiConsumer<String,String> callback) {
+    public void attachErrorListener(Consumer2<String,String> callback) {
         errorListeners.add(callback);
     }
     public void attachMethodListener(Consumer<List<MethodSnippet>> callback) {

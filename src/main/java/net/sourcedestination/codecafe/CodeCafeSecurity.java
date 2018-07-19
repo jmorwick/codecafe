@@ -16,8 +16,8 @@ public class CodeCafeSecurity extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/css/**", "/index").permitAll()
+                .antMatchers("/lessons/**").hasRole("USER")
                 .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/exec/**").hasRole("USER")
                 .and()
                 .csrf().disable()
                 .formLogin();
