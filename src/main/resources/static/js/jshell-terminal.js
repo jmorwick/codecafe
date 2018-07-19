@@ -27,6 +27,12 @@ $( document ).ready(function() {
         }
     });
 
-
+    var ajaxcmd = $('#code1');
+    ajaxcmd.keyup(function(e) {
+        if(e.keyCode == 13) {  // return was pressed
+            $.post('/exec/ex1', {code: ajaxcmd.val()})
+            ajaxcmd.val('')                      // clear input
+        }
+    });
 })
 
