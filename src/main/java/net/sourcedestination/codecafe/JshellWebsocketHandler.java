@@ -1,5 +1,6 @@
 package net.sourcedestination.codecafe;
 
+import jdk.jshell.SnippetEvent;
 import jdk.jshell.VarSnippet;
 import net.sourcedestination.funcles.tuple.Tuple2;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -28,22 +30,30 @@ public class JshellWebsocketHandler implements WebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         var path = session.getUri().getPath();
-        var lessonId = path.substring(path.lastIndexOf('/')+1);
-        logger.info("Connection " + session.getId() + " to lesson " + lessonId);
-        var id = makeTuple(lessonId,session.getPrincipal().getName());
-        Consumer<String> pipeToJs = msg -> {
+        var lesson = path.substring(path.lastIndexOf('/')+1);
+        logger.info("Connection " + session.getId() + " to lesson " + lesson);
+        var id = makeTuple(lesson,session.getPrincipal().getName());
+        Consumer<SnippetEvent> pipeToJs = s -> {
             try {
-                session.sendMessage(new TextMessage(msg));
+                var msg = s.snippet().source() + ": " + s.value() + "\n";
+                logger.info("sending user: " + msg);
+                session.sendMessage(new TextMessage(msg)); // TODO: encode to json
             } catch (Exception e) {
                 logger.info("Error sending message: " + e.getMessage());
             }
         };
-
+        BiConsumer<String,String> pipeErr = (msg, err) -> {
+            try {
+                session.sendMessage(new TextMessage("ERROR executing " + msg + ": " + err + "\n"));
+            } catch (Exception e) {
+                logger.info("Error sending message: " + e.getMessage());
+            }
+        };
         if(!jshellTerms.containsKey(id))
-            jshellTerms.put(id, new JShellEvalTerminal(pipeToJs));
-        else
-            jshellTerms.get(id).updateConsumer(pipeToJs);
+            jshellTerms.put(id, new JShellEvalTerminal(1000));
 
+        jshellTerms.get(id).attachHistoryListener(pipeToJs);
+        jshellTerms.get(id).attachErrorListener(pipeErr);
 
         // TODO: resend history? Use separate socket for history?
         session.sendMessage(new TextMessage("> "));
@@ -52,9 +62,9 @@ public class JshellWebsocketHandler implements WebSocketHandler {
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws IOException {
         var path = session.getUri().getPath();
-        var lessonId = path.substring(path.lastIndexOf('/')+1);
-        if(jshellTerms.containsKey(makeTuple(lessonId,session.getPrincipal().getName()))) {
-            jshellTerms.get(makeTuple(lessonId,session.getPrincipal().getName()))
+        var lesson = path.substring(path.lastIndexOf('/')+1);
+        if(jshellTerms.containsKey(makeTuple(lesson,session.getPrincipal().getName()))) {
+            jshellTerms.get(makeTuple(lesson,session.getPrincipal().getName()))
                     .receiveMessage(message.getPayload().toString());
         }
     }
@@ -67,9 +77,7 @@ public class JshellWebsocketHandler implements WebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         var path = session.getUri().getPath();
-        var lessonId = path.substring(path.lastIndexOf('/')+1);
-
-        // TODO: maintain session between reloads for logged in users.
+        var lesson = path.substring(path.lastIndexOf('/')+1);
         // TODO: close sessions on logouts / save progress and reload when user logs back in
     }
 
