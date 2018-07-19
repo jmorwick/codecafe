@@ -2,11 +2,14 @@ package net.sourcedestination.codecafe;
 
 import jdk.jshell.JShell;
 import jdk.jshell.Snippet;
+import jdk.jshell.SnippetEvent;
 import jdk.jshell.VarSnippet;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -27,27 +30,24 @@ public class JShellEvalTerminal {
 
     public void receiveMessage(String message) {
 
-        // TODO: log message and result
-
-        var output = jshell.eval(message); // TODO: execute in a separate thread and tiemout if it takes too long
-        jshell.sourceCodeAnalysis().sourceToSnippets(message);
-
-        for(var s : output) {
-            if (s.status() == Snippet.Status.REJECTED) {
-                out.forEach(o -> o.accept("Error: " + s.exception()));
-                // TODO: get error messages working appropriately
-            } else {
-                out.forEach(o -> o.accept("Result: " + s.value()));
-                // TODO: only output return values, no void or definition stuff
-
-                // TODO: limit updates to only when variable values change or new variables are defined
-                varListeners.forEach(listener ->
-                        listener.accept(jshell.variables().collect(
-                                Collectors.toMap(v -> v, v -> jshell.varValue(v)))
-                        ));
-            }
-        }
-        out.forEach(o -> o.accept("\n> "));
+        // TODO: stop long executions
+        CompletableFuture.supplyAsync(() -> jshell.eval(message))
+                .thenAccept(results -> { // update history listeners
+                    results.forEach(s -> {
+                        if (s.status() == Snippet.Status.REJECTED) {
+                            out.forEach(o -> o.accept("Error: " + s.exception()));
+                            // TODO: get error messages working appropriately
+                        } else {
+                            out.forEach(o -> o.accept("Result: " + s.value()+"\n"));
+                        }
+                    });
+                })
+                .thenRun(() -> {  // update var listeners
+                    varListeners.forEach(listener ->
+                            listener.accept(jshell.variables().collect(
+                                    Collectors.toMap(v -> v, v -> jshell.varValue(v)))
+                            ));
+                });
     }
 
     public void stop() {
