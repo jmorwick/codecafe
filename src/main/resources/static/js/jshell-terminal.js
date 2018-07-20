@@ -4,6 +4,7 @@ $( document ).ready(function() {
     var socket2 = new WebSocket('ws://' + window.location.host + '/lessons/ex1/variables');
     var socket3 = new WebSocket('ws://' + window.location.host + '/lessons/ex1/errors');
     var socket4 = new WebSocket('ws://' + window.location.host + '/lessons/ex1/methods');
+    var socket5 = new WebSocket('ws://' + window.location.host + '/lessons/ex1/stdout');
 
     socket.onmessage = function(message) {
         $('#term-home').append(message.data); // print message to terminal
@@ -17,7 +18,18 @@ $( document ).ready(function() {
         $('#errmsg').val(message.data);
     };
     socket4.onmessage = function(message) {
+        JSON.parse(message.data).forEach(function (method) {
+            $('#methods').append($('<option>',{
+                value: method[2],
+                text: method[0] + ': ' + method[1]
+            }))
+        });
         $('#methods').val(message.data);
+    };
+    socket5.onmessage = function(message) {
+        $('#term-stdout').append(message.data); // print message to terminal
+        $('#term-stdout').scrollTop($('#term-stdout')[0].scrollHeight - $('#term-stdout').height()); // scroll to bottom
+
     };
 
     $('#code1').keyup(function(e) {

@@ -3,6 +3,9 @@ package net.sourcedestination.codecafe;
 import jdk.jshell.*;
 import net.sourcedestination.funcles.consumer.Consumer2;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -25,8 +28,14 @@ public class JShellLessonTool {
     // TODO: add test listeners
 
     public JShellLessonTool(String username, String lesson, long timeout) {
-        this.jshell = JShell.create();
-        // TODO: create I/O pipes
+        this.jshell = JShell.builder().out(new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                // TODO: buffer this
+                stdoutListeners.forEach(out -> out.accept(""+((char)b)));
+            }
+        })).build();
+                // TODO: create I/O pipes
         this.timeout = timeout;
     }
 

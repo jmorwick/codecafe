@@ -95,7 +95,11 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                 new LessonWebsocketHandler(lessons, "stdout listener",
                         (tool, session) -> tool.attachStdoutListener(
                                 (msg) -> {
-                                    // TODO: send message
+                                    try {
+                                        session.sendMessage(new TextMessage(msg));
+                                    } catch(IOException e) {
+                                        // TODO: log error
+                                    }
                                 }
                         )
                 ),"/lessons/**/stdout");
