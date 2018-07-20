@@ -3,9 +3,7 @@ package net.sourcedestination.codecafe;
 import jdk.jshell.*;
 import net.sourcedestination.funcles.consumer.Consumer2;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -16,9 +14,10 @@ import java.util.stream.Collectors;
 public class JShellLessonTool {
     private final Logger logger = Logger.getLogger(JShellLessonTool.class.getCanonicalName());
 
-    private final JShell jshell;
-    private final long timeout;
-    private final List<SnippetEvent> history = new ArrayList<>();
+    private JShell jshell;
+    private long timeout;
+    private PrintWriter toStdin;
+    private List<SnippetEvent> history = new ArrayList<>();
 
     private final Set<Consumer<SnippetEvent>> historyListeners = new HashSet<>();
     private final Set<Consumer<Map<VarSnippet, String>>> varListeners = new HashSet<>();
@@ -28,14 +27,22 @@ public class JShellLessonTool {
     // TODO: add test listeners
 
     public JShellLessonTool(String username, String lesson, long timeout) {
-        this.jshell = JShell.builder().out(new PrintStream(new OutputStream() {
-            @Override
-            public void write(int b) throws IOException {
-                // TODO: buffer this
-                stdoutListeners.forEach(out -> out.accept(""+((char)b)));
-            }
-        })).build();
-                // TODO: create I/O pipes
+        try {
+            var out = new PipedOutputStream();
+            var in = new PipedInputStream(out);
+            this.toStdin = new PrintWriter(out);
+            this.jshell = JShell.builder()
+                    .out(new PrintStream(new OutputStream() {
+                        @Override public void write(int b) throws IOException {
+                            // TODO: buffer this
+                            stdoutListeners.forEach(out -> out.accept(""+((char)b)));
+                        }
+                    }))
+      //              .in(in)    // TODO: using this suspends the jshell -- need to figure out why
+                    .build();
+        } catch(IOException e) {
+            throw new IllegalStateException("could not initialize jshell");
+        }
         this.timeout = timeout;
     }
 
@@ -69,6 +76,10 @@ public class JShellLessonTool {
                     errorListeners.forEach(o -> o.accept(code, "Last statement went over time"));
                     return null;
                 });
+    }
+
+    public synchronized void writeToStdin(String data) {
+        toStdin.print(data);
     }
 
     public void attachHistoryListener(Consumer<SnippetEvent> callback) {

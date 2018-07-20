@@ -39,5 +39,12 @@ $( document ).ready(function() {
             $('#code1').val('');                     // clear input
         }
     });
+
+    $('#stdin').keyup(function(e) {
+        if(e.keyCode == 13) {  // return was pressed
+            $.post('/lessons/ex1/stdin', {data: $('#stdin').val()+"\n"});
+            $('#stdin').val('');                     // clear input
+        }
+    });
 });
 

@@ -62,8 +62,26 @@ public class LessonController {
             }
         }
         var name = request.getUserPrincipal().getName();
-        logger.info("User " + name + " on lesson " + lesson + " sent " + code);
+        logger.info("User " + name + " on lesson " + lesson + " executed: " + code);
         getTool(name, lesson).evaluateCodeSnippet(code);
+    }
+
+    @PostMapping("/lessons/{lesson}/stdin")
+    public void sendDataToTool(@PathVariable("lesson") String lesson,
+                               @RequestParam("data") String data,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+        if(request.getUserPrincipal() == null ) {
+            // ERROR: user not logged in
+            try {
+                response.sendError(403, "user must be logged in to use jshell instances");
+            } catch(IOException e) {
+                // TODO: log error
+            }
+        }
+        var name = request.getUserPrincipal().getName();
+        logger.info("User " + name + " on lesson " + lesson + " sent to stdin: " + data);
+        getTool(name, lesson).writeToStdin(data);
     }
 
     /** determins if the given lesson id is a valid, configured, lesson */
