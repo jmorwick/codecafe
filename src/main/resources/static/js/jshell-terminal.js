@@ -19,12 +19,17 @@ $( document ).ready(function() {
     };
     socket4.onmessage = function(message) {
         JSON.parse(message.data).forEach(function (method) {
-            $('#methods').append($('<option>',{
-                value: method[2],
-                text: method[0] + ': ' + method[1]
-            }))
+            var name = method[0] + ': ' + method[1];
+            var option = $('#methods option').filter(function (i,option) { return option.text == name; })[0];
+            if(option == null) {
+                $('#methods').append($('<option>', {
+                    value: method[2],
+                    text: name
+                }));
+            } else {
+                option.value = method[2];
+            }
         });
-        $('#methods').val(message.data);
     };
     socket5.onmessage = function(message) {
         $('#term-stdout').append(message.data); // print message to terminal
@@ -32,12 +37,10 @@ $( document ).ready(function() {
 
     };
 
-    $('#code1').keyup(function(e) {
-        if(e.keyCode == 13) {  // return was pressed
+    $('#sendcode').on('click', function(e) {
             $('#errmsg').val('');
-            $.post('/lessons/ex1/exec', {code: $('#code1').val()});
-            $('#code1').val('');                     // clear input
-        }
+            $.post('/lessons/ex1/exec', {code: $('#codepad').val()});
+            $('#codepad').val('');                     // clear input
     });
 
     $('#stdin').keyup(function(e) {
@@ -45,6 +48,10 @@ $( document ).ready(function() {
             $.post('/lessons/ex1/stdin', {data: $('#stdin').val()+"\n"});
             $('#stdin').val('');                     // clear input
         }
+    });
+
+    $('#loadmethod').on('click', function (e) {
+        $('#codepad').val($('#methods option:selected').val());
     });
 });
 

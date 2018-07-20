@@ -16,14 +16,15 @@
 <textarea id="term-vars" rows="10" cols="40" readonly></textarea>
 <textarea id="term-stdout" rows="10" cols="40" readonly></textarea>
 <br>Code:
-<input type="text" id="code1" size="80" />
+<textarea id="codepad" rows="10" cols="40"></textarea>
+<input type="submit" id="sendcode" value="execute"/>
 <br>Error:
 <input type="text" id="errmsg" size="80" disabled/>
 <br>Input:
 <input type="text" id="stdin" size="80"/>
 <br>
 
-<select id="methods"></select>
+Method definitions <select id="methods"></select> <input id="loadmethod" type="submit" value="load"/>
 
 </body>
 </html>

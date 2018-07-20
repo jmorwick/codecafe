@@ -81,7 +81,7 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                     try {
                                         session.sendMessage(new TextMessage(
                                                 gson.toJson(methodSnippets.stream()
-                                                        .map(ms -> List.of(ms.id(), ms.signature(), ms.source()))
+                                                        .map(ms -> List.of(ms.name(), ms.signature(), ms.source()))
                                                         .collect(Collectors.toList()))));
                                     } catch(IOException e) {
                                         // TODO: log error
