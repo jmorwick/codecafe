@@ -11,20 +11,30 @@
 </head>
 <body>
 <h1>jshell test</h1>
-
-<textarea id="term-home" rows="10" cols="40" readonly></textarea>
-<textarea id="term-vars" rows="10" cols="40" readonly></textarea>
-<textarea id="term-stdout" rows="10" cols="40" readonly></textarea>
+<div>
+    <span>
+        History
+        <textarea id="term-home" rows="10" cols="40" readonly></textarea>
+    </span>
+    <span>
+        Variables
+        <textarea id="term-vars" rows="10" cols="40" readonly></textarea>
+    </span>
+</div>
+<br>Last Error:
+<input type="text" id="errmsg" size="80" disabled/>
+<br/>
+Method definitions <select id="methods"></select> <input id="loadmethod" type="submit" value="load"/>
 <br>Code:
 <textarea id="codepad" rows="10" cols="40"></textarea>
 <input type="submit" id="sendcode" value="execute"/>
-<br>Error:
-<input type="text" id="errmsg" size="80" disabled/>
+<hr/>
 <br>Input:
 <input type="text" id="stdin" size="80"/>
 <br>
+Output:
+<textarea id="term-stdout" rows="10" cols="40" readonly></textarea>
 
-Method definitions <select id="methods"></select> <input id="loadmethod" type="submit" value="load"/>
 
 </body>
 </html>
