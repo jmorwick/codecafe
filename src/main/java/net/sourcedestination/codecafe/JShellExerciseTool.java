@@ -1,5 +1,6 @@
 package net.sourcedestination.codecafe;
 
+import com.google.common.collect.ImmutableSet;
 import jdk.jshell.*;
 import net.sourcedestination.funcles.consumer.Consumer2;
 
@@ -11,8 +12,8 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public class JShellLessonTool {
-    private final Logger logger = Logger.getLogger(JShellLessonTool.class.getCanonicalName());
+public class JShellExerciseTool {
+    private final Logger logger = Logger.getLogger(JShellExerciseTool.class.getCanonicalName());
 
     private JShell jshell;
     private long timeout;
@@ -24,9 +25,10 @@ public class JShellLessonTool {
     private final Set<Consumer2<String,String>> errorListeners = new HashSet<>();
     private final Set<Consumer<List<MethodSnippet>>> methodListeners = new HashSet<>();
     private final Set<Consumer<String>> stdoutListeners = new HashSet<>();
+    private final Set<Consumer2<String,Double>> goalListeners = new HashSet<>();
     // TODO: add test listeners
 
-    public JShellLessonTool(String username, String lesson, long timeout) {
+    public JShellExerciseTool(String username, String exerciseId, long timeout) {
         try {
             var out = new PipedOutputStream();
             var in = new PipedInputStream(out);
@@ -96,5 +98,8 @@ public class JShellLessonTool {
     }
     public void attachStdoutListener(Consumer<String> callback) {
         stdoutListeners.add(callback);
+    }
+    public void attachGoalsListener(Consumer2<String,Double> callback) {
+        goalListeners.add(callback);
     }
 }

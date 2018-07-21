@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 public class WebSocketsConfiguration implements WebSocketConfigurer {
     private final Logger logger = Logger.getLogger(WebSocketsConfiguration.class.getCanonicalName());
 
-    @Autowired private LessonController lessons;
+    @Autowired private ExerciseController exercises;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(
-                new LessonWebsocketHandler(lessons, "history",
+                new ExerciseWebsocketHandler(exercises, "history",
                         (tool, session) -> tool.attachHistoryListener(
                                 (snippetEvent) -> {
                                     try {
@@ -36,10 +36,10 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                     }
                                 }
                         )
-                ),"/lessons/**/history");
+                ),"/exercises/**/history");
 
         registry.addHandler(
-                new LessonWebsocketHandler(lessons, "variable listener",
+                new ExerciseWebsocketHandler(exercises, "variable listener",
                         (tool, session) -> tool.attachVariableListener(
                                 (varMap) -> {
                                     try {
@@ -55,10 +55,10 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                     }
                                 }
                         )
-                ),"/lessons/**/variables");
+                ),"/exercises/**/variables");
 
         registry.addHandler(
-                new LessonWebsocketHandler(lessons, "error listener",
+                new ExerciseWebsocketHandler(exercises, "error listener",
                         (tool, session) -> tool.attachErrorListener(
                                 (code, error) -> {
                                     try {
@@ -70,10 +70,10 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                     }
                                 }
                         )
-                ),"/lessons/**/errors");
+                ),"/exercises/**/errors");
 
         registry.addHandler(
-                new LessonWebsocketHandler(lessons, "method listener",
+                new ExerciseWebsocketHandler(exercises, "method listener",
                         (tool, session) -> tool.attachMethodListener(
                                 (methodSnippets) -> {
                                     GsonBuilder builder = new GsonBuilder();
@@ -89,10 +89,10 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                     // TODO: only send methods that changed
                                 }
                         )
-                ),"/lessons/**/methods");
+                ),"/exercises/**/methods");
 
         registry.addHandler(
-                new LessonWebsocketHandler(lessons, "stdout listener",
+                new ExerciseWebsocketHandler(exercises, "stdout listener",
                         (tool, session) -> tool.attachStdoutListener(
                                 (msg) -> {
                                     try {
@@ -102,6 +102,6 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                     }
                                 }
                         )
-                ),"/lessons/**/stdout");
+                ),"/exercises/**/stdout");
     }
 }

@@ -1,34 +1,33 @@
 package net.sourcedestination.codecafe;
 
 import net.sourcedestination.funcles.consumer.Consumer2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.*;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
-class LessonWebsocketHandler implements WebSocketHandler {
+class ExerciseWebsocketHandler implements WebSocketHandler {
 
-    Logger logger = Logger.getLogger(LessonWebsocketHandler.class.getCanonicalName());
+    Logger logger = Logger.getLogger(ExerciseWebsocketHandler.class.getCanonicalName());
 
-    private final Consumer2<JShellLessonTool,WebSocketSession> connectAction;
+    private final Consumer2<JShellExerciseTool,WebSocketSession> connectAction;
     private final String name;
-    private final LessonController lessons;
+    private final ExerciseController exercises;
 
-    public LessonWebsocketHandler(LessonController lessons, String name,
-                                  Consumer2<JShellLessonTool,WebSocketSession> connectAction) {
+    public ExerciseWebsocketHandler(ExerciseController exercises, String name,
+                                    Consumer2<JShellExerciseTool,WebSocketSession> connectAction) {
         this.connectAction = connectAction;
-        this.lessons = lessons;
+        this.exercises = exercises;
         this.name = name;
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
-        // get lesson ID from end of URL
+        // get exercise ID from end of URL
         var path = session.getUri().getPath().split("/");
-        var lesson = path[path.length-2];
-        if(!lessons.validLessonId(lesson)) {
-            // bad lesson ID
+        var exerciseId = path[path.length-2];
+        if(!exercises.validExerciseId(exerciseId)) {
+            // bad exerciseId ID
             session.close(CloseStatus.PROTOCOL_ERROR);
             return;
         }
@@ -41,9 +40,9 @@ class LessonWebsocketHandler implements WebSocketHandler {
         var username = session.getPrincipal().getName();
 
         logger.info("Connection " + session.getId() +
-                " to " + name + " for lesson " + lesson + " by " + username);
+                " to " + name + " for exerciseId " + exerciseId + " by " + username);
 
-        actOnConnect(lessons.getTool(username, lesson), session);
+        actOnConnect(exercises.getTool(username, exerciseId), session);
     }
 
     @Override
@@ -69,7 +68,7 @@ class LessonWebsocketHandler implements WebSocketHandler {
      * @param tool
      * @param session
      */
-    public void actOnConnect(JShellLessonTool tool, WebSocketSession session) {
+    public void actOnConnect(JShellExerciseTool tool, WebSocketSession session) {
         connectAction.accept(tool, session);
     }
 }
