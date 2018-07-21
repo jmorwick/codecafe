@@ -26,9 +26,12 @@ public class JShellExerciseTool {
     private final Set<Consumer<List<MethodSnippet>>> methodListeners = new HashSet<>();
     private final Set<Consumer<String>> stdoutListeners = new HashSet<>();
     private final Set<Consumer2<String,Double>> goalListeners = new HashSet<>();
+    private final Set<Restriction> restrictions;
+
     // TODO: add test listeners
 
-    public JShellExerciseTool(String username, String exerciseId, long timeout) {
+    public JShellExerciseTool(String username, String exerciseId, long timeout,
+                              List<Restriction> restrictions) {
         try {
             var out = new PipedOutputStream();
             var in = new PipedInputStream(out);
@@ -46,11 +49,22 @@ public class JShellExerciseTool {
             throw new IllegalStateException("could not initialize jshell");
         }
         this.timeout = timeout;
+        this.restrictions = ImmutableSet.copyOf(restrictions);
     }
 
     public void evaluateCodeSnippet(String code) {
         // TODO: check for and replace an existing method if its being redefined
         // TODO: analyze snippet and check for errors before executing
+        if(jshell.eval(code).stream()
+            .flatMap(s -> restrictions.stream().filter(r -> r.apply(s, this))
+                .map(Restriction::getReason))
+            .distinct()
+            .map(
+                   reason ->  {
+                       errorListeners.forEach(o -> o.accept(code,reason));
+                       return reason;
+                   }
+            ).count() > 0) return; // quit if a restriction fires
         CompletableFuture.supplyAsync(() -> jshell.eval(code))
                 .orTimeout(timeout, TimeUnit.MILLISECONDS)
                 .thenAccept(results -> { // update history listeners
