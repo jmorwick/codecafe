@@ -1,7 +1,12 @@
 package net.sourcedestination.codecafe;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.HashMultimap;
 import net.sourcedestination.funcles.tuple.Tuple2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,9 +23,17 @@ import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 @Controller
 public class ExerciseController {
 
+    @Autowired
+    private ApplicationContext appContext;
+
     private final Logger logger = Logger.getLogger(ExerciseController.class.getCanonicalName());
 
-
+    // exeriseId -> template name
+    private Map<String,String> templates = new HashMap<>();
+    // exerciseId -> restrictions
+    private Multimap<String,Restriction> restrictions = HashMultimap.create();
+    // exerciseId -> goals
+    private Multimap<String,Goal> goals = HashMultimap.create();
     // username x exerciseId -> current tool instance (if any)
     private Map<Tuple2<String,String>,JShellExerciseTool> toolCache = new HashMap<>();
 
@@ -37,14 +50,42 @@ public class ExerciseController {
         if(toolCache.containsKey(id))
             return toolCache.get(id);
 
-        // TODO: load exercise-specific restrictions on tool from app config
+        if(!templates.containsKey(exerciseId)) {
+            Map<String, ExerciseDefinition> exerciseBeans =
+                    appContext.getBeansOfType(ExerciseDefinition.class);
+            if (!exerciseBeans.containsKey(exerciseId)) {
+                throw new IllegalArgumentException("No such exercise: " + exerciseId);
+            }
+            var def = exerciseBeans.get(exerciseId);
+            templates.put(exerciseId, def.getTemplate());
+            def.getRestrictions().forEach(r -> restrictions.put(exerciseId, r));
+            def.getGoals().forEach(g -> goals.put(exerciseId, g));
+        }
 
         // TODO: attempt to load execution history from DB
 
         logger.info("starting new jshell session for " + id);
-        var newTool = new JShellExerciseTool(username, exerciseId, DEFAULT_TIMEOUT);
+        var newTool = new JShellExerciseTool(username, exerciseId, DEFAULT_TIMEOUT,
+                restrictions.get(exerciseId), goals.get(exerciseId));
         toolCache.put(id, newTool);
         return newTool;
+    }
+
+    public String getTemplate(String exerciseId) {
+        return templates.get(exerciseId);
+    }
+
+    @GetMapping("/exercises/{exerciseId}")
+    public String viewExercise(@PathVariable("exerciseId") String exerciseId,
+                             HttpServletRequest request,
+                             HttpServletResponse response) throws IOException {
+        var username = request.getUserPrincipal().getName();
+        var tool = getTool(username, exerciseId); // locating tool loads template def
+        if(tool == null) {
+            response.sendError(403, "could not start jshell tool");
+            return null;
+        }
+        return getTemplate(exerciseId)+".html";
     }
 
     /** accepts code snippets from users for execution on jshell tool instances */

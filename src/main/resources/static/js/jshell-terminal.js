@@ -1,10 +1,10 @@
 $( document ).ready(function() {
 
-    var socket = new WebSocket('ws://' + window.location.host + '/lessons/ex1/history');
-    var socket2 = new WebSocket('ws://' + window.location.host + '/lessons/ex1/variables');
-    var socket3 = new WebSocket('ws://' + window.location.host + '/lessons/ex1/errors');
-    var socket4 = new WebSocket('ws://' + window.location.host + '/lessons/ex1/methods');
-    var socket5 = new WebSocket('ws://' + window.location.host + '/lessons/ex1/stdout');
+    var socket = new WebSocket('ws://' + window.location.host + '/exercises/playground/history');
+    var socket2 = new WebSocket('ws://' + window.location.host + '/exercises/playground/variables');
+    var socket3 = new WebSocket('ws://' + window.location.host + '/exercises/playground/errors');
+    var socket4 = new WebSocket('ws://' + window.location.host + '/exercises/playground/methods');
+    var socket5 = new WebSocket('ws://' + window.location.host + '/exercises/playground/stdout');
 
     socket.onmessage = function(message) {
         $('#term-home').append(message.data); // print message to terminal
@@ -39,13 +39,13 @@ $( document ).ready(function() {
 
     $('#sendcode').on('click', function(e) {
             $('#errmsg').val('');
-            $.post('/lessons/ex1/exec', {code: $('#codepad').val()});
+            $.post('/exercises/playground/exec', {code: $('#codepad').val()});
             $('#codepad').val('');                     // clear input
     });
 
     $('#stdin').keyup(function(e) {
         if(e.keyCode == 13) {  // return was pressed
-            $.post('/lessons/ex1/stdin', {data: $('#stdin').val()+"\n"});
+            $.post('/exercises/playground/stdin', {data: $('#stdin').val()+"\n"});
             $('#stdin').val('');                     // clear input
         }
     });

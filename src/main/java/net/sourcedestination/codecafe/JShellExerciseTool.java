@@ -30,8 +30,8 @@ public class JShellExerciseTool {
     private final Set<Goal> goals;
 
     public JShellExerciseTool(String username, String exerciseId, long timeout,
-                              List<Restriction> restrictions,
-                              List<Goal> goals) {
+                              Collection<Restriction> restrictions,
+                              Collection<Goal> goals) {
         try {
             var out = new PipedOutputStream();
             var in = new PipedInputStream(out);
