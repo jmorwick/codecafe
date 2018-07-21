@@ -5,5 +5,5 @@ import net.sourcedestination.funcles.predicate.Predicate2;
 
 public interface Restriction extends Predicate2<Snippet,JShellExerciseTool> {
     /** explanation for a restricted snippet */
-    public String getReason();
+    public String getReason(Snippet s, JShellExerciseTool tool);
 }

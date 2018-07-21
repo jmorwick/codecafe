@@ -12,6 +12,8 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
+
 public class JShellExerciseTool {
     private final Logger logger = Logger.getLogger(JShellExerciseTool.class.getCanonicalName());
 
@@ -55,8 +57,10 @@ public class JShellExerciseTool {
 
     public void evaluateCodeSnippet(String code) {
         if(jshell.sourceCodeAnalysis().sourceToSnippets(code).stream()
-            .flatMap(s -> restrictions.stream().filter(r -> r.apply(s, this))
-                .map(Restriction::getReason))
+            .flatMap(s -> restrictions.stream()
+                    .filter(r -> r.apply(s, this))
+                    .map(r -> makeTuple(s, r)))
+                .map(t-> t._2.getReason(t._1, this))
             .distinct()
             .map(
                    reason ->  {
