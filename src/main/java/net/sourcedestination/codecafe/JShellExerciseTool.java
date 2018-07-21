@@ -54,7 +54,7 @@ public class JShellExerciseTool {
     }
 
     public void evaluateCodeSnippet(String code) {
-        if(jshell.eval(code).stream()
+        if(jshell.sourceCodeAnalysis().sourceToSnippets(code).stream()
             .flatMap(s -> restrictions.stream().filter(r -> r.apply(s, this))
                 .map(Restriction::getReason))
             .distinct()
