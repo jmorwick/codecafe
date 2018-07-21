@@ -27,11 +27,11 @@ public class JShellExerciseTool {
     private final Set<Consumer<String>> stdoutListeners = new HashSet<>();
     private final Set<Consumer2<String,Double>> goalListeners = new HashSet<>();
     private final Set<Restriction> restrictions;
-
-    // TODO: add test listeners
+    private final Set<Goal> goals;
 
     public JShellExerciseTool(String username, String exerciseId, long timeout,
-                              List<Restriction> restrictions) {
+                              List<Restriction> restrictions,
+                              List<Goal> goals) {
         try {
             var out = new PipedOutputStream();
             var in = new PipedInputStream(out);
@@ -50,11 +50,10 @@ public class JShellExerciseTool {
         }
         this.timeout = timeout;
         this.restrictions = ImmutableSet.copyOf(restrictions);
+        this.goals = ImmutableSet.copyOf(goals);
     }
 
     public void evaluateCodeSnippet(String code) {
-        // TODO: check for and replace an existing method if its being redefined
-        // TODO: analyze snippet and check for errors before executing
         if(jshell.eval(code).stream()
             .flatMap(s -> restrictions.stream().filter(r -> r.apply(s, this))
                 .map(Restriction::getReason))
@@ -92,6 +91,9 @@ public class JShellExerciseTool {
                     errorListeners.forEach(o -> o.accept(code, "Last statement went over time"));
                     return null;
                 });
+        goals.forEach(goal ->
+                goalListeners.forEach(o ->
+                        o.accept(goal.getDescription(), goal.completionPercentage(this))));
     }
 
     public synchronized void writeToStdin(String data) {
