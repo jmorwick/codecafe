@@ -53,9 +53,24 @@ $( document ).ready(function() {
         // TODO: sort
         // TODO: make in to a table
     });
+
+
+    // connect all output listeners to websockets for their exercises
+    $('.js-exercise .js-stdout').each(function(i) {
+        var term = $(this);
+        var exerciseId = term.parent().attr('id'); // TODO: write method that searches for exercise div
+        var socket = new WebSocket('ws://' + window.location.host + '/exercises/'+exerciseId+'/stdout');
+        socket.onmessage = function(message) {
+            term.append(message.data); // print message to terminal
+            term.scrollTop(term[0].scrollHeight - term.height());  // scroll to bottom
+        };
+        socket.onerror = function(e) { }; // TODO: detect / report connection errors
+        socket.onclose = function(e) { }; // TODO: detect / report connection errors
+
+        // TODO: make in to a table
+    });
 /*
     var socket4 = new WebSocket('ws://' + window.location.host + '/exercises/playground/methods');
-    var socket5 = new WebSocket('ws://' + window.location.host + '/exercises/playground/stdout');
     var socket6 = new WebSocket('ws://' + window.location.host + '/exercises/playground/goals');
 
     socket4.onmessage = function(message) {
@@ -71,11 +86,6 @@ $( document ).ready(function() {
                 option.value = method[2];
             }
         });
-    };
-    socket5.onmessage = function(message) {
-        $('#term-stdout').append(message.data); // print message to terminal
-        $('#term-stdout').scrollTop($('#term-stdout')[0].scrollHeight - $('#term-stdout').height()); // scroll to bottom
-
     };
     socket6.onmessage = function(message) {
         var pmessage = JSON.parse(message.data);

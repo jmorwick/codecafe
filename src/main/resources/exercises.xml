@@ -14,7 +14,9 @@
         <constructor-arg index="2" value="full"/>
         <constructor-arg index="3">
             <list>
+                <!--
                 <ref bean="expressions-only"/>
+                -->
             </list>
         </constructor-arg>
         <constructor-arg index="4">
