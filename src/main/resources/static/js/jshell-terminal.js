@@ -1,9 +1,18 @@
+function getExerciseDiv(innerJQObj) {
+    if(innerJQObj.length == 0) {
+        // TODO: handle error -- no parent js-exercise div
+    }
+    if(innerJQObj.attr('class') != 'js-exercise')
+        return getExerciseDiv(innerJQObj.parent());
+    return innerJQObj;
+}
+
 $( document ).ready(function() {
 
     // connect all history listeners to websockets for their exercises
     $('.js-exercise .js-history').each(function(i) {
         var term = $(this);
-        var exerciseId = term.parent().parent().parent().attr('id');
+        var exerciseId = getExerciseDiv(term).attr('id');
         var socket = new WebSocket('ws://' + window.location.host + '/exercises/'+exerciseId+'/history');
         socket.onmessage = function(message) {
             term.append(message.data); // print message to terminal
@@ -18,7 +27,7 @@ $( document ).ready(function() {
     // link every execute button to ajax call for their exercises
     $('.js-sendcode').on('click', function(e) {
         var sendButton = $(this);
-        var exerciseId = sendButton.parent().parent().attr('id');
+        var exerciseId = getExerciseDiv(sendButton).attr('id');
         var codepad = sendButton.parent().find('textarea');
         // TODO: clear messages for this exercise
         $.post('/exercises/'+exerciseId+'/exec', {code: codepad.val()});
@@ -29,7 +38,7 @@ $( document ).ready(function() {
     // connect all variable listeners to websockets for their exercises
     $('.js-exercise .js-variables').each(function(i) {
         var term = $(this);
-        var exerciseId = term.parent().parent().parent().attr('id');
+        var exerciseId = getExerciseDiv(term).attr('id');
         var socket = new WebSocket('ws://' + window.location.host + '/exercises/'+exerciseId+'/variables');
         socket.onmessage = function(message) {
             term.val(message.data); // print message to terminal
@@ -43,7 +52,7 @@ $( document ).ready(function() {
     // connect all message listeners to websockets for their exercises
     $('.js-exercise .js-message').each(function(i) {
         var term = $(this);
-        var exerciseId = term.parent().attr('id');
+        var exerciseId = getExerciseDiv(term).attr('id');
         var socket = new WebSocket('ws://' + window.location.host + '/exercises/'+exerciseId+'/errors');
         socket.onmessage = function(message) {
             term.val(message.data); // print error message to terminal
@@ -54,11 +63,10 @@ $( document ).ready(function() {
         // TODO: make in to a table
     });
 
-
     // connect all output listeners to websockets for their exercises
     $('.js-exercise .js-stdout').each(function(i) {
         var term = $(this);
-        var exerciseId = term.parent().attr('id'); // TODO: write method that searches for exercise div
+        var exerciseId = getExerciseDiv(term).attr('id');
         var socket = new WebSocket('ws://' + window.location.host + '/exercises/'+exerciseId+'/stdout');
         socket.onmessage = function(message) {
             term.append(message.data); // print message to terminal
@@ -69,6 +77,7 @@ $( document ).ready(function() {
 
         // TODO: make in to a table
     });
+
 /*
     var socket4 = new WebSocket('ws://' + window.location.host + '/exercises/playground/methods');
     var socket6 = new WebSocket('ws://' + window.location.host + '/exercises/playground/goals');
