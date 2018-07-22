@@ -76,7 +76,8 @@ public class ExerciseController {
     }
 
     @GetMapping("/exercises/{exerciseId}")
-    public String viewExercise(@PathVariable("exerciseId") String exerciseId,
+    public String viewExercise(Map<String, Object> model,
+                               @PathVariable("exerciseId") String exerciseId,
                              HttpServletRequest request,
                              HttpServletResponse response) throws IOException {
         var username = request.getUserPrincipal().getName();
@@ -85,6 +86,8 @@ public class ExerciseController {
             response.sendError(403, "could not start jshell tool");
             return null;
         }
+        
+
         return getTemplate(exerciseId)+".html";
     }
 

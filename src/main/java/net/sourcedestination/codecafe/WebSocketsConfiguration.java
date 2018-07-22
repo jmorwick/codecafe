@@ -103,5 +103,21 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                 }
                         )
                 ),"/exercises/**/stdout");
+
+        registry.addHandler(
+                new ExerciseWebsocketHandler(exercises, "goals listener",
+                        (tool, session) -> tool.attachGoalsListener(
+                                (testId, reason, progress) -> {
+                                    GsonBuilder builder = new GsonBuilder();
+                                    Gson gson = builder.create();
+                                    var msg = gson.toJson(List.of(testId,reason,progress));
+                                    try {
+                                        session.sendMessage(new TextMessage(msg));
+                                    } catch(IOException e) {
+                                        // TODO: log error
+                                    }
+                                }
+                        )
+                ),"/exercises/**/goals");
     }
 }

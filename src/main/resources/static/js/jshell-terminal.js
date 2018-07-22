@@ -5,11 +5,11 @@ $( document ).ready(function() {
     var socket3 = new WebSocket('ws://' + window.location.host + '/exercises/playground/errors');
     var socket4 = new WebSocket('ws://' + window.location.host + '/exercises/playground/methods');
     var socket5 = new WebSocket('ws://' + window.location.host + '/exercises/playground/stdout');
+    var socket6 = new WebSocket('ws://' + window.location.host + '/exercises/playground/goals');
 
     socket.onmessage = function(message) {
         $('#term-home').append(message.data); // print message to terminal
         $('#term-home').scrollTop($('#term-home')[0].scrollHeight - $('#term-home').height()); // scroll to bottom
-
     };
     socket2.onmessage = function(message) {
         $('#term-vars').val(message.data);
@@ -35,6 +35,14 @@ $( document ).ready(function() {
         $('#term-stdout').append(message.data); // print message to terminal
         $('#term-stdout').scrollTop($('#term-stdout')[0].scrollHeight - $('#term-stdout').height()); // scroll to bottom
 
+    };
+    socket6.onmessage = function(message) {
+        var pmessage = JSON.parse(message.data);
+        var gid = pmessage[0];
+        var reason = pmessage[1];
+        var progress = pmessage[2];
+        $($('#goals li span.progress')[gid]).html((100*progress)+'%');
+        $($('#goals li span.reason')[gid]).html(reason);
     };
 
     $('#sendcode').on('click', function(e) {

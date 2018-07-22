@@ -22,7 +22,7 @@
                 <bean class="net.sourcedestination.codecafe.goals.MethodUnitTest">
                     <constructor-arg name="methodName" value="add2Numbers"/>
                     <constructor-arg name="hiddenTest" value="false"/>
-                    <constructor-arg name="signature" value="int,int"/>
+                    <constructor-arg name="signature" value="(int,int)int"/>
                     <constructor-arg name="output" value="3"/>
                     <constructor-arg name="inputs" value="1,2"/>
                 </bean>

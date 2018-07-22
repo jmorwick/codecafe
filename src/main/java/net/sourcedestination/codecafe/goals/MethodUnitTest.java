@@ -4,6 +4,9 @@ import jdk.jshell.Snippet;
 import jdk.jshell.VarSnippet;
 import net.sourcedestination.codecafe.Goal;
 import net.sourcedestination.codecafe.JShellExerciseTool;
+import net.sourcedestination.funcles.tuple.Tuple2;
+
+import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 
 public class MethodUnitTest implements Goal {
 
@@ -31,26 +34,26 @@ public class MethodUnitTest implements Goal {
                         signature + " and should return " + output + " when given inputs: " + inputs;
     }
 
-    public double completionPercentage(JShellExerciseTool tool) {
+    public Tuple2<Double,String> completionPercentage(JShellExerciseTool tool) {
         var js = tool.getShell();
 
         // check method name exists
         if(!js.methods().anyMatch(m -> m.name().equals(methodName)))
-            return 0;
+            return makeTuple(0.0, "Method name is not correct");
 
         // check method has correct signature
         if(!js.methods().anyMatch(m -> m.name().equals(methodName) &&
                 m.signature().equals(signature)))
-            return 0.25;
+            return makeTuple(0.25, "Parameters and/or return type are not correct");
 
         // check test
-        var output = js.eval(methodName+"("+inputs+")");
-        if(output.size() < 1 ||
-                output.get(0).status() != Snippet.Status.VALID ||
-                output.get(0).snippet().subKind() != Snippet.SubKind.TEMP_VAR_EXPRESSION_SUBKIND ||
-                !output.equals(js.varValue((VarSnippet)output.get(0).snippet())))
-            return 0.5;
+        var actualOutput = js.eval(methodName+"("+inputs+")");
+        if(actualOutput.size() < 1 ||
+                actualOutput.get(0).status() != Snippet.Status.VALID ||
+                actualOutput.get(0).snippet().subKind() != Snippet.SubKind.TEMP_VAR_EXPRESSION_SUBKIND ||
+                !output.equals(js.varValue((VarSnippet)actualOutput.get(0).snippet())))
+            return makeTuple(0.5, "incorrect output");
 
-        return 1.0;
+        return makeTuple(1.0, "test passed!");
     }
 }
