@@ -26,8 +26,7 @@ $( document ).ready(function() {
         codepad.val('');                     // clear input
     });
 
-
-    // connect all history listeners to websockets for their exercises
+    // connect all variable listeners to websockets for their exercises
     $('.js-exercise .js-variables').each(function(i) {
         var term = $(this);
         var exerciseId = term.parent().parent().parent().attr('id');
@@ -40,16 +39,25 @@ $( document ).ready(function() {
         // TODO: sort
         // TODO: make in to a table
     });
+
+    // connect all message listeners to websockets for their exercises
+    $('.js-exercise .js-message').each(function(i) {
+        var term = $(this);
+        var exerciseId = term.parent().attr('id');
+        var socket = new WebSocket('ws://' + window.location.host + '/exercises/'+exerciseId+'/errors');
+        socket.onmessage = function(message) {
+            term.val(message.data); // print error message to terminal
+        };
+        socket.onerror = function(e) { }; // TODO: detect / report connection errors
+        socket.onclose = function(e) { }; // TODO: detect / report connection errors
+        // TODO: sort
+        // TODO: make in to a table
+    });
 /*
-    var socket2 = new WebSocket('ws://' + window.location.host + '/exercises/playground/variables');
-    var socket3 = new WebSocket('ws://' + window.location.host + '/exercises/playground/errors');
     var socket4 = new WebSocket('ws://' + window.location.host + '/exercises/playground/methods');
     var socket5 = new WebSocket('ws://' + window.location.host + '/exercises/playground/stdout');
     var socket6 = new WebSocket('ws://' + window.location.host + '/exercises/playground/goals');
 
-    socket3.onmessage = function(message) {
-        $('#errmsg').val(message.data);
-    };
     socket4.onmessage = function(message) {
         JSON.parse(message.data).forEach(function (method) {
             var name = method[0] + ': ' + method[1];
