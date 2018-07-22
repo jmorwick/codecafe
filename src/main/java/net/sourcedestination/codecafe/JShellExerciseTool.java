@@ -55,7 +55,7 @@ public class JShellExerciseTool {
         this.goals = ImmutableSet.copyOf(goals);
     }
 
-    public void evaluateCodeSnippet(String code) {
+    public synchronized void evaluateCodeSnippet(String code) {
         if(jshell.sourceCodeAnalysis().sourceToSnippets(code).stream()
             .flatMap(s -> restrictions.stream()
                     .filter(r -> r.apply(s, this))
@@ -100,6 +100,7 @@ public class JShellExerciseTool {
                         o.accept(goal.getDescription(), goal.completionPercentage(this))));
     }
 
+    public synchronized JShell getShell() { return jshell; }
     public synchronized void writeToStdin(String data) {
         toStdin.print(data);
     }

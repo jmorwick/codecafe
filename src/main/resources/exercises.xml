@@ -5,7 +5,7 @@
 
 
     <bean id="expressions-only" class="net.sourcedestination.codecafe.restrictions.SnippetTypeWhiteList">
-        <constructor-arg value="EXPRESSION"/>
+        <constructor-arg value="METHOD"/>
     </bean>
 
     <bean id="playground" class="net.sourcedestination.codecafe.ExerciseDefinition">
@@ -18,7 +18,15 @@
             </list>
         </constructor-arg>
         <constructor-arg index="4">
-            <list></list>
+            <list>
+                <bean class="net.sourcedestination.codecafe.goals.MethodUnitTest">
+                    <constructor-arg name="methodName" value="add2Numbers"/>
+                    <constructor-arg name="hiddenTest" value="false"/>
+                    <constructor-arg name="signature" value="int,int"/>
+                    <constructor-arg name="output" value="3"/>
+                    <constructor-arg name="inputs" value="1,2"/>
+                </bean>
+            </list>
         </constructor-arg>
     </bean>
 </beans>

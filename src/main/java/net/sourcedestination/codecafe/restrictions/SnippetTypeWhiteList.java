@@ -1,13 +1,10 @@
 package net.sourcedestination.codecafe.restrictions;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import jdk.jshell.Snippet;
 import net.sourcedestination.codecafe.JShellExerciseTool;
 import net.sourcedestination.codecafe.Restriction;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 public class SnippetTypeWhiteList implements Restriction {
