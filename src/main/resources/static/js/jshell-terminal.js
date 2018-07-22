@@ -25,6 +25,21 @@ $( document ).ready(function() {
         // TODO: report error on failure to send ajax message
         codepad.val('');                     // clear input
     });
+
+
+    // connect all history listeners to websockets for their exercises
+    $('.js-exercise .js-variables').each(function(i) {
+        var term = $(this);
+        var exerciseId = term.parent().parent().parent().attr('id');
+        var socket = new WebSocket('ws://' + window.location.host + '/exercises/'+exerciseId+'/variables');
+        socket.onmessage = function(message) {
+            term.val(message.data); // print message to terminal
+        };
+        socket.onerror = function(e) { }; // TODO: detect / report connection errors
+        socket.onclose = function(e) { }; // TODO: detect / report connection errors
+        // TODO: sort
+        // TODO: make in to a table
+    });
 /*
     var socket2 = new WebSocket('ws://' + window.location.host + '/exercises/playground/variables');
     var socket3 = new WebSocket('ws://' + window.location.host + '/exercises/playground/errors');
@@ -32,9 +47,6 @@ $( document ).ready(function() {
     var socket5 = new WebSocket('ws://' + window.location.host + '/exercises/playground/stdout');
     var socket6 = new WebSocket('ws://' + window.location.host + '/exercises/playground/goals');
 
-    socket2.onmessage = function(message) {
-        $('#term-vars').val(message.data);
-    };
     socket3.onmessage = function(message) {
         $('#errmsg').val(message.data);
     };
