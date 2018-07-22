@@ -10,36 +10,39 @@
     <script src="/js/jshell-terminal.js"></script>
 </head>
 <body>
+<div class="js-exercise" id="playground">
 <h1>jshell test</h1>
 <div>
     <span>
         History
-        <textarea id="term-home" rows="10" cols="40" readonly></textarea>
+        <textarea class="js-history" rows="10" cols="40" readonly></textarea>
     </span>
     <span>
         Variables
-        <textarea id="term-vars" rows="10" cols="40" readonly></textarea>
+        <textarea class="js-variables" rows="10" cols="40" readonly></textarea>
     </span>
 </div>
 <br>Last Error:
-<input type="text" id="errmsg" size="80" disabled/>
+<input type="text" class="js-message" size="80" disabled/>
 <br/>
 Method definitions <select id="methods"></select> <input id="loadmethod" type="submit" value="load"/>
-<br>Code:
-<textarea id="codepad" rows="10" cols="40"></textarea>
-<input type="submit" id="sendcode" value="execute"/>
+<div class="js-codepad"><br>Code:
+<textarea rows="10" cols="40"></textarea>
+<input type="submit" class="js-sendcode" value="execute"/>
+</div>
 <hr/>
 <br>Input:
-<input type="text" id="stdin" size="80"/>
+<input type="text" class="js-stdin" size="80"/>
 <br>
 Output:
-<textarea id="term-stdout" rows="10" cols="40" readonly></textarea>
+<textarea class="js-stdout" rows="10" cols="40" readonly></textarea>
 
-<ol id="goals">
+<ol class="js-goals">
     <li><span class="progress"></span><span class="reason"></span></li>
     <li><span class="progress"></span><span class="reason"></span></li>
     <li><span class="progress"></span><span class="reason"></span></li>
     <li><span class="progress"></span><span class="reason"></span></li>
 </ol>
+</div>
 </body>
 </html>

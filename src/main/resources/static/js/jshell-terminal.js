@@ -1,16 +1,37 @@
 $( document ).ready(function() {
 
-    var socket = new WebSocket('ws://' + window.location.host + '/exercises/playground/history');
+    // connect all history listeners to websockets for their exercises
+    $('.js-exercise .js-history').each(function(i) {
+        var term = $(this);
+        var exerciseId = term.parent().parent().parent().attr('id');
+        var socket = new WebSocket('ws://' + window.location.host + '/exercises/'+exerciseId+'/history');
+        socket.onmessage = function(message) {
+            term.append(message.data); // print message to terminal
+            term.scrollTop(term[0].scrollHeight - term.height());  // scroll to bottom
+        };
+        socket.onerror = function(e) { }; // TODO: detect / report connection errors
+        socket.onclose = function(e) { }; // TODO: detect / report connection errors
+
+        // TODO: make in to a table
+    });
+
+    // link every execute button to ajax call for their exercises
+    $('.js-sendcode').on('click', function(e) {
+        var sendButton = $(this);
+        var exerciseId = sendButton.parent().parent().attr('id');
+        var codepad = sendButton.parent().find('textarea');
+        // TODO: clear messages for this exercise
+        $.post('/exercises/'+exerciseId+'/exec', {code: codepad.val()});
+        // TODO: report error on failure to send ajax message
+        codepad.val('');                     // clear input
+    });
+/*
     var socket2 = new WebSocket('ws://' + window.location.host + '/exercises/playground/variables');
     var socket3 = new WebSocket('ws://' + window.location.host + '/exercises/playground/errors');
     var socket4 = new WebSocket('ws://' + window.location.host + '/exercises/playground/methods');
     var socket5 = new WebSocket('ws://' + window.location.host + '/exercises/playground/stdout');
     var socket6 = new WebSocket('ws://' + window.location.host + '/exercises/playground/goals');
 
-    socket.onmessage = function(message) {
-        $('#term-home').append(message.data); // print message to terminal
-        $('#term-home').scrollTop($('#term-home')[0].scrollHeight - $('#term-home').height()); // scroll to bottom
-    };
     socket2.onmessage = function(message) {
         $('#term-vars').val(message.data);
     };
@@ -45,11 +66,6 @@ $( document ).ready(function() {
         $($('#goals li span.reason')[gid]).html(reason);
     };
 
-    $('#sendcode').on('click', function(e) {
-            $('#errmsg').val('');
-            $.post('/exercises/playground/exec', {code: $('#codepad').val()});
-            $('#codepad').val('');                     // clear input
-    });
 
     $('#stdin').keyup(function(e) {
         if(e.keyCode == 13) {  // return was pressed
@@ -57,9 +73,6 @@ $( document ).ready(function() {
             $('#stdin').val('');                     // clear input
         }
     });
-
-    $('#loadmethod').on('click', function (e) {
-        $('#codepad').val($('#methods option:selected').val());
-    });
+    */
 });
 
