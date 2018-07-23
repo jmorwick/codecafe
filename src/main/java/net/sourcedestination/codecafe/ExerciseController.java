@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 
@@ -29,7 +30,7 @@ public class ExerciseController {
     private final Logger logger = Logger.getLogger(ExerciseController.class.getCanonicalName());
 
     // exeriseId -> template name
-    private Map<String,String> templates = new HashMap<>();
+    private Map<String,ExerciseDefinition> definitions = new HashMap<>();
     // exerciseId -> restrictions
     private Multimap<String,Restriction> restrictions = HashMultimap.create();
     // exerciseId -> goals
@@ -50,14 +51,14 @@ public class ExerciseController {
         if(toolCache.containsKey(id))
             return toolCache.get(id);
 
-        if(!templates.containsKey(exerciseId)) {
+        if(!definitions.containsKey(exerciseId)) {
             Map<String, ExerciseDefinition> exerciseBeans =
                     appContext.getBeansOfType(ExerciseDefinition.class);
             if (!exerciseBeans.containsKey(exerciseId)) {
                 throw new IllegalArgumentException("No such exercise: " + exerciseId);
             }
             var def = exerciseBeans.get(exerciseId);
-            templates.put(exerciseId, def.getTemplate());
+            definitions.put(exerciseId, def);
             def.getRestrictions().forEach(r -> restrictions.put(exerciseId, r));
             def.getGoals().forEach(g -> goals.put(exerciseId, g));
         }
@@ -71,8 +72,8 @@ public class ExerciseController {
         return newTool;
     }
 
-    public String getTemplate(String exerciseId) {
-        return templates.get(exerciseId);
+    public ExerciseDefinition getDefinition(String exerciseId) {
+        return definitions.get(exerciseId);
     }
 
     @GetMapping("/exercises/{exerciseId}")
@@ -82,13 +83,16 @@ public class ExerciseController {
                              HttpServletResponse response) throws IOException {
         var username = request.getUserPrincipal().getName();
         var tool = getTool(username, exerciseId); // locating tool loads template def
+        var def = getDefinition(exerciseId);
         if(tool == null) {
             response.sendError(403, "could not start jshell tool");
             return null;
         }
-        
 
-        return getTemplate(exerciseId)+".html";
+        var goalDescriptions = def.getGoals().map(Goal::getDescription).collect(Collectors.toList());
+        model.put("goals", goalDescriptions);
+
+        return def.getTemplate()+".html";
     }
 
     /** accepts code snippets from users for execution on jshell tool instances */

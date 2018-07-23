@@ -27,7 +27,7 @@
 <br/>
 Method definitions <select id="methods"></select> <input id="loadmethod" type="submit" value="load"/>
 <div class="js-codepad"><br>Code:
-<textarea rows="10" cols="40"></textarea>
+<textarea rows="10" cols="40" clearonsend></textarea>
 <input type="submit" class="js-sendcode" value="execute"/>
 </div>
 <hr/>
@@ -37,12 +37,13 @@ Method definitions <select id="methods"></select> <input id="loadmethod" type="s
 Output:
 <textarea class="js-stdout" rows="10" cols="40" readonly></textarea>
 
-<ol class="js-goals">
-    <li><span class="progress"></span><span class="reason"></span></li>
-    <li><span class="progress"></span><span class="reason"></span></li>
-    <li><span class="progress"></span><span class="reason"></span></li>
-    <li><span class="progress"></span><span class="reason"></span></li>
-</ol>
+    <ol class="js-goals">
+        <li th:each="goal : ${goals}">
+            <span class="description" th:text="${goal}"></span>
+            <span class="progress"></span>
+            <span class="reason"></span>
+        </li>
+    </ol>
 </div>
 </body>
 </html>

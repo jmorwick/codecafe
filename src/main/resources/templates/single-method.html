@@ -18,10 +18,11 @@
         <input type="submit" class="js-sendcode" value="execute"/>
 
     <ol class="js-goals">
-        <li><span class="progress"></span><span class="reason"></span></li>
-        <li><span class="progress"></span><span class="reason"></span></li>
-        <li><span class="progress"></span><span class="reason"></span></li>
-        <li><span class="progress"></span><span class="reason"></span></li>
+        <li th:each="goal : ${goals}">
+            <span class="description" th:text="${goal}"></span>
+            <span class="progress"></span>
+            <span class="reason"></span>
+        </li>
     </ol>
 </div>
 </body>
