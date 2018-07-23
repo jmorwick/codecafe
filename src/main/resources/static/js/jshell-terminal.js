@@ -32,7 +32,7 @@ $( document ).ready(function() {
         // TODO: clear messages for this exercise
         $.post('/exercises/'+exerciseId+'/exec', {code: codepad.val()});
         // TODO: report error on failure to send ajax message
-        codepad.val('');                     // clear input
+        if(codepad.attr('clearonsend') != undefined) codepad.val('');
     });
 
     // connect all variable listeners to websockets for their exercises
