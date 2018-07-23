@@ -25,7 +25,7 @@ $( document ).ready(function() {
     });
 
     // link every execute button to ajax call for their exercises
-    $('.js-sendcode').on('click', function(e) {
+    $('.js-exercise .js-sendcode').on('click', function(e) {
         var sendButton = $(this);
         var exerciseId = getExerciseDiv(sendButton).attr('id');
         var codepad = sendButton.parent().find('textarea');
@@ -78,40 +78,49 @@ $( document ).ready(function() {
         // TODO: make in to a table
     });
 
-/*
-    var socket4 = new WebSocket('ws://' + window.location.host + '/exercises/playground/methods');
-    var socket6 = new WebSocket('ws://' + window.location.host + '/exercises/playground/goals');
+    // connect all output listeners to goals for their exercises
+    $('.js-exercise .js-goals').each(function(i) {
+        var goalResponses = $(this);
+        var exerciseId = getExerciseDiv(goalResponses).attr('id');
+        var socket = new WebSocket('ws://' + window.location.host + '/exercises/'+exerciseId+'/goals');
+        socket.onmessage = function(message) {
+            var pmessage = JSON.parse(message.data);
+            var gid = pmessage[0];
+            var reason = pmessage[1];
+            var progress = pmessage[2];
+            $(goalResponses.find('span.progress')[gid]).html((100*progress)+'%');
+            $(goalResponses.find('span.reason')[gid]).html(reason);
+        };
+        socket.onerror = function(e) { }; // TODO: detect / report connection errors
+        socket.onclose = function(e) { }; // TODO: detect / report connection errors
 
-    socket4.onmessage = function(message) {
-        JSON.parse(message.data).forEach(function (method) {
-            var name = method[0] + ': ' + method[1];
-            var option = $('#methods option').filter(function (i,option) { return option.text == name; })[0];
-            if(option == null) {
-                $('#methods').append($('<option>', {
-                    value: method[2],
-                    text: name
-                }));
-            } else {
-                option.value = method[2];
+        // TODO: make in to a table
+    });
+
+    /*
+        var socket4 = new WebSocket('ws://' + window.location.host + '/exercises/playground/methods');
+
+        socket4.onmessage = function(message) {
+            JSON.parse(message.data).forEach(function (method) {
+                var name = method[0] + ': ' + method[1];
+                var option = $('#methods option').filter(function (i,option) { return option.text == name; })[0];
+                if(option == null) {
+                    $('#methods').append($('<option>', {
+                        value: method[2],
+                        text: name
+                    }));
+                } else {
+                    option.value = method[2];
+                }
+            });
+        };
+
+        $('#stdin').keyup(function(e) {
+            if(e.keyCode == 13) {  // return was pressed
+                $.post('/exercises/playground/stdin', {data: $('#stdin').val()+"\n"});
+                $('#stdin').val('');                     // clear input
             }
         });
-    };
-    socket6.onmessage = function(message) {
-        var pmessage = JSON.parse(message.data);
-        var gid = pmessage[0];
-        var reason = pmessage[1];
-        var progress = pmessage[2];
-        $($('#goals li span.progress')[gid]).html((100*progress)+'%');
-        $($('#goals li span.reason')[gid]).html(reason);
-    };
-
-
-    $('#stdin').keyup(function(e) {
-        if(e.keyCode == 13) {  // return was pressed
-            $.post('/exercises/playground/stdin', {data: $('#stdin').val()+"\n"});
-            $('#stdin').val('');                     // clear input
-        }
-    });
-    */
+        */
 });
 

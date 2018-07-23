@@ -1,0 +1,28 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>jshell test</title>
+
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/main.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/js/jshell-terminal.js"></script>
+</head>
+<body>
+<div class="js-exercise" id="add-two-numbers">
+    <br>Last Error:
+    <input type="text" class="js-message" size="80" disabled/>
+    <br/>Code:
+        <textarea rows="10" cols="40"></textarea>
+        <input type="submit" class="js-sendcode" value="execute"/>
+
+    <ol class="js-goals">
+        <li><span class="progress"></span><span class="reason"></span></li>
+        <li><span class="progress"></span><span class="reason"></span></li>
+        <li><span class="progress"></span><span class="reason"></span></li>
+        <li><span class="progress"></span><span class="reason"></span></li>
+    </ol>
+</div>
+</body>
+</html>
