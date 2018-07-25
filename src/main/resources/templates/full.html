@@ -6,7 +6,6 @@
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/main.css" rel="stylesheet">
     <script src="/webjars/jquery/jquery.min.js"></script>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/js/jshell-terminal.js"></script>
 </head>
 <body>
@@ -25,7 +24,7 @@
 <br>Last Error:
 <input type="text" class="js-message" size="80" disabled/>
 <br/>
-Method definitions <select id="methods"></select> <input id="loadmethod" type="submit" value="load"/>
+Method definitions <select class="js-methods"></select> <input class="js-loadmethod" type="submit" value="load"/>
 <div class="js-codepad"><br>Code:
 <textarea rows="10" cols="40" clearonsend></textarea>
 <input type="submit" class="js-sendcode" value="execute"/>

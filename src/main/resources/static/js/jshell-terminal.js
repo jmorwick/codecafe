@@ -97,15 +97,17 @@ $( document ).ready(function() {
         // TODO: make in to a table
     });
 
-    /*
-        var socket4 = new WebSocket('ws://' + window.location.host + '/exercises/playground/methods');
-
-        socket4.onmessage = function(message) {
+    // connect all output listeners to goals for their exercises
+    $('.js-exercise .js-methods').each(function(i) {
+        var glist = $(this);
+        var exerciseId = getExerciseDiv(glist).attr('id');
+        var socket = new WebSocket('ws://' + window.location.host + '/exercises/'+exerciseId+'/methods');
+        socket.onmessage = function(message) {
             JSON.parse(message.data).forEach(function (method) {
                 var name = method[0] + ': ' + method[1];
-                var option = $('#methods option').filter(function (i,option) { return option.text == name; })[0];
+                var option = glist.find('option').filter(function (i,option) { return option.text == name; })[0];
                 if(option == null) {
-                    $('#methods').append($('<option>', {
+                    glist.append($('<option>', {
                         value: method[2],
                         text: name
                     }));
@@ -114,6 +116,19 @@ $( document ).ready(function() {
                 }
             });
         };
+        socket.onerror = function(e) { }; // TODO: detect / report connection errors
+        socket.onclose = function(e) { }; // TODO: detect / report connection errors
+    });
+    $('.js-exercise .js-loadmethod').each(function(i) {
+        var loadMethod = $(this);
+        var glist = getExerciseDiv(loadMethod).find('.js-methods');
+        var term = getExerciseDiv(loadMethod).find('.js-codepad textarea');
+        loadMethod.on('click', function (ev) {
+            term.val(glist.val());
+        });
+    });
+
+    /*
 
         $('#stdin').keyup(function(e) {
             if(e.keyCode == 13) {  // return was pressed
