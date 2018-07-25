@@ -135,11 +135,12 @@ function populateExercise(exercise) {
         // TODO: clear messages for this exercise
         // TODO: report error on failure to send ajax message
     });
-    
+
     });
 };
 
 $( document ).ready(function() {
+    alert($('.js-exercise').length);
     $('.js-exercise').each(function(i) {
         populateExercise($(this));
     })
