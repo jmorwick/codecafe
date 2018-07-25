@@ -27,6 +27,9 @@ public class ExerciseController {
     @Autowired
     private ApplicationContext appContext;
 
+    @Autowired
+    private DBManager db;
+
     private final Logger logger = Logger.getLogger(ExerciseController.class.getCanonicalName());
 
     // exeriseId -> template name
@@ -66,8 +69,10 @@ public class ExerciseController {
         // TODO: attempt to load execution history from DB
 
         logger.info("starting new jshell session for " + id);
-        var newTool = new JShellExerciseTool(username, exerciseId, DEFAULT_TIMEOUT,
-                restrictions.get(exerciseId), goals.get(exerciseId));
+        var newTool = new JShellExerciseTool(username, exerciseId, db,
+                DEFAULT_TIMEOUT,
+                restrictions.get(exerciseId),
+                goals.get(exerciseId));
         toolCache.put(id, newTool);
         return newTool;
     }

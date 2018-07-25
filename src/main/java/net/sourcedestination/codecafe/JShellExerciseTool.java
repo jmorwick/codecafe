@@ -19,6 +19,8 @@ import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 public class JShellExerciseTool {
     private final Logger logger = Logger.getLogger(JShellExerciseTool.class.getCanonicalName());
 
+    private final String username;
+    private final String exerciseId;
     private JShell jshell;
     private long timeout;
     private PrintWriter toStdin;
@@ -32,13 +34,18 @@ public class JShellExerciseTool {
     private final Set<Consumer3<Integer,String,Double>> goalListeners = new HashSet<>();
     private final Set<Restriction> restrictions;
     private final List<Goal> goals;
+    private final DBManager db;
 
-    public JShellExerciseTool(String username, String exerciseId, long timeout,
+    public JShellExerciseTool(String username, String exerciseId, DBManager db,
+                              long timeout,
                               Collection<Restriction> restrictions,
                               Collection<Goal> goals) {
         try {
             var out = new PipedOutputStream();
             var in = new PipedInputStream(out);
+            this.exerciseId = exerciseId;
+            this.username = username;
+            this.db = db;
             this.toStdin = new PrintWriter(out);
             this.jshell = JShell.builder()
                     .out(new PrintStream(new OutputStream() {
@@ -67,6 +74,8 @@ public class JShellExerciseTool {
                 .map(
                         reason ->  {
                             errorListeners.forEach(o -> o.accept(code,reason));
+
+                            db.recordSnippet(username,code,exerciseId, true);
                             return reason;
                         }
                 ).count() > 0) return; // quit if a restriction fires
@@ -76,9 +85,11 @@ public class JShellExerciseTool {
                     results.forEach(s -> {
                         if (s.status() == Snippet.Status.REJECTED) {
                             errorListeners.forEach(o -> o.accept(code, ""+s.exception()));
+                            db.recordSnippet(username,code,exerciseId, true);
                             // TODO: get error messages working appropriately
                         } else {
                             historyListeners.forEach(o -> o.accept(s));
+                            db.recordSnippet(username,code,exerciseId, false);
                         }
                     });
                 }).thenRun(() -> {  // update var listeners
