@@ -119,6 +119,8 @@ $( document ).ready(function() {
         socket.onerror = function(e) { }; // TODO: detect / report connection errors
         socket.onclose = function(e) { }; // TODO: detect / report connection errors
     });
+
+    // callback to populate codepad with method definitions
     $('.js-exercise .js-loadmethod').each(function(i) {
         var loadMethod = $(this);
         var glist = getExerciseDiv(loadMethod).find('.js-methods');
@@ -128,14 +130,17 @@ $( document ).ready(function() {
         });
     });
 
-    /*
+    // link every input field to ajax call for their exercises
+    $('.js-exercise .js-stdin').keyup(function(e) {
+        var inputfield = $(this);
+        var exerciseId = getExerciseDiv(inputfield).attr('id');
 
-        $('#stdin').keyup(function(e) {
-            if(e.keyCode == 13) {  // return was pressed
-                $.post('/exercises/playground/stdin', {data: $('#stdin').val()+"\n"});
-                $('#stdin').val('');                     // clear input
-            }
-        });
-        */
+        if(e.keyCode == 13) {  // return was pressed
+            $.post('/exercises/'+exerciseId+'/stdin', {data: inputfield.val()+"\n"});
+            inputfield.val('');                     // clear input
+        }
+        // TODO: clear messages for this exercise
+        // TODO: report error on failure to send ajax message
+    });
 });
 
