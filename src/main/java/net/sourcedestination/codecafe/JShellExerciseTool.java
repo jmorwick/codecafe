@@ -47,21 +47,31 @@ public class JShellExerciseTool {
             this.username = username;
             this.db = db;
             this.toStdin = new PrintWriter(out);
-            this.jshell = JShell.builder()
-                    .out(new PrintStream(new OutputStream() {
-                        @Override public void write(int b) throws IOException {
-                            // TODO: buffer this
-                            stdoutListeners.forEach(out -> out.accept(""+((char)b)));
-                        }
-                    }))
-                    //              .in(in)    // TODO: using this suspends the jshell -- need to figure out why
-                    .build();
+            this.jshell = buildJShell();
+
         } catch(IOException e) {
             throw new IllegalStateException("could not initialize jshell");
         }
         this.timeout = timeout;
         this.restrictions = ImmutableSet.copyOf(restrictions);
         this.goals = ImmutableList.copyOf(goals);
+    }
+
+    private JShell buildJShell() {
+        var jshell = JShell.builder()
+                .out(new PrintStream(new OutputStream() {
+                    @Override public void write(int b) throws IOException {
+                        // TODO: buffer this
+                        stdoutListeners.forEach(out -> out.accept(""+((char)b)));
+                    }
+                }))
+                //              .in(in)    // TODO: using this suspends the jshell -- need to figure out why
+                .build();
+        db.retrieveHistory(username,exerciseId).forEach(code -> {
+            logger.info("replaying: " + code);
+            evaluateCodeSnippet(code);
+        });
+        return jshell;
     }
 
     public synchronized void evaluateCodeSnippet(String code) {
@@ -75,7 +85,7 @@ public class JShellExerciseTool {
                         reason ->  {
                             errorListeners.forEach(o -> o.accept(code,reason));
 
-                            db.recordSnippet(username,code,exerciseId, true);
+                            db.recordSnippet(username,exerciseId,code, true);
                             return reason;
                         }
                 ).count() > 0) return; // quit if a restriction fires
@@ -85,11 +95,11 @@ public class JShellExerciseTool {
                     results.forEach(s -> {
                         if (s.status() == Snippet.Status.REJECTED) {
                             errorListeners.forEach(o -> o.accept(code, ""+s.exception()));
-                            db.recordSnippet(username,code,exerciseId, true);
+                            db.recordSnippet(username,exerciseId, code,true);
                             // TODO: get error messages working appropriately
                         } else {
                             historyListeners.forEach(o -> o.accept(s));
-                            db.recordSnippet(username,code,exerciseId, false);
+                            db.recordSnippet(username,exerciseId, code,false);
                         }
                     });
                 }).thenRun(() -> {  // update var listeners
@@ -119,6 +129,10 @@ public class JShellExerciseTool {
     public synchronized JShell getShell() { return jshell; }
     public synchronized void writeToStdin(String data) {
         toStdin.print(data);
+    }
+    public synchronized void reset() {
+        jshell.stop();
+        jshell = buildJShell();
     }
 
     public void attachHistoryListener(Consumer<SnippetEvent> callback) {

@@ -136,7 +136,28 @@ function populateExercise(exercise) {
         // TODO: report error on failure to send ajax message
     });
 
+
+
+    // link every reset button to ajax call for their exercises
+    exercise.find('.js-sendreset').on('click', function(e) {
+        var sendButton = $(this);
+        var exerciseId = exercise.attr('id');
+        var codepad = sendButton.parent().find('textarea');
+        codepad.val('');
+        var variables = exercise.find('js-variables');
+        variables.val('');
+        var history = exercise.find('js-history');
+        history.val('');
+        // TODO: clear methods
+        $.post('/exercises/'+exerciseId+'/reset');  // reset terminal
+        // TODO: report error on failure to send ajax message
+        if(codepad.attr('clearonsend') != undefined) codepad.val('');
     });
+
+
+    });
+
+
 };
 
 $( document ).ready(function() {

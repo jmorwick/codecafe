@@ -149,6 +149,25 @@ public class ExerciseController {
         getTool(name, exerciseId).writeToStdin(data);
     }
 
+
+    @PostMapping("/exercises/{exerciseId}/reset")
+    public void resetTool(@PathVariable("exerciseId") String exerciseId,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+        if(request.getUserPrincipal() == null ) {
+            // ERROR: user not logged in
+            try {
+                response.sendError(403, "user must be logged in to use jshell instances");
+            } catch(IOException e) {
+                // TODO: log error
+            }
+        }
+        var username = request.getUserPrincipal().getName();
+        logger.info("User " + username + " on exercise " + exerciseId + " issued reset");
+        getTool(username, exerciseId).reset();
+        db.recordReset(username, exerciseId);
+    }
+
     /** determins if the given exercise id is a valid, configured, exercise */
     public boolean validExerciseId(String exerciseId) {
         return exerciseId.length() > 0; // TODO: check exercise definitions instead
