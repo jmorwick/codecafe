@@ -140,7 +140,6 @@ function populateExercise(exercise) {
 };
 
 $( document ).ready(function() {
-    alert($('.js-exercise').length);
     $('.js-exercise').each(function(i) {
         populateExercise($(this));
     })
