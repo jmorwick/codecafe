@@ -79,8 +79,19 @@ public class ExerciseController {
     @GetMapping("/exercises/{exerciseId}")
     public String viewExercise(Map<String, Object> model,
                                @PathVariable("exerciseId") String exerciseId,
-                             HttpServletRequest request,
-                             HttpServletResponse response) throws IOException {
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws IOException {
+        var username = request.getUserPrincipal().getName();
+        model.put("exerciseId", exerciseId);
+
+        return "single-exercise.html";
+    }
+
+    @GetMapping("/exercises/{exerciseId}/raw")
+    public String viewRawExercise(Map<String, Object> model,
+                               @PathVariable("exerciseId") String exerciseId,
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws IOException {
         var username = request.getUserPrincipal().getName();
         var tool = getTool(username, exerciseId); // locating tool loads template def
         var def = getDefinition(exerciseId);
@@ -91,8 +102,9 @@ public class ExerciseController {
 
         var goalDescriptions = def.getGoals().map(Goal::getDescription).collect(Collectors.toList());
         model.put("goals", goalDescriptions);
+        model.put("exerciseId", exerciseId);
 
-        return def.getTemplate()+".html";
+        return "exercises/"+def.getTemplate()+".html";
     }
 
     /** accepts code snippets from users for execution on jshell tool instances */
