@@ -67,7 +67,7 @@ public class JShellExerciseTool {
                 }))
                 //              .in(in)    // TODO: using this suspends the jshell -- need to figure out why
                 .build();
-        db.retrieveHistory(username,exerciseId).forEach(code -> {
+        if(db != null) db.retrieveHistory(username,exerciseId).forEach(code -> {
             logger.info("replaying: " + code);
             evaluateCodeSnippet(code);
         });

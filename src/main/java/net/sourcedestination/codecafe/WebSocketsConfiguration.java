@@ -11,6 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -27,12 +28,12 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                 new ExerciseWebsocketHandler(exercises, "history",
                         (tool, session) -> tool.attachHistoryListener(
                                 (snippetEvent) -> {
-                                    try {
+                                    if(session.isOpen()) try {
                                         var msg = "input: " + snippetEvent.snippet().source() + "\n\t\tresult --> " +
                                                 snippetEvent.value() + "\n";
                                         session.sendMessage(new TextMessage(msg)); // TODO: encode to json
                                     } catch (Exception e) {
-                                        // TODO: log error
+                                        logger.log(Level.INFO, "error sending history", e);
                                     }
                                 }
                         )
@@ -42,7 +43,7 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                 new ExerciseWebsocketHandler(exercises, "variable listener",
                         (tool, session) -> tool.attachVariableListener(
                                 (varMap) -> {
-                                    try {
+                                    if(session.isOpen()) try {
                                         // TODO: format in JSON
                                         // TODO: only send updated vars
                                         StringBuilder sb = new StringBuilder();
@@ -51,7 +52,7 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                                         " = " + value + "\n"));
                                         session.sendMessage(new TextMessage(sb.toString()));
                                     } catch (Exception e) {
-                                        // TODO: log error
+                                        logger.log(Level.INFO, "error sending variables", e);
                                     }
                                 }
                         )
@@ -61,12 +62,12 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                 new ExerciseWebsocketHandler(exercises, "error listener",
                         (tool, session) -> tool.attachErrorListener(
                                 (code, error) -> {
-                                    try {
+                                    if(session.isOpen()) try {
                                         // TODO: format in JSON
                                         session.sendMessage(new TextMessage("ERROR executing " + code
                                                 + ": " + error + "\n"));
                                     } catch (Exception e) {
-                                        // TODO: log error
+                                        logger.log(Level.INFO, "error sending error msg", e);
                                     }
                                 }
                         )
@@ -76,15 +77,15 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                 new ExerciseWebsocketHandler(exercises, "method listener",
                         (tool, session) -> tool.attachMethodListener(
                                 (methodSnippets) -> {
-                                    GsonBuilder builder = new GsonBuilder();
-                                    Gson gson = builder.create();
-                                    try {
+                                    if(session.isOpen()) try {
+                                        GsonBuilder builder = new GsonBuilder();
+                                        Gson gson = builder.create();
                                         session.sendMessage(new TextMessage(
                                                 gson.toJson(methodSnippets.stream()
                                                         .map(ms -> List.of(ms.name(), ms.signature(), ms.source()))
                                                         .collect(Collectors.toList()))));
                                     } catch(IOException e) {
-                                        // TODO: log error
+                                        logger.log(Level.INFO, "error sending method headers", e);
                                     }
                                     // TODO: only send methods that changed
                                 }
@@ -95,10 +96,10 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                 new ExerciseWebsocketHandler(exercises, "stdout listener",
                         (tool, session) -> tool.attachStdoutListener(
                                 (msg) -> {
-                                    try {
+                                    if(session.isOpen()) try {
                                         session.sendMessage(new TextMessage(msg));
                                     } catch(IOException e) {
-                                        // TODO: log error
+                                        logger.log(Level.INFO, "error sending stdout", e);
                                     }
                                 }
                         )
@@ -108,13 +109,13 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                 new ExerciseWebsocketHandler(exercises, "goals listener",
                         (tool, session) -> tool.attachGoalsListener(
                                 (testId, reason, progress) -> {
-                                    GsonBuilder builder = new GsonBuilder();
-                                    Gson gson = builder.create();
-                                    var msg = gson.toJson(List.of(testId,reason,progress));
-                                    try {
+                                    if(session.isOpen()) try {
+                                        GsonBuilder builder = new GsonBuilder();
+                                        Gson gson = builder.create();
+                                        var msg = gson.toJson(List.of(testId,reason,progress));
                                         session.sendMessage(new TextMessage(msg));
                                     } catch(IOException e) {
-                                        // TODO: log error
+                                        logger.log(Level.INFO, "error sending goal info", e);
                                     }
                                 }
                         )
