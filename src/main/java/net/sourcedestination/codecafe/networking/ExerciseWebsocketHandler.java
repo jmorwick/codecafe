@@ -1,5 +1,7 @@
-package net.sourcedestination.codecafe;
+package net.sourcedestination.codecafe.networking;
 
+import net.sourcedestination.codecafe.structure.ExerciseController;
+import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.funcles.consumer.Consumer2;
 import org.springframework.web.socket.*;
 

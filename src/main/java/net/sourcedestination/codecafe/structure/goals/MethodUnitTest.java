@@ -1,9 +1,8 @@
-package net.sourcedestination.codecafe.goals;
+package net.sourcedestination.codecafe.structure.goals;
 
 import jdk.jshell.Snippet;
 import jdk.jshell.VarSnippet;
-import net.sourcedestination.codecafe.Goal;
-import net.sourcedestination.codecafe.JShellExerciseTool;
+import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.funcles.tuple.Tuple2;
 
 import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;

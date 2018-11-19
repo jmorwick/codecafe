@@ -1,8 +1,11 @@
-package net.sourcedestination.codecafe;
+package net.sourcedestination.codecafe.execution;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import jdk.jshell.*;
+import net.sourcedestination.codecafe.persistance.DBManager;
+import net.sourcedestination.codecafe.structure.goals.Goal;
+import net.sourcedestination.codecafe.structure.restrictions.Restriction;
 import net.sourcedestination.funcles.consumer.Consumer2;
 import net.sourcedestination.funcles.consumer.Consumer3;
 

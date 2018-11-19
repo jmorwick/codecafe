@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="playground" class="net.sourcedestination.codecafe.ExerciseDefinition">
+    <bean id="playground" class="net.sourcedestination.codecafe.structure.ExerciseDefinition">
         <constructor-arg index="0" value="playground"/>
         <constructor-arg index="1" value="1000"/>
         <constructor-arg index="2" value="full"/>
@@ -17,41 +17,41 @@
         </constructor-arg>
     </bean>
 
-    <bean id="add-two-numbers" class="net.sourcedestination.codecafe.ExerciseDefinition">
+    <bean id="add-two-numbers" class="net.sourcedestination.codecafe.structure.ExerciseDefinition">
         <constructor-arg index="0" value="add-two-numbers"/>
         <constructor-arg index="1" value="1000"/>
         <constructor-arg index="2" value="single-method"/>
         <constructor-arg index="3">
             <list>
-                <bean id="expressions-only" class="net.sourcedestination.codecafe.restrictions.SnippetTypeWhiteList">
+                <bean id="expressions-only" class="net.sourcedestination.codecafe.structure.restrictions.SnippetTypeWhiteList">
                     <constructor-arg value="METHOD"/>
                 </bean>
             </list>
         </constructor-arg>
         <constructor-arg index="4">
             <list>
-                <bean class="net.sourcedestination.codecafe.goals.MethodUnitTest">
+                <bean class="net.sourcedestination.codecafe.structure.goals.MethodUnitTest">
                     <constructor-arg name="methodName" value="add2Numbers"/>
                     <constructor-arg name="hiddenTest" value="false"/>
                     <constructor-arg name="signature" value="(int,int)int"/>
                     <constructor-arg name="output" value="3"/>
                     <constructor-arg name="inputs" value="1,2"/>
                 </bean>
-                <bean class="net.sourcedestination.codecafe.goals.MethodUnitTest">
+                <bean class="net.sourcedestination.codecafe.structure.goals.MethodUnitTest">
                     <constructor-arg name="methodName" value="add2Numbers"/>
                     <constructor-arg name="hiddenTest" value="false"/>
                     <constructor-arg name="signature" value="(int,int)int"/>
                     <constructor-arg name="output" value="2"/>
                     <constructor-arg name="inputs" value="0,2"/>
                 </bean>
-                <bean class="net.sourcedestination.codecafe.goals.MethodUnitTest">
+                <bean class="net.sourcedestination.codecafe.structure.goals.MethodUnitTest">
                     <constructor-arg name="methodName" value="add2Numbers"/>
                     <constructor-arg name="hiddenTest" value="false"/>
                     <constructor-arg name="signature" value="(int,int)int"/>
                     <constructor-arg name="output" value="-1"/>
                     <constructor-arg name="inputs" value="4,-5"/>
                 </bean>
-                <bean class="net.sourcedestination.codecafe.goals.MethodUnitTest">
+                <bean class="net.sourcedestination.codecafe.structure.goals.MethodUnitTest">
                     <constructor-arg name="methodName" value="add2Numbers"/>
                     <constructor-arg name="hiddenTest" value="false"/>
                     <constructor-arg name="signature" value="(int,int)int"/>

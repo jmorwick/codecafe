@@ -1,7 +1,11 @@
-package net.sourcedestination.codecafe;
+package net.sourcedestination.codecafe.structure;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.HashMultimap;
+import net.sourcedestination.codecafe.execution.JShellExerciseTool;
+import net.sourcedestination.codecafe.structure.goals.Goal;
+import net.sourcedestination.codecafe.persistance.DBManager;
+import net.sourcedestination.codecafe.structure.restrictions.Restriction;
 import net.sourcedestination.funcles.tuple.Tuple2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -41,7 +45,7 @@ public class ExerciseController {
     // username x exerciseId -> current tool instance (if any)
     private Map<Tuple2<String,String>,JShellExerciseTool> toolCache = new HashMap<>();
 
-    public final long DEFAULT_TIMEOUT = 1000;
+    public final long DEFAULT_TIMEOUT = 100000;
 
     /** returns the jshell tool associated with the given exerciseId and username.
      * If no such tool exists in memory, one is created and its history is loaded a database.

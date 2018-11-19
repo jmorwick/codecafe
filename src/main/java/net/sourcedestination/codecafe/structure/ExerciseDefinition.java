@@ -1,4 +1,7 @@
-package net.sourcedestination.codecafe;
+package net.sourcedestination.codecafe.structure;
+
+import net.sourcedestination.codecafe.structure.goals.Goal;
+import net.sourcedestination.codecafe.structure.restrictions.Restriction;
 
 import java.util.Collection;
 import java.util.stream.Stream;

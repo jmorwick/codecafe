@@ -1,6 +1,7 @@
-package net.sourcedestination.codecafe;
+package net.sourcedestination.codecafe.structure.restrictions;
 
 import jdk.jshell.Snippet;
+import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.funcles.predicate.Predicate2;
 
 public interface Restriction extends Predicate2<Snippet,JShellExerciseTool> {

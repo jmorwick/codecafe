@@ -1,7 +1,8 @@
-package net.sourcedestination.codecafe;
+package net.sourcedestination.codecafe.networking;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.sourcedestination.codecafe.structure.ExerciseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.*;

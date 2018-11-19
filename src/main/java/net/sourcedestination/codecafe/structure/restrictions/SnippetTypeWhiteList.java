@@ -1,9 +1,8 @@
-package net.sourcedestination.codecafe.restrictions;
+package net.sourcedestination.codecafe.structure.restrictions;
 
 import com.google.common.collect.Sets;
 import jdk.jshell.Snippet;
-import net.sourcedestination.codecafe.JShellExerciseTool;
-import net.sourcedestination.codecafe.Restriction;
+import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 
 import java.util.Set;
 

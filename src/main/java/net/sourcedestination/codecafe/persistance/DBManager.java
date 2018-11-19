@@ -1,15 +1,14 @@
-package net.sourcedestination.codecafe;
+package net.sourcedestination.codecafe.persistance;
 
+import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.sqlite.JDBC;
 
