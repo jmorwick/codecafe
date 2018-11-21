@@ -62,4 +62,70 @@
         </constructor-arg>
     </bean>
 
+
+
+    <bean id="noVowels" class="net.sourcedestination.codecafe.structure.SimpleMethodExercise">
+        <constructor-arg name="exerciseId" value="noVowels"/>
+        <constructor-arg name="methodName" value="noVowels"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(String)String"/>
+        <constructor-arg name="description"><value>
+            It is said that humans are able to often correctly interpret English sentences with all of the vowels
+            removed. Let's test this theory out! Write a method that takes a String (sentence) and returns the same
+            string with all of the vowels removed. Remove all instances of 'y' regardless of its status as a vowel.
+        </value></constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Frankly, my dear, I don't give a damn."</value></constructor-arg>
+                    <constructor-arg><value>"Frnkl, m dr,  dn't gv  dmn."</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"I'm gonna make him an offer he can't refuse."</value></constructor-arg>
+                    <constructor-arg><value>"'m gnn mk hm n ffr h cn't rfs."</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Toto, I've a feeling we're not in Kansas anymore."</value></constructor-arg>
+                    <constructor-arg><value>"Tt, 'v  flng w'r nt n Knss nmr."</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Here's looking at you, kid."</value></constructor-arg>
+                    <constructor-arg><value>"Hr's lkng t , kd."</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"All right, Mr. DeMille, I'm ready for my close-up."</value></constructor-arg>
+                    <constructor-arg><value>"ll rght, Mr. DMll, 'm rd fr m cls-p."</value></constructor-arg>
+                </bean>
+            <bean class="net.sourcedestination.funcles.tuple.Pair">
+                <constructor-arg><value>"I love the smell of napalm in the morning."</value></constructor-arg>
+                <constructor-arg><value>" lv th smll f nplm n th mrnng."</value></constructor-arg>
+            </bean>
+            <bean class="net.sourcedestination.funcles.tuple.Pair">
+                <constructor-arg><value>"Fasten your seatbelts. It's going to be a bumpy night."</value></constructor-arg>
+                <constructor-arg><value>"Fstn r stblts. t's gng t b  bmp nght."</value></constructor-arg>
+            </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"You talking to me?"</value></constructor-arg>
+                    <constructor-arg><value>" tlkng t m?"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"What we've got here is failure to communicate."</value></constructor-arg>
+                    <constructor-arg><value>"Wht w'v gt hr s flr t cmmnct."</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"May the Force be with you."</value></constructor-arg>
+                    <constructor-arg><value>"M th Frc b wth ."</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Go ahead, make my day."</value></constructor-arg>
+                    <constructor-arg><value>"G hd, mk m d."</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
 </beans>
