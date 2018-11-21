@@ -1,7 +1,5 @@
 package net.sourcedestination.codecafe.structure;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.HashMultimap;
 import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.codecafe.structure.goals.Goal;
 import net.sourcedestination.codecafe.persistance.DBManager;
@@ -19,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -39,9 +38,9 @@ public class ExerciseController {
     // exeriseId -> template name
     private Map<String,ExerciseDefinition> definitions = new HashMap<>();
     // exerciseId -> restrictions
-    private Multimap<String,Restriction> restrictions = HashMultimap.create();
+    private Map<String,List<Restriction>> restrictions = new HashMap<>();
     // exerciseId -> goals
-    private Multimap<String,Goal> goals = HashMultimap.create();
+    private Map<String,List<Goal>> goals = new HashMap<>();
     // username x exerciseId -> current tool instance (if any)
     private Map<Tuple2<String,String>,JShellExerciseTool> toolCache = new HashMap<>();
 
@@ -66,8 +65,8 @@ public class ExerciseController {
             }
             var def = exerciseBeans.get(exerciseId);
             definitions.put(exerciseId, def);
-            def.getRestrictions().forEach(r -> restrictions.put(exerciseId, r));
-            def.getGoals().forEach(g -> goals.put(exerciseId, g));
+            restrictions.put(exerciseId, def.getRestrictions().collect(Collectors.toList()));
+            goals.put(exerciseId, def.getGoals().collect(Collectors.toList()));
         }
 
         // TODO: attempt to load execution history from DB
@@ -112,7 +111,7 @@ public class ExerciseController {
         var goalDescriptions = def.getGoals().map(Goal::getDescription).collect(Collectors.toList());
         model.put("goals", goalDescriptions);
         model.put("exerciseId", exerciseId);
-
+logger.info(model.toString());
         return "exercises/"+def.getTemplate()+".html";
     }
 

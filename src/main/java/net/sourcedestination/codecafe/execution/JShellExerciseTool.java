@@ -42,7 +42,7 @@ public class JShellExerciseTool {
     public JShellExerciseTool(String username, String exerciseId, DBManager db,
                               long timeout,
                               Collection<Restriction> restrictions,
-                              Collection<Goal> goals) {
+                              List<Goal> goals) {
         try {
             var out = new PipedOutputStream();
             var in = new PipedInputStream(out);

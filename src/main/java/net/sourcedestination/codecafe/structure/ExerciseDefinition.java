@@ -3,13 +3,15 @@ package net.sourcedestination.codecafe.structure;
 import net.sourcedestination.codecafe.structure.goals.Goal;
 import net.sourcedestination.codecafe.structure.restrictions.Restriction;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class ExerciseDefinition {
 
     private final Collection<Restriction> restrictions;
-    private final Collection<Goal> goals;
+    private final List<Goal> goals;
     private final String id;
     private final String template;
     private final long timeout;
@@ -18,7 +20,7 @@ public class ExerciseDefinition {
                               String template,
                               Collection<Restriction> restrictions,
                               Collection<Goal> goals) {
-        this.goals = goals;
+        this.goals = new ArrayList<>(goals);
         this.restrictions = restrictions;
         this.id = exerciseId;
         this.timeout = timeout;
