@@ -3,7 +3,6 @@ package net.sourcedestination.codecafe.structure.goals;
 import jdk.jshell.Snippet;
 import jdk.jshell.VarSnippet;
 import net.sourcedestination.codecafe.execution.JShellExerciseTool;
-import net.sourcedestination.codecafe.structure.SimpleMethodExercise;
 import net.sourcedestination.funcles.tuple.Tuple2;
 
 import java.util.logging.Logger;
@@ -31,6 +30,8 @@ public class MethodUnitTest implements Goal {
         this.output = output;
         this.inputs = inputs;
     }
+
+    public String getType() { return "unit-test"; }
 
     public String getDescription() {
         return hiddenTest ? "<hidden test>" :
