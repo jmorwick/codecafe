@@ -1,13 +1,15 @@
 package net.sourcedestination.codecafe.execution;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableSet;
 import jdk.jshell.*;
 import net.sourcedestination.codecafe.persistance.DBManager;
 import net.sourcedestination.codecafe.structure.goals.Goal;
+import net.sourcedestination.codecafe.structure.goals.GoalStatus;
 import net.sourcedestination.codecafe.structure.restrictions.Restriction;
 import net.sourcedestination.funcles.consumer.Consumer2;
-import net.sourcedestination.funcles.consumer.Consumer3;
+import net.sourcedestination.funcles.tuple.Tuple2;
 
 import java.io.*;
 import java.util.*;
@@ -34,15 +36,15 @@ public class JShellExerciseTool {
     private final Set<Consumer2<String,String>> errorListeners = new HashSet<>();
     private final Set<Consumer<List<MethodSnippet>>> methodListeners = new HashSet<>();
     private final Set<Consumer<String>> stdoutListeners = new HashSet<>();
-    private final Set<Consumer3<Integer,String,Double>> goalListeners = new HashSet<>();
+    private final Set<Consumer<GoalStatus>> goalListeners = new HashSet<>();
     private final Set<Restriction> restrictions;
-    private final List<Goal> goals;
+    private final BiMap<Goal, List<String>> goals;
     private final DBManager db;
 
     public JShellExerciseTool(String username, String exerciseId, DBManager db,
                               long timeout,
                               Collection<Restriction> restrictions,
-                              List<Goal> goals) {
+                              Tuple2<Goal, List<String>> ... goals) {
         try {
             var out = new PipedOutputStream();
             var in = new PipedInputStream(out);
@@ -57,7 +59,9 @@ public class JShellExerciseTool {
         }
         this.timeout = timeout;
         this.restrictions = ImmutableSet.copyOf(restrictions);
-        this.goals = ImmutableList.copyOf(goals);
+        this.goals = HashBiMap.create();
+        Arrays.stream(goals) // add each goal, along with its path and ID, to the goals
+                .forEach(((Consumer2<Goal,List<String>>)this.goals::put)::accept);
     }
 
     private JShell buildJShell() {
@@ -114,19 +118,23 @@ public class JShellExerciseTool {
                     methodListeners.forEach(listener ->
                             listener.accept(jshell.methods().collect(Collectors.toList())));
                 }).thenRun(() -> {
-                    for(int i=0; i<goals.size(); i++) {
-                        var goalId = i;
-                        var goal = goals.get(i);
-                        goalListeners.forEach(o -> {
-                            var t = goal.completionPercentage(this);
-                            o.accept(goalId, t._2, t._1);
-                        });
-                    }
+                    goals.keySet().stream()  // for each goal
+                    .map(g -> g.getStatus(this)) // get it's status
+                    .forEach(status -> // then update each goal listener with that status
+                            goalListeners.forEach(gl -> gl.accept(status))
+                    );
                 }).exceptionally(e -> {
                     jshell.stop();
                     errorListeners.forEach(o -> o.accept(code, "Last statement went over time"));
                     return null;
                 });
+    }
+
+    /** "path" indicating the nesting of this goal within a tree of goals for an exercise.
+     * The final element of this list will be unique and will identify the goal relative to
+     * this exercise. */
+    public List<String> getGoalId(Goal g) {
+        return goals.get(g);
     }
 
     public synchronized JShell getShell() { return jshell; }
@@ -153,7 +161,7 @@ public class JShellExerciseTool {
     public void attachStdoutListener(Consumer<String> callback) {
         stdoutListeners.add(callback);
     }
-    public void attachGoalsListener(Consumer3<Integer,String,Double> callback) {
+    public void attachGoalsListener(Consumer<GoalStatus> callback) {
         goalListeners.add(callback);
     }
 }
