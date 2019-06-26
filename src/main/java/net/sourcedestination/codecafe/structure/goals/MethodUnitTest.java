@@ -5,11 +5,12 @@ import jdk.jshell.VarSnippet;
 import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.funcles.tuple.Tuple2;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 
-public class MethodUnitTest implements Goal {
+public class MethodUnitTest extends Goal {
 
     private static final Logger logger = Logger.getLogger(MethodUnitTest.class.getCanonicalName());
 
@@ -19,11 +20,13 @@ public class MethodUnitTest implements Goal {
     private final String inputs;
     private final String output;
 
-    public MethodUnitTest(String methodName,
+    public MethodUnitTest(List<String> id,
+                          String methodName,
                           boolean hiddenTest,
                           String signature,
                           String output,
                           String inputs) {
+        super(id);
         this.hiddenTest = hiddenTest;
         this.methodName = methodName;
         this.signature = signature;

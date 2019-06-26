@@ -7,15 +7,16 @@ import net.sourcedestination.codecafe.structure.restrictions.Restriction;
 import net.sourcedestination.funcles.tuple.Tuple2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class ExerciseController {
             var def = exerciseBeans.get(exerciseId);
             definitions.put(exerciseId, def);
             restrictions.put(exerciseId, def.getRestrictions().collect(Collectors.toList()));
-            goals.put(exerciseId, def.getGoals().collect(Collectors.toList()));
+            goals.put(exerciseId, def.getGoals().collect(   Collectors.toList()));
         }
 
         // TODO: attempt to load execution history from DB
@@ -82,6 +83,13 @@ public class ExerciseController {
 
     public ExerciseDefinition getDefinition(String exerciseId) {
         return definitions.get(exerciseId);
+    }
+
+    @GetMapping("/test")
+    public String test(Map<String, Object> model,
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws IOException {
+        return "test.html";
     }
 
     @GetMapping("/exercises/{exerciseId}")
@@ -115,61 +123,47 @@ logger.info(model.toString());
         return "exercises/"+def.getTemplate()+".html";
     }
 
-    /** accepts code snippets from users for execution on jshell tool instances */
-    @PostMapping("/exercises/{exerciseId}/exec")
-    public void executeSnippet(@PathVariable("exerciseId") String exerciseId,
-                               @RequestParam("code") String code,
-                               HttpServletRequest request,
-                               HttpServletResponse response) {
-        if(request.getUserPrincipal() == null ) {
-            // ERROR: user not logged in
-            try {
-                response.sendError(403, "user must be logged in to use jshell instances");
-            } catch(IOException e) {
-                // TODO: log error
-            }
-        }
-        var name = request.getUserPrincipal().getName();
-        logger.info("User " + name + " on exercise " + exerciseId + " executed: " + code);
-        getTool(name, exerciseId).evaluateCodeSnippet(code);
-    }
-
-    @PostMapping("/exercises/{exerciseId}/stdin")
-    public void sendDataToTool(@PathVariable("exerciseId") String exerciseId,
-                               @RequestParam("data") String data,
-                               HttpServletRequest request,
-                               HttpServletResponse response) {
-        if(request.getUserPrincipal() == null ) {
-            // ERROR: user not logged in
-            try {
-                response.sendError(403, "user must be logged in to use jshell instances");
-            } catch(IOException e) {
-                // TODO: log error
-            }
-        }
-        var name = request.getUserPrincipal().getName();
-        logger.info("User " + name + " on exercise " + exerciseId + " sent to stdin: " + data);
-        getTool(name, exerciseId).writeToStdin(data);
+    @MessageMapping("/app/test")
+    public void testMessaging(
+            String code,
+            @DestinationVariable("exerciseId") String exerciseId) {
     }
 
 
-    @PostMapping("/exercises/{exerciseId}/reset")
-    public void resetTool(@PathVariable("exerciseId") String exerciseId,
-                               HttpServletRequest request,
-                               HttpServletResponse response) {
-        if(request.getUserPrincipal() == null ) {
-            // ERROR: user not logged in
-            try {
-                response.sendError(403, "user must be logged in to use jshell instances");
-            } catch(IOException e) {
-                // TODO: log error
-            }
-        }
-        var username = request.getUserPrincipal().getName();
+    @MessageMapping("/exercise/{exerciseId}/exec")
+    public void executeSnippet(
+            String code,
+            @DestinationVariable("exerciseId") String exerciseId,
+            Principal user) {
+
+        var username = user.getName();
+        logger.info("User " + username + " on exercise " + exerciseId + " executed: " + code);
+        getTool(username, exerciseId).evaluateCodeSnippet(code);
+    }
+
+    @MessageMapping("/exercise/{exerciseId}/stdin")
+    public void sendDataToTool(
+            String data,
+            @DestinationVariable("exerciseId") String exerciseId,
+            Principal user) {
+
+        var username = user.getName();
+        logger.info("User " + username + " on exercise " + exerciseId + " sent to stdin: " + data);
+        getTool(username, exerciseId).writeToStdin(data);
+    }
+
+    @MessageMapping("/exercise/{exerciseId}/reset")
+    public void resetTool(
+            String data,
+            @DestinationVariable("exerciseId") String exerciseId,
+            Principal user) {
+
+        var username = user.getName();
         logger.info("User " + username + " on exercise " + exerciseId + " issued reset");
         getTool(username, exerciseId).reset();
         db.recordReset(username, exerciseId);
     }
+
 
     /** determins if the given exercise id is a valid, configured, exercise */
     public boolean validExerciseId(String exerciseId) {

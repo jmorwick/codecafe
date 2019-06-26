@@ -1,21 +1,19 @@
 package net.sourcedestination.codecafe.execution;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jdk.jshell.*;
 import net.sourcedestination.codecafe.persistance.DBManager;
 import net.sourcedestination.codecafe.structure.goals.Goal;
-import net.sourcedestination.codecafe.structure.goals.GoalStatus;
 import net.sourcedestination.codecafe.structure.restrictions.Restriction;
-import net.sourcedestination.funcles.consumer.Consumer2;
-import net.sourcedestination.funcles.tuple.Tuple2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -24,27 +22,24 @@ import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 public class JShellExerciseTool {
     private final Logger logger = Logger.getLogger(JShellExerciseTool.class.getCanonicalName());
 
+    @Autowired
+    private SimpMessageSendingOperations messagingTemplate;
+
     private final String username;
     private final String exerciseId;
     private JShell jshell;
     private long timeout;
     private PrintWriter toStdin;
-    private List<SnippetEvent> history = new ArrayList<>();
-
-    private final Set<Consumer<SnippetEvent>> historyListeners = new HashSet<>();
-    private final Set<Consumer<Map<VarSnippet, String>>> varListeners = new HashSet<>();
-    private final Set<Consumer2<String,String>> errorListeners = new HashSet<>();
-    private final Set<Consumer<List<MethodSnippet>>> methodListeners = new HashSet<>();
-    private final Set<Consumer<String>> stdoutListeners = new HashSet<>();
-    private final Set<Consumer<GoalStatus>> goalListeners = new HashSet<>();
     private final Set<Restriction> restrictions;
-    private final BiMap<Goal, List<String>> goals;
+    private final Map<List<String>, Goal> goals;
     private final DBManager db;
+    private final Gson gson;
+
 
     public JShellExerciseTool(String username, String exerciseId, DBManager db,
                               long timeout,
                               Collection<Restriction> restrictions,
-                              Tuple2<Goal, List<String>> ... goals) {
+                              List<Goal> goals) {
         try {
             var out = new PipedOutputStream();
             var in = new PipedInputStream(out);
@@ -53,15 +48,18 @@ public class JShellExerciseTool {
             this.db = db;
             this.toStdin = new PrintWriter(out);
             this.jshell = buildJShell();
-
+            var gb = new GsonBuilder();
+            gson = gb.create();
         } catch(IOException e) {
             throw new IllegalStateException("could not initialize jshell");
         }
         this.timeout = timeout;
         this.restrictions = ImmutableSet.copyOf(restrictions);
-        this.goals = HashBiMap.create();
-        Arrays.stream(goals) // add each goal, along with its path and ID, to the goals
-                .forEach(((Consumer2<Goal,List<String>>)this.goals::put)::accept);
+        this.goals = new HashMap<>();
+        for(var g : goals) {
+            this.goals.put(g.getId(), g);
+        }
+        replaySavedInteractions();
     }
 
     private JShell buildJShell() {
@@ -69,16 +67,19 @@ public class JShellExerciseTool {
                 .out(new PrintStream(new OutputStream() {
                     @Override public void write(int b) throws IOException {
                         // TODO: buffer this
-                        stdoutListeners.forEach(out -> out.accept(""+((char)b)));
+                        sendStdout(""+((char)b));
                     }
                 }))
                 //              .in(in)    // TODO: using this suspends the jshell -- need to figure out why
                 .build();
+        return jshell;
+    }
+
+    private void replaySavedInteractions() {
         if(db != null) db.retrieveHistory(username,exerciseId).forEach(code -> {
-            logger.info("replaying: " + code);
+            logger.info("replaying: " + code );
             evaluateCodeSnippet(code);
         });
-        return jshell;
     }
 
     public synchronized void evaluateCodeSnippet(String code) {
@@ -90,7 +91,7 @@ public class JShellExerciseTool {
                 .distinct()
                 .map(
                         reason ->  {
-                            errorListeners.forEach(o -> o.accept(code,reason));
+                            sendError(code,reason);
 
                             db.recordSnippet(username,exerciseId,code, true);
                             return reason;
@@ -101,40 +102,57 @@ public class JShellExerciseTool {
                 .thenAccept(results -> { // update history listeners
                     results.forEach(s -> {
                         if (s.status() == Snippet.Status.REJECTED) {
-                            errorListeners.forEach(o -> o.accept(code, ""+s.exception()));
+                            sendError(code, ""+s.exception());
                             db.recordSnippet(username,exerciseId, code,true);
                             // TODO: get error messages working appropriately
                         } else {
-                            historyListeners.forEach(o -> o.accept(s));
+                            sendSnippetHistory(s);
                             db.recordSnippet(username,exerciseId, code,false);
                         }
                     });
-                }).thenRun(() -> {  // update var listeners
-                    varListeners.forEach(listener ->
-                            listener.accept(jshell.variables().collect(
-                                    Collectors.toMap(v -> v, v -> jshell.varValue(v)))
-                            ));
-                }).thenRun(() -> {  // update method listeners
-                    methodListeners.forEach(listener ->
-                            listener.accept(jshell.methods().collect(Collectors.toList())));
                 }).thenRun(() -> {
-                    goals.keySet().stream()  // for each goal
-                    .map(g -> g.getStatus(this)) // get it's status
-                    .forEach(status -> // then update each goal listener with that status
-                            goalListeners.forEach(gl -> gl.accept(status))
-                    );
+                    sendVariables();
+                    sendMethods();
+                    goals.values().stream()  // for each goal
+                    .forEach(this::sendGoalStatus); // update client
                 }).exceptionally(e -> {
                     jshell.stop();
-                    errorListeners.forEach(o -> o.accept(code, "Last statement went over time"));
+                    sendError(code, "Last statement went over time");
                     return null;
                 });
     }
 
-    /** "path" indicating the nesting of this goal within a tree of goals for an exercise.
-     * The final element of this list will be unique and will identify the goal relative to
-     * this exercise. */
-    public List<String> getGoalId(Goal g) {
-        return goals.get(g);
+    public void sendSnippetHistory(SnippetEvent e) {
+        // TODO: send JSON to client via STOMP
+    }
+
+    public void sendStdout(String message) {
+        // TODO: send JSON to client via STOMP
+    }
+
+    public void sendMethods() {
+        var methods = jshell.methods().collect(Collectors.toList());
+        // TODO: send JSON to client via STOMP
+    }
+
+    public void sendVariables() {
+        var vars = jshell.variables().collect(
+                Collectors.toMap(v -> v, v -> jshell.varValue(v)));
+        var json = gson.toJson(vars);
+        messagingTemplate.convertAndSendToUser(username,"/exercises/"+exerciseId, json); // TODO: test
+    }
+
+    public void sendError(String offendingSnippet, String errorMessage) {
+        // TODO: send JSON to client via STOMP
+    }
+
+    public void sendGoalStatus(Goal goal) {
+        var m = new HashMap<String,String>();
+        m.put("id", gson.toJson(goals.get(goal)));
+        var results = goal.completionPercentage(this);
+        m.put("completion", ""+results._1);
+        m.put("message", results._2);
+        messagingTemplate.convertAndSendToUser(username,"/exercises/"+exerciseId, m); // TODO: test
     }
 
     public synchronized JShell getShell() { return jshell; }
@@ -144,24 +162,5 @@ public class JShellExerciseTool {
     public synchronized void reset() {
         jshell.stop();
         jshell = buildJShell();
-    }
-
-    public void attachHistoryListener(Consumer<SnippetEvent> callback) {
-        historyListeners.add(callback);
-    }
-    public void attachVariableListener(Consumer<Map<VarSnippet, String>> callback) {
-        varListeners.add(callback);
-    }
-    public void attachErrorListener(Consumer2<String,String> callback) {
-        errorListeners.add(callback);
-    }
-    public void attachMethodListener(Consumer<List<MethodSnippet>> callback) {
-        methodListeners.add(callback);
-    }
-    public void attachStdoutListener(Consumer<String> callback) {
-        stdoutListeners.add(callback);
-    }
-    public void attachGoalsListener(Consumer<GoalStatus> callback) {
-        goalListeners.add(callback);
     }
 }

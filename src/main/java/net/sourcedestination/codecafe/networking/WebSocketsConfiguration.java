@@ -1,28 +1,25 @@
 package net.sourcedestination.codecafe.networking;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import net.sourcedestination.codecafe.structure.ExerciseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.*;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.logging.Level;
+import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @Configuration
-@EnableWebSocket
-public class WebSocketsConfiguration implements WebSocketConfigurer {
+@EnableWebSocketMessageBroker
+public class WebSocketsConfiguration extends AbstractSecurityWebSocketMessageBrokerConfigurer {
     private final Logger logger = Logger.getLogger(WebSocketsConfiguration.class.getCanonicalName());
 
     @Autowired private ExerciseController exercises;
 
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/codecafe-websocket").withSockJS();
+    }
+
+    /*
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(
@@ -38,7 +35,7 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                     }
                                 }
                         )
-                ),"/exercises/**/history");
+                ),"/exercises/** /history");
 
         registry.addHandler(
                 new ExerciseWebsocketHandler(exercises, "variable listener",
@@ -57,7 +54,7 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                     }
                                 }
                         )
-                ),"/exercises/**/variables");
+                ),"/exercises/** /variables");
 
         registry.addHandler(
                 new ExerciseWebsocketHandler(exercises, "error listener",
@@ -72,7 +69,7 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                     }
                                 }
                         )
-                ),"/exercises/**/errors");
+                ),"/exercises/** /errors");
 
         registry.addHandler(
                 new ExerciseWebsocketHandler(exercises, "method listener",
@@ -91,7 +88,7 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                     // TODO: only send methods that changed
                                 }
                         )
-                ),"/exercises/**/methods");
+                ),"/exercises/** /methods");
 
         registry.addHandler(
                 new ExerciseWebsocketHandler(exercises, "stdout listener",
@@ -104,12 +101,12 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                     }
                                 }
                         )
-                ),"/exercises/**/stdout");
+                ),"/exercises/** /stdout");
 
         registry.addHandler(
                 new ExerciseWebsocketHandler(exercises, "goals listener",
                         (tool, session) -> tool.attachGoalsListener(
-                                (testId, reason, progress) -> {
+                                (status) -> {
                                     if(session.isOpen()) try {
                                         GsonBuilder builder = new GsonBuilder();
                                         Gson gson = builder.create();
@@ -120,6 +117,7 @@ public class WebSocketsConfiguration implements WebSocketConfigurer {
                                     }
                                 }
                         )
-                ),"/exercises/**/goals");
+                ),"/exercises/** /goals");
     }
+    */
 }

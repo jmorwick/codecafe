@@ -46,14 +46,19 @@ public class SimpleMethodExercise extends ExerciseDefinition {
             Collection<Pair<String>> hiddenTests) {
         List<Goal> goals = new ArrayList<>();
 
+        int testNumber = 1;
         for(Pair<String> test : visibleTests) {
             logger.info("read test: " + test);
-            var unitTest = new MethodUnitTest(methodName, false, signature, test._2, test._1);
+            var unitTest = new MethodUnitTest(
+                    List.of("unit test " + (testNumber++)),
+                    methodName, false, signature, test._2, test._1);
             logger.info(unitTest.getInputs() + " -> " + unitTest.getOutput());
             goals.add(unitTest);
         }
         for(Pair<String> test : hiddenTests)
-            goals.add(new MethodUnitTest(methodName, true,  signature, test._2, test._1));
+            goals.add(new MethodUnitTest(
+                    List.of("unit test " + (testNumber++)),
+                    methodName, true,  signature, test._2, test._1));
         return goals;
     }
 }

@@ -31,6 +31,7 @@
         <constructor-arg index="4">
             <list>
                 <bean class="net.sourcedestination.codecafe.structure.goals.MethodUnitTest">
+                    <constructor-arg name="id"><list><value>test1</value></list></constructor-arg>
                     <constructor-arg name="methodName" value="add2Numbers"/>
                     <constructor-arg name="hiddenTest" value="false"/>
                     <constructor-arg name="signature" value="(int,int)int"/>
@@ -38,6 +39,7 @@
                     <constructor-arg name="inputs" value="1,2"/>
                 </bean>
                 <bean class="net.sourcedestination.codecafe.structure.goals.MethodUnitTest">
+                    <constructor-arg name="id"><list><value>test2</value></list></constructor-arg>
                     <constructor-arg name="methodName" value="add2Numbers"/>
                     <constructor-arg name="hiddenTest" value="false"/>
                     <constructor-arg name="signature" value="(int,int)int"/>
@@ -45,6 +47,7 @@
                     <constructor-arg name="inputs" value="0,2"/>
                 </bean>
                 <bean class="net.sourcedestination.codecafe.structure.goals.MethodUnitTest">
+                    <constructor-arg name="id"><list><value>test3</value></list></constructor-arg>
                     <constructor-arg name="methodName" value="add2Numbers"/>
                     <constructor-arg name="hiddenTest" value="false"/>
                     <constructor-arg name="signature" value="(int,int)int"/>
@@ -52,6 +55,7 @@
                     <constructor-arg name="inputs" value="4,-5"/>
                 </bean>
                 <bean class="net.sourcedestination.codecafe.structure.goals.MethodUnitTest">
+                    <constructor-arg name="id"><list><value>test4</value></list></constructor-arg>
                     <constructor-arg name="methodName" value="add2Numbers"/>
                     <constructor-arg name="hiddenTest" value="false"/>
                     <constructor-arg name="signature" value="(int,int)int"/>

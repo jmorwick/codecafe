@@ -19,7 +19,7 @@ function populateExercise(exercise) {
 
     // link every execute button to ajax call for their exercises
     exercise.find('.js-sendcode').on('click', function(e) {
-        var sendButton = $(this);
+        var sendButton = $(this);added
         var exerciseId = exercise.attr('id');
         var codepad = sendButton.parent().find('textarea');
         // TODO: clear messages for this exercise
