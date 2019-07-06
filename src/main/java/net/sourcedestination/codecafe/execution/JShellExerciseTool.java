@@ -121,7 +121,9 @@ public class JShellExerciseTool {
     }
 
     public void sendSnippetHistory(SnippetEvent e) {
-        // TODO: send JSON to client via STOMP
+        messagingTemplate.convertAndSendToUser(username,
+                "/queue/exercises/"+exerciseId+"/result",
+                e.value());
     }
 
     public void sendStdout(String message) {
@@ -137,8 +139,9 @@ public class JShellExerciseTool {
         var vars = jshell.variables().collect(
                 Collectors.toMap(v -> v.name(), v -> jshell.varValue(v)));
         var json = gson.toJson(vars);
-        messagingTemplate.convertAndSendToUser(username,"/queue/exercises/"+exerciseId+"/variables",
-                json); // TODO: test
+        messagingTemplate.convertAndSendToUser(username,
+                "/queue/exercises/"+exerciseId+"/variables",
+                json);
         // TODO: send types also
     }
 

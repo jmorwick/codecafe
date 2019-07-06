@@ -24,8 +24,8 @@ function populateExercise(exercise, stompClient) {
             var term = $(this);
             var exerciseId = exercise.attr('id');
 
-            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/variables', function (greeting) {
-                var variables = JSON.parse(greeting.body);
+            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/variables', function (varmap) {
+                var variables = JSON.parse(varmap.body);
                 console.log(variables);
                 value = "";
                 Object.keys(variables).sort().forEach(function(key) {
@@ -41,12 +41,10 @@ function populateExercise(exercise, stompClient) {
         exercise.find('.js-message').each(function(i) {
             var term = $(this);
             var exerciseId = exercise.attr('id');
-            var callback = function(message) {
-                term.val(message.data); // print error message to terminal
-            };
-            // TODO: register callback
-            // TODO: sort
-            // TODO: make in to a table
+
+            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/result', function (result) {
+                term.val(result.body); // print result to terminal
+            });
         });
 
         // connect all output listeners to websockets for their exercises
