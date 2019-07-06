@@ -45,6 +45,9 @@ function populateExercise(exercise, stompClient) {
             stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/result', function (result) {
                 term.val(result.body); // print result to terminal
             });
+            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/error', function (result) {
+                term.val("ERROR: " + result.body); // print result to terminal
+            });
         });
 
         // connect all output listeners to websockets for their exercises
@@ -79,20 +82,20 @@ function populateExercise(exercise, stompClient) {
         exercise.find('.js-methods').each(function(i) {
             var glist = $(this);
             var exerciseId = exercise.attr('id');
-            var callback = function(message) {
-                JSON.parse(message.data).forEach(function (method) {
-                    var name = method[0] + ': ' + method[1];
-                    var option = glist.find('option').filter(function (i,option) { return option.text == name; })[0];
-                    if(option == null) {
-                        glist.append($('<option>', {
-                            value: method[2],
-                            text: name
-                        }));
-                    } else {
-                        option.value = method[2];
-                    }
+            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/methods', function (message) {
+                JSON.parse(message.body).forEach(function (method) {
+                        var name = method[0] + ': ' + method[1];
+                        var option = glist.find('option').filter(function (i,option) { return option.text == name; })[0];
+                        if(option == null) {
+                            glist.append($('<option>', {
+                                value: method[2],
+                                text: name
+                            }));
+                        } else {
+                            option.value = method[2];
+                        }
                 });
-            };
+            });
             // TODO: register callback
         });
 

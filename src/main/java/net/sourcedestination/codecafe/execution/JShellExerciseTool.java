@@ -121,9 +121,11 @@ public class JShellExerciseTool {
     }
 
     public void sendSnippetHistory(SnippetEvent e) {
-        messagingTemplate.convertAndSendToUser(username,
-                "/queue/exercises/"+exerciseId+"/result",
-                e.value());
+        if(e.value() != null) {
+            messagingTemplate.convertAndSendToUser(username,
+                    "/queue/exercises/"+exerciseId+"/result",
+                    e.value());
+        }
     }
 
     public void sendStdout(String message) {
@@ -133,8 +135,13 @@ public class JShellExerciseTool {
     }
 
     public void sendMethods() {
-        var methods = jshell.methods().collect(Collectors.toList());
-        // TODO: send JSON to client via STOMP
+        var methods = jshell.methods()
+                .map(method -> List.of(method.name(), method.signature(), method.source()))
+                .collect(Collectors.toList());
+        logger.info("sending methods: " + methods);
+        messagingTemplate.convertAndSendToUser(username,
+                "/queue/exercises/"+exerciseId+"/methods",
+                methods);
     }
 
     public void sendVariables() {
@@ -148,7 +155,9 @@ public class JShellExerciseTool {
     }
 
     public void sendError(String offendingSnippet, String errorMessage) {
-        // TODO: send JSON to client via STOMP
+        messagingTemplate.convertAndSendToUser(username,
+                "/queue/exercises/"+exerciseId+"/error",
+                errorMessage);
     }
 
     public void sendGoalStatus(Goal goal) {
