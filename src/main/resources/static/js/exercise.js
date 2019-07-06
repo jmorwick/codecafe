@@ -51,12 +51,11 @@ function populateExercise(exercise, stompClient) {
         exercise.find('.js-stdout').each(function(i) {
             var term = $(this);
             var exerciseId = exercise.attr('id');
-            var callback = function(message) {
-                term.append(message.data); // print message to terminal
+            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/stdout', function (message) {
+                term.append(message.body); // print result to terminal
                 term.scrollTop(term[0].scrollHeight - term.height());  // scroll to bottom
-            };
-            // TODO: register callback
-            // TODO: make in to a table
+                // TODO: prevent newline after every call
+            });
         });
 
         // connect all output listeners to goals for their exercises

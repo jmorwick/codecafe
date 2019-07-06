@@ -127,7 +127,9 @@ public class JShellExerciseTool {
     }
 
     public void sendStdout(String message) {
-        // TODO: send JSON to client via STOMP
+        messagingTemplate.convertAndSendToUser(username,
+                "/queue/exercises/"+exerciseId+"/stdout",
+                message);
     }
 
     public void sendMethods() {
