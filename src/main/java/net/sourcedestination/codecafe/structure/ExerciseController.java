@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,9 @@ public class ExerciseController {
 
     @Autowired
     private DBManager db;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     private final Logger logger = Logger.getLogger(ExerciseController.class.getCanonicalName());
 
@@ -75,6 +79,7 @@ public class ExerciseController {
         logger.info("starting new jshell session for " + id);
         var newTool = new JShellExerciseTool(username, exerciseId, db,
                 DEFAULT_TIMEOUT,
+                messagingTemplate,
                 restrictions.get(exerciseId),
                 goals.get(exerciseId));
         toolCache.put(id, newTool);
@@ -83,13 +88,6 @@ public class ExerciseController {
 
     public ExerciseDefinition getDefinition(String exerciseId) {
         return definitions.get(exerciseId);
-    }
-
-    @GetMapping("/test")
-    public String test(Map<String, Object> model,
-                               HttpServletRequest request,
-                               HttpServletResponse response) throws IOException {
-        return "test.html";
     }
 
     @GetMapping("/exercises/{exerciseId}")
@@ -122,13 +120,6 @@ public class ExerciseController {
 logger.info(model.toString());
         return "exercises/"+def.getTemplate()+".html";
     }
-
-    @MessageMapping("/app/test")
-    public void testMessaging(
-            String code,
-            @DestinationVariable("exerciseId") String exerciseId) {
-    }
-
 
     @MessageMapping("/exercise/{exerciseId}/exec")
     public void executeSnippet(
@@ -163,7 +154,6 @@ logger.info(model.toString());
         getTool(username, exerciseId).reset();
         db.recordReset(username, exerciseId);
     }
-
 
     /** determins if the given exercise id is a valid, configured, exercise */
     public boolean validExerciseId(String exerciseId) {

@@ -9,20 +9,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
-public class CodeCafeSecurity extends WebSecurityConfigurerAdapter {
-
+public class CodeCafeSecurity { //extends WebSecurityConfigurerAdapter {
+/*
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/css/**", "/index").permitAll()
+                .antMatchers("/css/**", "/index", "/test").permitAll()
                 .antMatchers("/exercises/**").hasRole("USER")
                 .antMatchers("/chapters/**").hasRole("USER")
                 .antMatchers("/user/**").hasRole("USER")
                 .and()
-                .csrf().disable()
+       //         .csrf().disable()
                 .formLogin();
     }
+
+*/
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

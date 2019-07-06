@@ -7,8 +7,7 @@ import jdk.jshell.*;
 import net.sourcedestination.codecafe.persistance.DBManager;
 import net.sourcedestination.codecafe.structure.goals.Goal;
 import net.sourcedestination.codecafe.structure.restrictions.Restriction;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.io.*;
 import java.util.*;
@@ -22,9 +21,6 @@ import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 public class JShellExerciseTool {
     private final Logger logger = Logger.getLogger(JShellExerciseTool.class.getCanonicalName());
 
-    @Autowired
-    private SimpMessageSendingOperations messagingTemplate;
-
     private final String username;
     private final String exerciseId;
     private JShell jshell;
@@ -34,10 +30,11 @@ public class JShellExerciseTool {
     private final Map<List<String>, Goal> goals;
     private final DBManager db;
     private final Gson gson;
-
+    private final SimpMessagingTemplate messagingTemplate;
 
     public JShellExerciseTool(String username, String exerciseId, DBManager db,
                               long timeout,
+                              SimpMessagingTemplate messagingTemplate,
                               Collection<Restriction> restrictions,
                               List<Goal> goals) {
         try {
@@ -45,6 +42,7 @@ public class JShellExerciseTool {
             var in = new PipedInputStream(out);
             this.exerciseId = exerciseId;
             this.username = username;
+            this.messagingTemplate = messagingTemplate;
             this.db = db;
             this.toStdin = new PrintWriter(out);
             this.jshell = buildJShell();
@@ -78,7 +76,7 @@ public class JShellExerciseTool {
     private void replaySavedInteractions() {
         if(db != null) db.retrieveHistory(username,exerciseId).forEach(code -> {
             logger.info("replaying: " + code );
-            evaluateCodeSnippet(code);
+            //evaluateCodeSnippet(code);  // TODO: fix
         });
     }
 
@@ -137,9 +135,11 @@ public class JShellExerciseTool {
 
     public void sendVariables() {
         var vars = jshell.variables().collect(
-                Collectors.toMap(v -> v, v -> jshell.varValue(v)));
+                Collectors.toMap(v -> v.name(), v -> jshell.varValue(v)));
         var json = gson.toJson(vars);
-        messagingTemplate.convertAndSendToUser(username,"/exercises/"+exerciseId, json); // TODO: test
+        messagingTemplate.convertAndSendToUser(username,"/queue/exercises/"+exerciseId+"/variables",
+                json); // TODO: test
+        // TODO: send types also
     }
 
     public void sendError(String offendingSnippet, String errorMessage) {
@@ -152,7 +152,8 @@ public class JShellExerciseTool {
         var results = goal.completionPercentage(this);
         m.put("completion", ""+results._1);
         m.put("message", results._2);
-        messagingTemplate.convertAndSendToUser(username,"/exercises/"+exerciseId, m); // TODO: test
+        messagingTemplate.convertAndSendToUser(username,"/queue/exercises/"+exerciseId+"/goals",
+                m); // TODO: test
     }
 
     public synchronized JShell getShell() { return jshell; }

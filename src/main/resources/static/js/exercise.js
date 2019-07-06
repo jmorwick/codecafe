@@ -1,11 +1,3 @@
-
-var socket = new SockJS('/codecafe-websocket');
-var stompClient = Stomp.over(socket);
-stompClient.connect({}, function (frame) {
-    console.log('Connected: ' + frame);
-});
-
-
 function populateExercise(exercise, stompClient) {
 
     // load html for exercise
@@ -22,7 +14,7 @@ function populateExercise(exercise, stompClient) {
             var exerciseId = exercise.attr('id');
             var codepad = sendButton.parent().find('textarea');
             // TODO: clear messages for this exercise
-            stompClient.send("/app/"+exercise.attr('id'), {}, JSON.stringify({'code': codepad}));
+            stompClient.send("/app/exercise/"+exercise.attr('id')+"/exec", {}, codepad.val());
             // TODO: report error on failure to send ajax message
             if(codepad.attr('clearonsend') != undefined) codepad.val('');
         });
@@ -31,13 +23,16 @@ function populateExercise(exercise, stompClient) {
         exercise.find('.js-variables').each(function(i) {
             var term = $(this);
             var exerciseId = exercise.attr('id');
-            var callback = function(message) {
-                term.val(message.data); // print message to terminal
-            };
 
-            stompClient.subscribe('/user/queue/'+exerciseId+'/variables', function (greeting) {
+            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/variables', function (greeting) {
                 var variables = JSON.parse(greeting.body);
-                // TODO: sort
+                console.log(variables);
+                value = "";
+                Object.keys(variables).sort().forEach(function(key) {
+                    value += (key + " = " + variables[key]) + "\n";
+                });
+                term.val(value); // print message to terminal
+                // TODO: include type
                 // TODO: populate variable table
             });
         });
@@ -148,7 +143,12 @@ function populateExercise(exercise, stompClient) {
 };
 
 $( document ).ready(function() {
-    $('.js-exercise').each(function(i) {
-        populateExercise($(this));
-    })
+    var socket = new SockJS('/codecafe-websocket');
+    var stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        $('.js-exercise').each(function(i) {
+            populateExercise($(this), stompClient);
+        })
+    });
 });
