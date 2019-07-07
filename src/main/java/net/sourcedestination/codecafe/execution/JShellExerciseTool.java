@@ -166,8 +166,9 @@ public class JShellExerciseTool {
         m.put("completion", ""+results._1);
         m.put("message", results._2);
         logger.info(""+m);
-        messagingTemplate.convertAndSendToUser(username,"/queue/exercises/"+exerciseId+"/goals/"+goal.getId(),
-                m); // TODO: test
+        messagingTemplate.convertAndSendToUser(username,
+                "/queue/exercises/"+exerciseId+"/goals/"+goal.getId(),
+                m);
     }
 
     public synchronized JShell getShell() { return jshell; }

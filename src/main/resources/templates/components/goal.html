@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<section layout:fragment="goal"
+         th:attr="id=${goal.id}"
+         class="js-goal">
+    <span class="description" th:text="${goal.children}"></span>
+    <span class="progress"></span>
+    <span class="reason"></span>
+    <ol class="js-goals">
+        <li th:each="goal : ${goals}">
+            <section layout:include="@{components} :: goal"
+                     th:with="goal=${goal}">
+            </section>
+        </li>
+    </ol>
+</section>
