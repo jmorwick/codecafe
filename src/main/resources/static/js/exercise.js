@@ -5,7 +5,13 @@ function populateExercise(exercise, stompClient) {
 
         // connect all history listeners to websockets for their exercises
         exercise.find('.js-history').each(function(i) {
-
+            var exerciseId = exercise.attr('id');
+            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/result', function (result) {
+                var message = exercise.find('.js-message');
+                message.val('');  // clear last error message
+                var hist = exercise.find('.js-history');
+                hist.append("\n"+result.body); // print result to terminal
+            });
         });
 
         // link every execute button to ajax call for their exercises
@@ -42,9 +48,6 @@ function populateExercise(exercise, stompClient) {
             var term = $(this);
             var exerciseId = exercise.attr('id');
 
-            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/result', function (result) {
-                term.val(result.body); // print result to terminal
-            });
             stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/error', function (result) {
                 term.val("ERROR: " + result.body); // print result to terminal
             });
