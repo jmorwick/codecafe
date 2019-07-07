@@ -114,7 +114,13 @@ public class ExerciseController {
             return null;
         }
 
-        var goalDescriptions = def.getGoals().map(Goal::getDescription).collect(Collectors.toList());
+        var goalDescriptions =
+                def.getGoals()
+                        .collect(Collectors.toMap(
+                                g -> g.getId(),
+                                g -> g.getDescription()
+                        ));
+
         model.put("goals", goalDescriptions);
         model.put("exerciseId", exerciseId);
 logger.info(model.toString());

@@ -3,17 +3,15 @@ package net.sourcedestination.codecafe.structure.goals;
 import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.funcles.tuple.Tuple2;
 
-import java.util.List;
-
 public abstract class Goal {
 
-    private final List<String> id;
+    private final String id;
 
-    public Goal(List<String> id) {
+    public Goal(String id) {
         this.id = id;
     }
 
-    public List<String> getId() {
+    public String getId() {
         return id;
     }
 

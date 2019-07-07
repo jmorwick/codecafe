@@ -27,7 +27,7 @@ public class JShellExerciseTool {
     private long timeout;
     private PrintWriter toStdin;
     private final Set<Restriction> restrictions;
-    private final Map<List<String>, Goal> goals;
+    private final Map<String, Goal> goals;
     private final DBManager db;
     private final Gson gson;
     private final SimpMessagingTemplate messagingTemplate;
@@ -162,11 +162,11 @@ public class JShellExerciseTool {
 
     public void sendGoalStatus(Goal goal) {
         var m = new HashMap<String,String>();
-        m.put("id", gson.toJson(goals.get(goal)));
         var results = goal.completionPercentage(this);
         m.put("completion", ""+results._1);
         m.put("message", results._2);
-        messagingTemplate.convertAndSendToUser(username,"/queue/exercises/"+exerciseId+"/goals",
+        logger.info(""+m);
+        messagingTemplate.convertAndSendToUser(username,"/queue/exercises/"+exerciseId+"/goals/"+goal.getId(),
                 m); // TODO: test
     }
 

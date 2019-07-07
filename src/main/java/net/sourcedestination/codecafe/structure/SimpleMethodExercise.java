@@ -50,14 +50,14 @@ public class SimpleMethodExercise extends ExerciseDefinition {
         for(Pair<String> test : visibleTests) {
             logger.info("read test: " + test);
             var unitTest = new MethodUnitTest(
-                    List.of("unit test " + (testNumber++)),
+                    "unit test " + (testNumber++),
                     methodName, false, signature, test._2, test._1);
             logger.info(unitTest.getInputs() + " -> " + unitTest.getOutput());
             goals.add(unitTest);
         }
         for(Pair<String> test : hiddenTests)
             goals.add(new MethodUnitTest(
-                    List.of("unit test " + (testNumber++)),
+                    "unit test " + (testNumber++),
                     methodName, true,  signature, test._2, test._1));
         return goals;
     }

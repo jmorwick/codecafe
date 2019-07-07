@@ -20,7 +20,7 @@ public class MethodUnitTest extends Goal {
     private final String inputs;
     private final String output;
 
-    public MethodUnitTest(List<String> id,
+    public MethodUnitTest(String id,
                           String methodName,
                           boolean hiddenTest,
                           String signature,

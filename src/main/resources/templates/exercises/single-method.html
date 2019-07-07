@@ -5,8 +5,8 @@
         <input type="submit" class="js-sendcode" value="execute"/>
 
     <ol class="js-goals">
-        <li th:each="goal : ${goals}">
-            <span class="description" th:text="${goal}"></span>
+        <li th:each="goal : ${goals}" th:attr="id=${goal.key}" class="js-goal">
+            <span class="description" th:text="${goal.value}"></span>
             <span class="progress"></span>
             <span class="reason"></span>
         </li>

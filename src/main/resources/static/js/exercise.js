@@ -62,19 +62,19 @@ function populateExercise(exercise, stompClient) {
         });
 
         // connect all output listeners to goals for their exercises
-        exercise.find('.js-goals').each(function(i) {
-            var goalResponses = $(this);
+        exercise.find('.js-goal').each(function(i) {
+            var goal = $(this);
+            var goalId = goal.attr('id');
             var exerciseId = exercise.attr('id');
-            var callback = function(message) {
-                var pmessage = JSON.parse(message.data);
-                var gid = pmessage[0];
-                var reason = pmessage[1];
-                var progress = pmessage[2];
-                $(goalResponses.find('span.progress')[gid]).html((100*progress)+'%');
-                $(goalResponses.find('span.reason')[gid]).html(reason);
-            };
-            // TODO: register callback
 
+            // TODO: make stomp channel match goal ID as a path following 'goals'
+            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/goals/'+goalId, function (message) {
+                var pmessage = JSON.parse(message.body);
+                var progress = pmessage['completion'];
+                var message = pmessage['message'];
+                $(goal.find('span.progress')).html((100*progress)+'%');
+                $(goal.find('span.reason')).html(message);
+            });
             // TODO: make in to a table
         });
 
