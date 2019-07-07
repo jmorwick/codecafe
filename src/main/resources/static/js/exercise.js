@@ -96,7 +96,6 @@ function populateExercise(exercise, stompClient) {
                         }
                 });
             });
-            // TODO: register callback
         });
 
         // callback to populate codepad with method definitions
@@ -115,10 +114,10 @@ function populateExercise(exercise, stompClient) {
             var exerciseId = exercise.attr('id');
 
             if(e.keyCode == 13) {  // return was pressed
+                stompClient.send("/app/exercise/"+exercise.attr('id')+"/stdin", {}, inputfield.val());
                 // TODO: send inputfield.val()
                 inputfield.val('');                     // clear input
             }
-            // TODO: clear messages for this exercise
             // TODO: report error on failure to send ajax message
         });
 
@@ -128,16 +127,16 @@ function populateExercise(exercise, stompClient) {
         exercise.find('.js-sendreset').on('click', function(e) {
             var sendButton = $(this);
             var exerciseId = exercise.attr('id');
+            stompClient.send("/app/exercise/"+exerciseId+"/reset", {}, "reset");
             var codepad = sendButton.parent().find('textarea');
             codepad.val('');
             var variables = exercise.find('js-variables');
             variables.val('');
             var history = exercise.find('js-history');
             history.val('');
-            // TODO: clear methods
-            // TODO: reset exercise
+            var methods = exercise.find('.js-methods');
+            $(methods).children().remove();
             // TODO: report error on failure to send ajax message
-            if(codepad.attr('clearonsend') != undefined) codepad.val('');
         });
     });
 };
