@@ -1,6 +1,7 @@
 package net.sourcedestination.codecafe.structure;
 
 import net.sourcedestination.codecafe.execution.JShellExerciseTool;
+import net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition;
 import net.sourcedestination.codecafe.structure.goals.Goal;
 import net.sourcedestination.codecafe.persistance.DBManager;
 import net.sourcedestination.codecafe.structure.restrictions.Restriction;
@@ -41,7 +42,7 @@ public class ExerciseController {
     private final Logger logger = Logger.getLogger(ExerciseController.class.getCanonicalName());
 
     // exeriseId -> template name
-    private Map<String,ExerciseDefinition> definitions = new HashMap<>();
+    private Map<String, ExerciseDefinition> definitions = new HashMap<>();
     // exerciseId -> restrictions
     private Map<String,List<Restriction>> restrictions = new HashMap<>();
     // exerciseId -> goals

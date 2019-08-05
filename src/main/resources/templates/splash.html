@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<span th:if="${username != null}">
+    Welcome, <span th:text="${username}"/>, to Code Cafe!<hr/>
+    <a href="/logout">Log Out</a>
+</span>
+<span th:unless="${username != null}">
+    Welcome to Code Cafe! <hr/> <a href="/login">Log In</a>
+</span>
+</body>
+</html>

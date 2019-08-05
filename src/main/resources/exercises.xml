@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="playground" class="net.sourcedestination.codecafe.structure.ExerciseDefinition">
+    <bean id="playground" class="net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition">
         <constructor-arg index="0" value="playground"/>
         <constructor-arg index="1" value="1000"/>
         <constructor-arg index="2" value="full"/>
@@ -17,7 +17,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="add-two-numbers" class="net.sourcedestination.codecafe.structure.ExerciseDefinition">
+    <bean id="add-two-numbers" class="net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition">
         <constructor-arg index="0" value="add-two-numbers"/>
         <constructor-arg index="1" value="1000"/>
         <constructor-arg index="2" value="single-method"/>
@@ -68,7 +68,7 @@
 
 
 
-    <bean id="noVowels" class="net.sourcedestination.codecafe.structure.SimpleMethodExercise">
+    <bean id="noVowels" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
         <constructor-arg name="exerciseId" value="noVowels"/>
         <constructor-arg name="methodName" value="noVowels"/>
         <constructor-arg name="timeout" value="1000"/>

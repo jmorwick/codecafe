@@ -1,4 +1,4 @@
-package net.sourcedestination.codecafe.structure;
+package net.sourcedestination.codecafe.structure.exercises;
 
 import net.sourcedestination.codecafe.structure.goals.Goal;
 import net.sourcedestination.codecafe.structure.restrictions.Restriction;

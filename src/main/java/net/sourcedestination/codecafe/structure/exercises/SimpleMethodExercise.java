@@ -1,4 +1,4 @@
-package net.sourcedestination.codecafe.structure;
+package net.sourcedestination.codecafe.structure.exercises;
 
 import jdk.jshell.Snippet;
 import net.sourcedestination.codecafe.structure.goals.Goal;
