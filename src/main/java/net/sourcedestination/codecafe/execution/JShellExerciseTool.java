@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jdk.jshell.*;
 import net.sourcedestination.codecafe.persistance.DBManager;
+import net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition;
 import net.sourcedestination.codecafe.structure.goals.Goal;
 import net.sourcedestination.codecafe.structure.restrictions.Restriction;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -31,6 +32,17 @@ public class JShellExerciseTool {
     private final DBManager db;
     private final Gson gson;
     private final SimpMessagingTemplate messagingTemplate;
+
+    public JShellExerciseTool(String username, String exerciseId, DBManager db,
+                              long timeout,
+                              SimpMessagingTemplate messagingTemplate,
+                              ExerciseDefinition exercise) {
+        this(username, exerciseId, db, timeout, messagingTemplate,
+                exercise.getRestrictions().collect(Collectors.toList()),
+                exercise.getGoals().collect(Collectors.toList()));
+        exercise.initializeTool(this);
+    }
+
 
     public JShellExerciseTool(String username, String exerciseId, DBManager db,
                               long timeout,

@@ -43,11 +43,6 @@ public class ExerciseController {
 
     // exeriseId -> template name
     private Map<String, ExerciseDefinition> definitions = new HashMap<>();
-    // exerciseId -> restrictions
-    private Map<String,List<Restriction>> restrictions = new HashMap<>();
-    // exerciseId -> goals
-    private Map<String,List<Goal>> goals = new HashMap<>();
-    // username x exerciseId -> current tool instance (if any)
     private Map<Tuple2<String,String>,JShellExerciseTool> toolCache = new HashMap<>();
 
     public final long DEFAULT_TIMEOUT = 100000;
@@ -71,8 +66,6 @@ public class ExerciseController {
             }
             var def = exerciseBeans.get(exerciseId);
             definitions.put(exerciseId, def);
-            restrictions.put(exerciseId, def.getRestrictions().collect(Collectors.toList()));
-            goals.put(exerciseId, def.getGoals().collect(   Collectors.toList()));
         }
 
         // TODO: attempt to load execution history from DB
@@ -81,8 +74,7 @@ public class ExerciseController {
         var newTool = new JShellExerciseTool(username, exerciseId, db,
                 DEFAULT_TIMEOUT,
                 messagingTemplate,
-                restrictions.get(exerciseId),
-                goals.get(exerciseId));
+                definitions.get(exerciseId));
         toolCache.put(id, newTool);
         return newTool;
     }

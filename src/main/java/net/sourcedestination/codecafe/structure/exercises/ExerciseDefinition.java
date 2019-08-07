@@ -1,5 +1,6 @@
 package net.sourcedestination.codecafe.structure.exercises;
 
+import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.codecafe.structure.goals.Goal;
 import net.sourcedestination.codecafe.structure.restrictions.Restriction;
 
@@ -32,4 +33,9 @@ public class ExerciseDefinition {
     public long getTimeout() { return timeout; }
     public Stream<Goal> getGoals() { return goals.stream(); }
     public Stream<Restriction> getRestrictions() { return restrictions.stream(); }
+
+    /** initializes the state of the JShell tool for this exercise. By default, does nothing */
+    public void initializeTool(JShellExerciseTool tool) {}
+    /** preprocesses user code snippet before it is evaluated. By default, does nothing */
+    public String preprocessSnippet(String snippet) { return snippet; }
 }
