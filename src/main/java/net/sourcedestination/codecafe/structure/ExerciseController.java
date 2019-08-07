@@ -2,9 +2,7 @@ package net.sourcedestination.codecafe.structure;
 
 import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition;
-import net.sourcedestination.codecafe.structure.goals.Goal;
 import net.sourcedestination.codecafe.persistance.DBManager;
-import net.sourcedestination.codecafe.structure.restrictions.Restriction;
 import net.sourcedestination.funcles.tuple.Tuple2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -20,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -151,7 +148,7 @@ logger.info(model.toString());
         var username = user.getName();
         logger.info("User " + username + " on exercise " + exerciseId + " issued reset");
         getTool(username, exerciseId).reset();
-        db.recordReset(username, exerciseId);
+        //db.recordReset(username, exerciseId);
     }
 
     /** determins if the given exercise id is a valid, configured, exercise */

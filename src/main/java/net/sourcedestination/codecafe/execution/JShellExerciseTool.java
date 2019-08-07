@@ -32,6 +32,7 @@ public class JShellExerciseTool {
     private final DBManager db;
     private final Gson gson;
     private final SimpMessagingTemplate messagingTemplate;
+    private ExerciseDefinition exercise;
 
     public JShellExerciseTool(String username, String exerciseId, DBManager db,
                               long timeout,
@@ -41,6 +42,7 @@ public class JShellExerciseTool {
                 exercise.getRestrictions().collect(Collectors.toList()),
                 exercise.getGoals().collect(Collectors.toList()));
         exercise.initializeTool(this);
+        this.exercise = exercise;
     }
 
 
@@ -86,10 +88,10 @@ public class JShellExerciseTool {
     }
 
     private void replaySavedInteractions() {
-        if(db != null) db.retrieveHistory(username,exerciseId).forEach(code -> {
-            logger.info("replaying: " + code );
+        //if(db != null) db.retrieveHistory(username,exerciseId).forEach(code -> {
+            //logger.info("replaying: " + code );
             //evaluateCodeSnippet(code);  // TODO: fix
-        });
+        //});
     }
 
     public synchronized void evaluateCodeSnippet(String code) {
@@ -102,34 +104,38 @@ public class JShellExerciseTool {
                 .map(
                         reason ->  {
                             sendError(code,reason);
-
                             db.recordSnippet(username,exerciseId,code, true);
                             return reason;
                         }
                 ).count() > 0) return; // quit if a restriction fires
+        directlyExecuteCodeSnippet(exercise.preprocessSnippet(code), code);
+
+    }
+
+    public void directlyExecuteCodeSnippet(String code, String originalCode) {
         CompletableFuture.supplyAsync(() -> jshell.eval(code))
                 .orTimeout(timeout, TimeUnit.MILLISECONDS)
                 .thenAccept(results -> { // update history listeners
                     results.forEach(s -> {
                         if (s.status() == Snippet.Status.REJECTED) {
-                            sendError(code, ""+s.exception());
-                            db.recordSnippet(username,exerciseId, code,true);
+                            sendError(originalCode, ""+s.exception());
+                            db.recordSnippet(username,exerciseId, originalCode,true);
                             // TODO: get error messages working appropriately
                         } else {
                             sendSnippetHistory(s);
-                            db.recordSnippet(username,exerciseId, code,false);
+                            db.recordSnippet(username,exerciseId, originalCode,false);
                         }
                     });
                 }).thenRun(() -> {
-                    sendVariables();
-                    sendMethods();
-                    goals.values().stream()  // for each goal
+            sendVariables();
+            sendMethods();
+            goals.values().stream()  // for each goal
                     .forEach(this::sendGoalStatus); // update client
-                }).exceptionally(e -> {
-                    jshell.stop();
-                    sendError(code, "Last statement went over time");
-                    return null;
-                });
+        }).exceptionally(e -> {
+            jshell.stop();
+            sendError(code, "Last statement went over time");
+            return null;
+        });
     }
 
     public void sendSnippetHistory(SnippetEvent e) {
@@ -150,7 +156,6 @@ public class JShellExerciseTool {
         var methods = jshell.methods()
                 .map(method -> List.of(method.name(), method.signature(), method.source()))
                 .collect(Collectors.toList());
-        logger.info("sending methods: " + methods);
         messagingTemplate.convertAndSendToUser(username,
                 "/queue/exercises/"+exerciseId+"/methods",
                 methods);
@@ -177,7 +182,6 @@ public class JShellExerciseTool {
         var results = goal.completionPercentage(this);
         m.put("completion", ""+results._1);
         m.put("message", results._2);
-        logger.info(""+m);
         messagingTemplate.convertAndSendToUser(username,
                 "/queue/exercises/"+exerciseId+"/goals/"+goal.getId(),
                 m);

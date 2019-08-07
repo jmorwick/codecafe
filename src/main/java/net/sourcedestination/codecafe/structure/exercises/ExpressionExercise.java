@@ -16,6 +16,7 @@ public class ExpressionExercise extends ExerciseDefinition {
     private Map<String,Object> parameters;
     private String targetType;
 
+    // TODO: get restrictions working for expressions only (despite preprocessing)
 
     public ExpressionExercise(String exerciseId,
                               long timeout,
@@ -26,7 +27,7 @@ public class ExpressionExercise extends ExerciseDefinition {
         super(exerciseId,
                 timeout,
                 "develop-an-expression",
-                List.of(new SnippetTypeWhiteList(Snippet.Kind.METHOD)),
+                List.of(new SnippetTypeWhiteList(Snippet.Kind.EXPRESSION)),
                 convertToGoals(parameters, targetType, visibleTests, hiddenTests));
         this.parameters = parameters;
         this.targetType = targetType;
@@ -73,8 +74,9 @@ public class ExpressionExercise extends ExerciseDefinition {
     @Override
     public void initializeTool(JShellExerciseTool tool) {
         parameters.entrySet().stream()
-                .forEach(entry -> tool.evaluateCodeSnippet(
-                        "var " + entry.getKey() + "=" + entry.getValue() + ";" ));
+                .forEach(entry -> tool.directlyExecuteCodeSnippet(
+                        "var " + entry.getKey() + "=" + entry.getValue() + ";" ,
+                        entry.getValue().toString()));
     }
 
     /** User's response should be a single expression. Convert it to a method for unit tests */

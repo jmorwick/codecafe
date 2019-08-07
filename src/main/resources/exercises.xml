@@ -17,6 +17,37 @@
         </constructor-arg>
     </bean>
 
+
+    <bean id="double-x" class="net.sourcedestination.codecafe.structure.exercises.ExpressionExercise">
+        <constructor-arg index="0" value="double-x"/>
+        <constructor-arg index="1" value="1000"/>
+        <constructor-arg index="2">
+            <map>
+                <entry key="x" value="#{5}"/>
+            </map>
+        </constructor-arg>
+        <constructor-arg index="3" value="int"/>
+        <constructor-arg index="4">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>5</value></constructor-arg>
+                    <constructor-arg><value>10</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg index="5">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>15</value></constructor-arg>
+                    <constructor-arg><value>30</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+
+
+
     <bean id="add-two-numbers" class="net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition">
         <constructor-arg index="0" value="add-two-numbers"/>
         <constructor-arg index="1" value="1000"/>
