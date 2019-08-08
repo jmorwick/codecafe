@@ -104,7 +104,7 @@ public class ExerciseController {
             return null;
         }
 
-        model.put("goal", def.getGoalStructure().toStateMap(tool));
+        model.put("goal", def.getGoalStructure().toStateMap());
         model.put("exerciseId", exerciseId);
         return "exercises/"+def.getTemplate()+".html";
     }

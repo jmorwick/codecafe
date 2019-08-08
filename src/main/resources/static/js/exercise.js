@@ -1,3 +1,27 @@
+function updateParentGoal(goal) {
+    parent = $(goal).parent().closest('.js-goal');
+    if(parent.length == 1) {
+        parent = $(parent[0]);
+        total = 0;
+        count = 0;
+        children = parent.children('ul').children('li').children('.js-goal');
+        children.children('.progress').each(function(index) {
+           p = $(this);
+           count++;
+           completion = parseInt(p.html().substring(0,p.html().length-1));
+           total = total + completion;
+        });
+        parent.children('.progress').html(Math.trunc(total/count)+'%');
+        updateParentGoal(parent);
+    }
+}
+
+function toggleGoalChildren(goal) {
+    $(goal).children('.expand-arrow').toggleClass('open-arrow');
+    $(goal).children('.longDescription').toggle();
+    $(goal).children('.reason').toggle();
+    $(goal).children('ul').toggle();
+}
 function populateExercise(exercise, stompClient) {
 
     // load html for exercise
@@ -72,10 +96,13 @@ function populateExercise(exercise, stompClient) {
 
             stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/goals/'+goalId, function (message) {
                 var pmessage = JSON.parse(message.body);
-                var progress = pmessage['completion'];
+                var progress = (100*pmessage['completion'])+'%';
                 var message = pmessage['message'];
-                $(goal.find('span.progress')).html((100*progress)+'%');
+                var oldProgress = $(goal.find('span.progress')).html();
+                $(goal.find('span.progress')).html(progress);
                 $(goal.find('span.reason')).html(message);
+                if(oldProgress != progress)
+                    updateParentGoal(goal);
             });
         });
 
@@ -142,12 +169,6 @@ function populateExercise(exercise, stompClient) {
     });
 };
 
-function toggleGoalChildren(goal) {
-    $(goal).children('.expand-arrow').toggleClass('open-arrow');
-    $(goal).children('.longDescription').toggle();
-    $(goal).children('.reason').toggle();
-    $(goal).children('ul').toggle();
-}
 
 $( document ).ready(function() {
     var socket = new SockJS('/codecafe-websocket');

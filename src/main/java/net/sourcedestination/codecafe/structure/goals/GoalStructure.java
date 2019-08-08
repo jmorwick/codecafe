@@ -53,16 +53,15 @@ public class GoalStructure extends Goal {
     }
 
     @Override
-    public Map<String,Object> toStateMap(JShellExerciseTool tool) {
-        var completion = completionPercentage(tool);
+    public Map<String,Object> toStateMap() {
         return Map.of(
                 "id", getId(),
                 "description", getDescription(),
                 "longDescription", getLongDescription(),
-                "progress", completion._1,
-                "reason", completion._2,
+                "progress", "0%",
+                "reason", "",
                 "children", subgoals.stream()
-                    .map(goal -> goal.toStateMap(tool))
+                    .map(goal -> goal.toStateMap())
                     .collect(Collectors.toList())
         );
     }
