@@ -93,7 +93,8 @@ public class ExpressionExercise extends ExerciseDefinition {
 
     /** User's response should be a single expression. Convert it to a method for unit tests */
     @Override
-    public String preprocessSnippet(String snippet) {
+    public String preprocessSnippet(JShellExerciseTool tool, String snippet) {
+        tool.reset();
         return targetType + " expressionTestMethod(" +
                 parameters.entrySet().stream() // convert params in to parameter definitions
                     .map(entry -> determineType(entry.getValue()) + " " + entry.getKey())

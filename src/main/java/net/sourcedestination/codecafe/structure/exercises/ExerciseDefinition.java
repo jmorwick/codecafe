@@ -40,6 +40,6 @@ public class ExerciseDefinition {
     /** initializes the state of the JShell tool for this exercise. By default, does nothing */
     public void initializeTool(JShellExerciseTool tool) {}
     /** preprocesses user code snippet before it is evaluated. By default, does nothing */
-    public String preprocessSnippet(String snippet) { return snippet; }
+    public String preprocessSnippet(JShellExerciseTool tool, String snippet) { return snippet; }
 
 }

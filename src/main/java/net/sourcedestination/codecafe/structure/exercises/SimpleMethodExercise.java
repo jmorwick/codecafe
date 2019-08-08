@@ -1,6 +1,7 @@
 package net.sourcedestination.codecafe.structure.exercises;
 
 import jdk.jshell.Snippet;
+import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.codecafe.structure.goals.*;
 import net.sourcedestination.codecafe.structure.restrictions.SnippetTypeWhiteList;
 import net.sourcedestination.funcles.tuple.Pair;
@@ -73,4 +74,11 @@ public class SimpleMethodExercise extends ExerciseDefinition {
                 new GoalStructure("Hidden Tests", "Hidden Tests",
                         hiddenTestGoals.toArray(new Goal[0]))
         );    }
+
+
+    @Override
+    public String preprocessSnippet(JShellExerciseTool tool, String snippet) {
+        tool.reset();
+        return snippet;
+    }
 }

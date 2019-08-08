@@ -108,7 +108,7 @@ public class JShellExerciseTool {
                             return reason;
                         }
                 ).count() > 0) return; // quit if a restriction fires
-        directlyExecuteCodeSnippet(exercise.preprocessSnippet(code), code);
+        directlyExecuteCodeSnippet(exercise.preprocessSnippet(this, code), code);
 
     }
 
