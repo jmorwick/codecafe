@@ -6,6 +6,8 @@ import net.sourcedestination.funcles.tuple.Tuple2;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GoalStructure extends Goal {
@@ -47,6 +49,21 @@ public class GoalStructure extends Goal {
                         .mapToDouble(goal -> goal.completionPercentage(tool)._1)
                         .average().getAsDouble(),
                 "category-average"
+        );
+    }
+
+    @Override
+    public Map<String,Object> toStateMap(JShellExerciseTool tool) {
+        var completion = completionPercentage(tool);
+        return Map.of(
+                "id", getId(),
+                "description", getDescription(),
+                "longDescription", getLongDescription(),
+                "progress", completion._1,
+                "reason", completion._2,
+                "children", subgoals.stream()
+                    .map(goal -> goal.toStateMap(tool))
+                    .collect(Collectors.toList())
         );
     }
 

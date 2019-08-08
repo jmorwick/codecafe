@@ -1,14 +1,11 @@
-<section layout:fragment="goal"
-         th:attr="id=${goal.id}"
-         class="js-goal">
-    <span class="description" th:text="${goal.children}"></span>
-    <span class="progress"></span>
-    <span class="reason"></span>
-    <ol class="js-goals">
-        <li th:each="goal : ${goals}">
-            <section layout:include="@{components} :: goal"
-                     th:with="goal=${goal}">
-            </section>
+<section th:fragment="goal" th:attr="id=${goal.id}" class="js-goal">sdfdsf
+    <span class="description" th:text="${goal.description}"/>
+    <span class="longDescription" th:text="${goal.longDescription}"/>
+    <span class="progress" th:text="${goal.progress}"/>
+    <span class="reason" th:text="${goal.reason}"/>
+    <ol class="js-goals" th:if="${goal.children}">
+        <li th:each="goal : ${goal.children}">
+            <section th:replace="this :: goal" th:with="goal=${goal}"/>
         </li>
     </ol>
 </section>

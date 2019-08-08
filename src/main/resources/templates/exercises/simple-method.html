@@ -3,11 +3,4 @@
 <br/>Code:
 <textarea rows="10" cols="40"></textarea>
 <input type="submit" class="js-sendcode" value="execute"/>
-
-<ol class="js-goals">
-    <li th:each="goal : ${goals}">
-        <span class="description" th:text="${goal}"></span>
-        <span class="progress"></span>
-        <span class="reason"></span>
-    </li>
-</ol>
+<section th:replace="components/goal :: goal" th:with="goal=${goal}"/>

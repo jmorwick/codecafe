@@ -3,6 +3,8 @@ package net.sourcedestination.codecafe.structure.goals;
 import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.funcles.tuple.Tuple2;
 
+import java.util.Map;
+
 public abstract class Goal {
 
     private final String id;
@@ -35,4 +37,17 @@ public abstract class Goal {
     }
 
     public abstract Tuple2<Double,String> completionPercentage(JShellExerciseTool tool);
+
+
+    public Map<String,Object> toStateMap(JShellExerciseTool tool) {
+        var completion = completionPercentage(tool);
+        return Map.of(
+                "id", getId(),
+                "description", getDescription(),
+                "longDescription", getLongDescription(),
+                "progress", completion._1,
+                "reason", completion._2,
+                "children", false
+        );
+    }
 }

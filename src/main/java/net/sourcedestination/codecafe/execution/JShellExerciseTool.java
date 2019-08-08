@@ -40,7 +40,7 @@ public class JShellExerciseTool {
                               ExerciseDefinition exercise) {
         this(username, exerciseId, db, timeout, messagingTemplate,
                 exercise.getRestrictions().collect(Collectors.toList()),
-                exercise.getGoals().collect(Collectors.toList()));
+                exercise.getGoalStructure().getLeafGoals().collect(Collectors.toList()));
         exercise.initializeTool(this);
         this.exercise = exercise;
     }

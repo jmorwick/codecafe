@@ -34,7 +34,7 @@ public class ExerciseDefinition {
     public String getId() { return id; }
     public String getTemplate() { return template; }
     public long getTimeout() { return timeout; }
-    public Stream<Goal> getGoals() { return goals.getLeafGoals(); }
+    public GoalStructure getGoalStructure() { return goals; }
     public Stream<Restriction> getRestrictions() { return restrictions.stream(); }
 
     /** initializes the state of the JShell tool for this exercise. By default, does nothing */

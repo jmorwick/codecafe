@@ -51,7 +51,7 @@
     <bean id="add-two-numbers" class="net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition">
         <constructor-arg index="0" value="add-two-numbers"/>
         <constructor-arg index="1" value="1000"/>
-        <constructor-arg index="2" value="single-method"/>
+        <constructor-arg index="2" value="simple-method"/>
         <constructor-arg index="3">
             <list>
                 <bean id="expressions-only" class="net.sourcedestination.codecafe.structure.restrictions.SnippetTypeWhiteList">

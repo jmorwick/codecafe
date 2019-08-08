@@ -104,16 +104,8 @@ public class ExerciseController {
             return null;
         }
 
-        var goalDescriptions =
-                def.getGoals()
-                        .collect(Collectors.toMap(
-                                g -> g.getId(),
-                                g -> g.getDescription()
-                        ));
-
-        model.put("goals", goalDescriptions);
+        model.put("goal", def.getGoalStructure().toStateMap(tool));
         model.put("exerciseId", exerciseId);
-logger.info(model.toString());
         return "exercises/"+def.getTemplate()+".html";
     }
 
@@ -144,7 +136,6 @@ logger.info(model.toString());
             String data,
             @DestinationVariable("exerciseId") String exerciseId,
             Principal user) {
-
         var username = user.getName();
         logger.info("User " + username + " on exercise " + exerciseId + " issued reset");
         getTool(username, exerciseId).reset();
