@@ -12,6 +12,8 @@ function updateParentGoal(goal) {
            total = total + completion;
         });
         parent.children('.progress').html(Math.trunc(total/count)+'%');
+        parent.children('.progress').attr('data-progress',Math.trunc(total/count)+'%');
+
         updateParentGoal(parent);
     }
 }
@@ -100,6 +102,7 @@ function populateExercise(exercise, stompClient) {
                 var message = pmessage['message'];
                 var oldProgress = $(goal.find('span.progress')).html();
                 $(goal.find('span.progress')).html(progress);
+                $(goal.find('span.progress')).attr('data-progress', progress);
                 $(goal.find('span.reason')).html(message);
                 if(oldProgress != progress)
                     updateParentGoal(goal);

@@ -22,3 +22,9 @@
 .js-goal .open-arrow::before {
     transform: rotate(90deg);
 }
+.js-goal .progress {
+    background-color: red;
+}
+.js-goal .progress[data-progress="100%"] {
+    background-color: green;
+}
