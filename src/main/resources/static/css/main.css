@@ -1,0 +1,24 @@
+/* goal tree view derived from https://www.w3schools.com/howto/howto_js_treeview.asp */
+.js-goal .longDescription {
+    display: none;
+}
+.js-goal .reason {
+    display: none;
+}
+.js-goal ul {
+    list-style-type: none;
+    display: none;
+}
+.js-goal .expand-arrow {
+    cursor: pointer;
+    user-select: none;
+}
+.js-goal .expand-arrow::before {
+    content: "\25B6";
+    color: black;
+    display: inline-block;
+    margin-right: 6px;
+}
+.js-goal .open-arrow::before {
+    transform: rotate(90deg);
+}

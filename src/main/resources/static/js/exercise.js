@@ -142,6 +142,13 @@ function populateExercise(exercise, stompClient) {
     });
 };
 
+function toggleGoalChildren(goal) {
+    $(goal).children('.expand-arrow').toggleClass('open-arrow');
+    $(goal).children('.longDescription').toggle();
+    $(goal).children('.reason').toggle();
+    $(goal).children('ul').toggle();
+}
+
 $( document ).ready(function() {
     var socket = new SockJS('/codecafe-websocket');
     var stompClient = Stomp.over(socket);
