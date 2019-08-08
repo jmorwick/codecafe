@@ -70,7 +70,6 @@ function populateExercise(exercise, stompClient) {
             var goalId = goal.attr('id');
             var exerciseId = exercise.attr('id');
 
-            // TODO: make stomp channel match goal ID as a path following 'goals'
             stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/goals/'+goalId, function (message) {
                 var pmessage = JSON.parse(message.body);
                 var progress = pmessage['completion'];
@@ -78,7 +77,6 @@ function populateExercise(exercise, stompClient) {
                 $(goal.find('span.progress')).html((100*progress)+'%');
                 $(goal.find('span.reason')).html(message);
             });
-            // TODO: make in to a table
         });
 
         // connect all output listeners to goals for their exercises

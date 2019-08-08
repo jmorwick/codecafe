@@ -1,6 +1,3 @@
-<br>Last Error:
-<input type="text" class="js-message" size="80" disabled/>
-<br/>Code:
-<textarea rows="10" cols="40"></textarea>
-<input type="submit" class="js-sendcode" value="execute"/>
+<section th:replace="components/messagebox :: messagebox"/>
+<section th:replace="components/codepad :: codepad"/>
 <section th:replace="components/goal :: goal" th:with="goal=${goal}"/>
