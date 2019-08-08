@@ -5,11 +5,12 @@ import net.sourcedestination.funcles.tuple.Tuple2;
 
 import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 
-public class MethodDefinitionName {
+public class MethodDefinitionName extends Goal {
 
     private final String methodName;
 
     public MethodDefinitionName(String methodName) {
+        super("define-method-named-"+methodName);
         this.methodName = methodName;
     }
 

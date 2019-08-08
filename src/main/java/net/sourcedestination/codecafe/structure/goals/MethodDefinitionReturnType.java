@@ -5,7 +5,7 @@ import net.sourcedestination.funcles.tuple.Tuple2;
 
 import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 
-public class MethodDefinitionReturnType {
+public class MethodDefinitionReturnType extends Goal {
 
     private final String methodName;
     private final String returnType;
@@ -15,6 +15,8 @@ public class MethodDefinitionReturnType {
     }
 
     public MethodDefinitionReturnType(String methodName, String signature) {
+        super("define-method-named-"+methodName+
+                "-with-return-type-"+parseSignatureReturnType(signature));
         this.methodName = methodName;
         this.returnType = parseSignatureReturnType(signature);
     }
@@ -35,7 +37,7 @@ public class MethodDefinitionReturnType {
         // check method has correct return type
         if(!js.methods().anyMatch(m -> m.name().equals(methodName) &&
                 parseSignatureReturnType(m.signature()).equals(returnType)))
-            return makeTuple(0.25, "incorrect return type, should be " + returnType);
+            return makeTuple(0.0, "incorrect return type, should be " + returnType);
 
         return makeTuple(1.0, "test passed!");
     }

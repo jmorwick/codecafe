@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 
-public class MethodDefinitionParameters {
+public class MethodDefinitionParameters extends Goal {
 
     private final String methodName;
     private final String[] params;
@@ -17,6 +17,8 @@ public class MethodDefinitionParameters {
     }
 
     public MethodDefinitionParameters(String methodName, String signature) {
+        super("define-method-named-"+methodName+
+                "-with-parameters-"+parseSignatureParameters(signature));
         this.methodName = methodName;
         this.params = parseSignatureParameters(signature);
     }
@@ -56,7 +58,7 @@ public class MethodDefinitionParameters {
             if(mistakes.equals("") && actualParams.length == params.length)
                 return makeTuple(1.0, "All tests passed!");
 
-            return makeTuple(0.25 +  // 25% for getting the name right
+            return makeTuple(
                             (actualParams.length == params.length ? 0.25 : 0.0) + // 25% for right # of params
                             ((double)correct / actualParams.length)*0.5,          // 50% for correct param types
                     mistakes);

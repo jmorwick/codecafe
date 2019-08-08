@@ -3,6 +3,7 @@ package net.sourcedestination.codecafe.structure.exercises;
 import jdk.jshell.Snippet;
 import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.codecafe.structure.goals.Goal;
+import net.sourcedestination.codecafe.structure.goals.GoalStructure;
 import net.sourcedestination.codecafe.structure.goals.MethodUnitTest;
 import net.sourcedestination.codecafe.structure.restrictions.SnippetTypeWhiteList;
 import net.sourcedestination.funcles.tuple.Pair;
@@ -28,17 +29,16 @@ public class ExpressionExercise extends ExerciseDefinition {
                 timeout,
                 "develop-an-expression",
                 List.of(new SnippetTypeWhiteList(Snippet.Kind.EXPRESSION)),
-                convertToGoals(parameters, targetType, visibleTests, hiddenTests));
+                convertToGoalStructure(parameters, targetType, visibleTests, hiddenTests));
         this.parameters = parameters;
         this.targetType = targetType;
     }
 
-    public static Collection<Goal> convertToGoals(
+    public static GoalStructure convertToGoalStructure(
             Map<String,Object> parameters,
             String targetType,
             Collection<Pair<String>> visibleTests,
             Collection<Pair<String>> hiddenTests) {
-        List<Goal> goals = new ArrayList<>();
 
         var signature =
                 "(" + parameters.values().stream()
@@ -47,17 +47,29 @@ public class ExpressionExercise extends ExerciseDefinition {
                 +")"+targetType;
 
         int testNumber = 1;
+
+        var visibleTestGoals = new ArrayList<Goal>();
         for(Pair<String> test : visibleTests) {
             var unitTest = new MethodUnitTest(
                     "unit test " + (testNumber++),
                     "expressionTestMethod", false, signature, test._2, test._1);
-            goals.add(unitTest);
+            visibleTestGoals.add(unitTest);
         }
+
+        var hiddenTestGoals = new ArrayList<Goal>();
         for(Pair<String> test : hiddenTests)
-            goals.add(new MethodUnitTest(
+            hiddenTestGoals.add(new MethodUnitTest(
                     "unit test " + (testNumber++),
                     "expressionTestMethod", true,  signature, test._2, test._1));
-        return goals;
+
+        return new GoalStructure(
+                "All goals",
+                "Goals for expression submission",
+                new GoalStructure("Visible Tests", "Visible Tests",
+                        visibleTestGoals.toArray(new Goal[0])),
+                new GoalStructure("Hidden Tests", "Hidden Tests",
+                        hiddenTestGoals.toArray(new Goal[0]))
+        );
     }
 
     public static String determineType(Object value) {

@@ -38,8 +38,8 @@ public class MethodUnitTest extends Goal {
 
     public String getDescription() {
         return hiddenTest ? "<hidden test>" :
-                "The method should be named '" + methodName + "' and have parameters " +
-                        signature + " and should return " + output + " when given inputs: " + inputs;
+                "The method '" + methodName + "' should return " + output +
+                        " when given inputs: " + inputs;
     }
 
     public String getInputs() { return inputs; }
@@ -50,25 +50,25 @@ public class MethodUnitTest extends Goal {
 
         // check method name exists
         if(!js.methods().anyMatch(m -> m.name().equals(methodName)))
-            return makeTuple(0.0, "Method name is not correct");
+            return makeTuple(0.0, "Method not properly defined");
 
         // check method has correct signature
         if(!js.methods().anyMatch(m -> m.name().equals(methodName) &&
                 m.signature().equals(signature)))
-            return makeTuple(0.25, "Parameters and/or return type are not correct");
+            return makeTuple(0.0, "Method not properly defined");
 
         // check test
         var actualOutput = js.eval(methodName+"("+inputs+")");
         if(actualOutput.size() < 1)
-            return makeTuple(0.5, "no output recieved");
+            return makeTuple(0.0, "no output received");
         if(actualOutput.get(0).status() != Snippet.Status.VALID )
-            return makeTuple(0.5, "invalid result");
+            return makeTuple(0.0, "invalid result");
         if(actualOutput.get(0).snippet().subKind() != Snippet.SubKind.TEMP_VAR_EXPRESSION_SUBKIND)
-            return makeTuple(0.5, "wrong type of result");
+            return makeTuple(0.0, "wrong type of result");
 
         var actualTextOutput = js.varValue((VarSnippet)actualOutput.get(0).snippet());
         if(!output.equals(actualTextOutput))
-            return makeTuple(0.5, "incorrect output: " + actualTextOutput);
+            return makeTuple(0.25, "incorrect output: " + actualTextOutput);
 
         return makeTuple(1.0, "test passed!");
     }
