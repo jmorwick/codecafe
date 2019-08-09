@@ -4,6 +4,7 @@ function updateParentGoal(goal) {
         parent = $(parent[0]);
         total = 0;
         count = 0;
+        met = 0;
         children = parent.children('ul').children('li').children('.js-goal');
         children.children('.progress').each(function(index) {
            p = $(this);
@@ -11,8 +12,10 @@ function updateParentGoal(goal) {
            completion = parseInt(p.children('.indicator').html().substring(0,p.html().length-1));
            console.log("completion: " + completion);
            total = total + completion;
+           if(completion == 100) met++;
         });
         parent.children('.progress').children('.indicator').html(Math.trunc(total/count)+'%');
+        parent.children('.progress').children('.reason').html(met + ' out of ' + count + ' goals met');
         parent.children('.progress').attr('data-progress',Math.trunc(total/count)+'%');
 
         updateParentGoal(parent);
@@ -25,6 +28,13 @@ function toggleGoalChildren(goal) {
     //$(goal).children('.reason').toggle();
     $(goal).children('ul').toggle();
 }
+
+function resetGoals(exercise) {
+    $(exercise).find('.progress .indicator').html('0%');
+    $(exercise).find('.progress .reason').html('code not yet executed');
+    $(exercise).find('.progress').attr('data-progress',Math.trunc(total/count)+'%');
+}
+
 function populateExercise(exercise, stompClient) {
 
     // load html for exercise
@@ -50,6 +60,7 @@ function populateExercise(exercise, stompClient) {
             stompClient.send("/app/exercise/"+exercise.attr('id')+"/exec", {}, codepad.val());
             // TODO: report error on failure to send ajax message
             if(codepad.attr('clearonsend') != undefined) codepad.val('');
+            resetGoals(exercise);
         });
 
         // connect all variable listeners to websockets for their exercises
