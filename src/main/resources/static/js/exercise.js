@@ -60,6 +60,7 @@ function populateExercise(exercise, stompClient) {
             stompClient.send("/app/exercise/"+exercise.attr('id')+"/exec", {}, codepad.val());
             // TODO: report error on failure to send ajax message
             if(codepad.attr('clearonsend') != undefined) codepad.val('');
+            exercise.find('.js-message').val('');
             resetGoals(exercise);
         });
 

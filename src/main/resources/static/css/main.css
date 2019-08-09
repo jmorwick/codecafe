@@ -1,4 +1,8 @@
-/* goal tree view derived from https://www.w3schools.com/howto/howto_js_treeview.asp */
+.js-exercise {
+    max-width: 600px;
+    margin: auto;
+}
+
 .js-goal .description {
     position: relative;
     display: inline-block;
@@ -15,6 +19,7 @@
     position: absolute;
     z-index: 1;
 }
+/* goal tree view derived from https://www.w3schools.com/howto/howto_js_treeview.asp */
 
 .js-goal .description:hover .longDescription {
     visibility: visible;
