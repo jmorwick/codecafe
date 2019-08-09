@@ -57,3 +57,16 @@
 .js-goal .progress:hover .reason {
     visibility: visible;
 }
+
+.codepad {
+    display:inline-block;
+    position:relative;
+}
+.js-sendcode {
+    position:absolute;
+    bottom:10px;
+    right:10px;
+}
+.codepad textarea {
+    display: block;
+}
