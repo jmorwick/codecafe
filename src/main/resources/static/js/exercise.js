@@ -8,10 +8,11 @@ function updateParentGoal(goal) {
         children.children('.progress').each(function(index) {
            p = $(this);
            count++;
-           completion = parseInt(p.html().substring(0,p.html().length-1));
+           completion = parseInt(p.children('.indicator').html().substring(0,p.html().length-1));
+           console.log("completion: " + completion);
            total = total + completion;
         });
-        parent.children('.progress').html(Math.trunc(total/count)+'%');
+        parent.children('.progress').children('.indicator').html(Math.trunc(total/count)+'%');
         parent.children('.progress').attr('data-progress',Math.trunc(total/count)+'%');
 
         updateParentGoal(parent);
@@ -20,8 +21,8 @@ function updateParentGoal(goal) {
 
 function toggleGoalChildren(goal) {
     $(goal).children('.expand-arrow').toggleClass('open-arrow');
-    $(goal).children('.longDescription').toggle();
-    $(goal).children('.reason').toggle();
+    //$(goal).children('.longDescription').toggle();
+    //$(goal).children('.reason').toggle();
     $(goal).children('ul').toggle();
 }
 function populateExercise(exercise, stompClient) {
@@ -101,7 +102,7 @@ function populateExercise(exercise, stompClient) {
                 var progress = (100*pmessage['completion'])+'%';
                 var message = pmessage['message'];
                 var oldProgress = $(goal.find('span.progress')).html();
-                $(goal.find('span.progress')).html(progress);
+                $(goal.find('span.indicator')).html(progress);
                 $(goal.find('span.progress')).attr('data-progress', progress);
                 $(goal.find('span.reason')).html(message);
                 if(oldProgress != progress)

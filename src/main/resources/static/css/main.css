@@ -1,9 +1,23 @@
 /* goal tree view derived from https://www.w3schools.com/howto/howto_js_treeview.asp */
-.js-goal .longDescription {
-    display: none;
+.js-goal .description {
+    position: relative;
+    display: inline-block;
 }
-.js-goal .reason {
-    display: none;
+
+.js-goal .description .longDescription {
+    visibility: hidden;
+    width: 120px;
+    background-color: gray;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+}
+
+.js-goal .description:hover .longDescription {
+    visibility: visible;
 }
 .js-goal ul {
     list-style-type: none;
@@ -27,4 +41,19 @@
 }
 .js-goal .progress[data-progress="100%"] {
     background-color: green;
+}
+.js-goal .progress .reason {
+    visibility: hidden;
+    width: 120px;
+    background-color: gray;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+}
+
+.js-goal .progress:hover .reason {
+    visibility: visible;
 }
