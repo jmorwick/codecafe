@@ -103,7 +103,7 @@ public class JShellExerciseTool {
                 .distinct()
                 .map(
                         reason ->  {
-                            sendError(code,reason);
+                            sentSnippetResult(code,"ERROR", reason);
                             db.recordSnippet(username,exerciseId,code, true);
                             return reason;
                         }
@@ -118,11 +118,11 @@ public class JShellExerciseTool {
                 .thenAccept(results -> { // update history listeners
                     results.forEach(s -> {
                         if (s.status() == Snippet.Status.REJECTED) {
-                            sendError(originalCode, ""+s.exception());
+                            sentSnippetResult(originalCode, "ERROR",""+s.exception());
                             db.recordSnippet(username,exerciseId, originalCode,true);
                             // TODO: get error messages working appropriately
                         } else {
-                            sendSnippetHistory(s);
+                            sentSnippetResult(originalCode, s.status().toString(), s.value());
                             db.recordSnippet(username,exerciseId, originalCode,false);
                         }
                     });
@@ -133,17 +133,19 @@ public class JShellExerciseTool {
                     .forEach(this::sendGoalStatus); // update client
         }).exceptionally(e -> {
             jshell.stop();
-            sendError(code, "Last statement went over time");
+            sentSnippetResult(originalCode, "ERROR", "Last statement went over time");
             return null;
         });
     }
 
-    public void sendSnippetHistory(SnippetEvent e) {
-        if(e.value() != null) {
-            messagingTemplate.convertAndSendToUser(username,
-                    "/queue/exercises/"+exerciseId+"/result",
-                    e.value());
-        }
+    public void sentSnippetResult(String snippet, String status, String message) {
+        messagingTemplate.convertAndSendToUser(username,
+                "/queue/exercises/"+exerciseId+"/result",
+                gson.toJson(Map.of(
+                        "status", status,
+                        "snippet", snippet,
+                        "message", message == null ? "" : message
+                        )));
     }
 
     public void sendStdout(String message) {
@@ -169,12 +171,6 @@ public class JShellExerciseTool {
                 "/queue/exercises/"+exerciseId+"/variables",
                 json);
         // TODO: send types also
-    }
-
-    public void sendError(String offendingSnippet, String errorMessage) {
-        messagingTemplate.convertAndSendToUser(username,
-                "/queue/exercises/"+exerciseId+"/error",
-                errorMessage);
     }
 
     public void sendGoalStatus(Goal goal) {

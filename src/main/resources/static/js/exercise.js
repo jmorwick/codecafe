@@ -24,33 +24,29 @@ function updateParentGoal(goal) {
 
 function toggleGoalChildren(goal) {
     $(goal).children('.expand-arrow').toggleClass('open-arrow');
-    //$(goal).children('.longDescription').toggle();
-    //$(goal).children('.reason').toggle();
     $(goal).children('ul').toggle();
 }
 
 function resetGoals(exercise) {
     $(exercise).find('.progress .indicator').html('0%');
     $(exercise).find('.progress .reason').html('code not yet executed');
-    $(exercise).find('.progress').attr('data-progress',Math.trunc(total/count)+'%');
+    $(exercise).find('.progress').attr('data-progress','0%');
 }
 
 function populateExercise(exercise, stompClient) {
 
     // load html for exercise
     exercise.load("/exercises/"+exercise.attr('id')+"/raw", function() {
-
+/*
         // connect all history listeners to websockets for their exercises
         exercise.find('.js-history').each(function(i) {
             var exerciseId = exercise.attr('id');
             stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/result', function (result) {
-                var message = exercise.find('.js-message');
-                message.val('');  // clear last error message
                 var hist = exercise.find('.js-history');
                 hist.append("\n"+result.body); // print result to terminal
             });
         });
-
+*/
         // link every execute button to ajax call for their exercises
         exercise.find('.js-sendcode').on('click', function(e) {
             var sendButton = $(this);
@@ -84,11 +80,13 @@ function populateExercise(exercise, stompClient) {
 
         // connect all message listeners to websockets for their exercises
         exercise.find('.js-message').each(function(i) {
-            var term = $(this);
+            var box = $(this);
             var exerciseId = exercise.attr('id');
 
-            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/error', function (result) {
-                term.val("ERROR: " + result.body); // print result to terminal
+            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/result', function (result) {
+                message = JSON.parse(result.body);
+                box.val('submitted snippet result: ' + message.status +
+                    (message.message.length > 0 ? ' "' + message.message + '"' : ''));
             });
         });
 
@@ -129,7 +127,9 @@ function populateExercise(exercise, stompClient) {
             stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/methods', function (message) {
                 JSON.parse(message.body).forEach(function (method) {
                         var name = method[0] + ': ' + method[1];
-                        var option = glist.find('option').filter(function (i,option) { return option.text == name; })[0];
+                        var option = glist.find('option').filter(
+                                function (i,option) {return option.text == name; }
+                            )[0];
                         if(option == null) {
                             glist.append($('<option>', {
                                 value: method[2],
