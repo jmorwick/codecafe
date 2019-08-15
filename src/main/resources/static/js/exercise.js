@@ -41,11 +41,14 @@ function populateExercise(exercise, stompClient) {
         // connect all history listeners to websockets for their exercises
         exercise.find('.history').each(function(i) {
             var exerciseId = exercise.attr('id');
-            var table = $(this).children('table').DataTable();
+            var table = $(this).children('table').DataTable( {
+                "order": [[ 0, "desc" ]]
+            } );
 
             stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/result', function (result) {
                 var update = JSON.parse(result.body);
                 table.row.add([
+                    (new Date()).toISOString(),
                     ''+(update.completion*100)+'%',
                     '<pre>'+update.snippet+'</pre>',
                     ''+update.status,
