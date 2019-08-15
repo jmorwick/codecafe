@@ -37,16 +37,23 @@ function populateExercise(exercise, stompClient) {
 
     // load html for exercise
     exercise.load("/exercises/"+exercise.attr('id')+"/raw", function() {
-/*
+
         // connect all history listeners to websockets for their exercises
-        exercise.find('.js-history').each(function(i) {
+        exercise.find('.history').each(function(i) {
             var exerciseId = exercise.attr('id');
+            var table = $(this).children('table').DataTable();
+
             stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/result', function (result) {
-                var hist = exercise.find('.js-history');
-                hist.append("\n"+result.body); // print result to terminal
+                var update = JSON.parse(result.body);
+                table.row.add([
+                    ''+(update.completion*100)+'%',
+                    '<pre>'+update.snippet+'</pre>',
+                    ''+update.status,
+                    ''+update.message
+                ]).draw(false);
             });
         });
-*/
+
         // link every execute button to ajax call for their exercises
         exercise.find('.js-sendcode').on('click', function(e) {
             var sendButton = $(this);
