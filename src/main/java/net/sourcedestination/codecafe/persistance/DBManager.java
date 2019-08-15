@@ -34,14 +34,15 @@ public class DBManager {
         }
     }
 
-    public void recordSnippet(String username, String exercise, String code, boolean error) {
+    public void recordSnippet(String username, String exercise, String code, String status, double completion) {
         try {
             var s = conn.prepareStatement(
-                    "INSERT INTO snippets VALUES (NULL, CURRENT_TIMESTAMP, ?,?,?,?,FALSE);");
+                    "INSERT INTO snippets VALUES (NULL, CURRENT_TIMESTAMP, ?,?,?,?,?,FALSE);");
             s.setString(1, username);
             s.setString(2, exercise);
             s.setString(3, code);
-            s.setBoolean(4, error);
+            s.setString(4, status);
+            s.setDouble(5, completion);
             s.execute();
         } catch(SQLException e) {
             logger.info("ERROR logging code snippet: " + e);
@@ -51,7 +52,7 @@ public class DBManager {
     public void recordReset(String username, String exercise) {
         try {
             var s = conn.prepareStatement(
-                    "INSERT INTO snippets VALUES (NULL, CURRENT_TIMESTAMP, ?,?,NULL,TRUE,TRUE);");
+                    "INSERT INTO snippets VALUES (NULL, CURRENT_TIMESTAMP, ?,?,NULL,NULL,0,TRUE);");
             s.setString(1, username);
             s.setString(2, exercise);
             s.execute();
@@ -64,7 +65,7 @@ public class DBManager {
         try {
             var sql =
                     "SELECT snippet FROM snippets WHERE username == ? AND exercise == ? "+
-                            "AND error == 0 " +
+                            "AND status == 'VALID' " +
                             "AND id > COALESCE((SELECT MAX(id) FROM snippets WHERE username == ? "+
                             "AND exercise == ? AND reset == 1), 0);";
             var s = conn.prepareStatement(sql);

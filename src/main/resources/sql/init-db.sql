@@ -4,6 +4,7 @@ CREATE TABLE snippets (
   username VARCHAR(30),
   exercise VARCHAR(1024),
   snippet  VARCHAR(10000),
-  error    BOOLEAN,
+  status    VARCHAR(30),
+  completion DOUBLE,
   reset    BOOLEAN
 );

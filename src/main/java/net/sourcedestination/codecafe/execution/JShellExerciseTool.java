@@ -71,7 +71,6 @@ public class JShellExerciseTool {
         for(var g : goals) {
             this.goals.put(g.getId(), g);
         }
-        replaySavedInteractions();
     }
 
     private JShell buildJShell() {
@@ -86,14 +85,6 @@ public class JShellExerciseTool {
                 .build();
         return jshell;
     }
-
-    private void replaySavedInteractions() {
-        //if(db != null) db.retrieveHistory(username,exerciseId).forEach(code -> {
-            //logger.info("replaying: " + code );
-            //evaluateCodeSnippet(code);  // TODO: fix
-        //});
-    }
-
     public synchronized void evaluateCodeSnippet(String code) {
         if(jshell.sourceCodeAnalysis().sourceToSnippets(code).stream()
                 .flatMap(s -> restrictions.stream()
@@ -103,13 +94,11 @@ public class JShellExerciseTool {
                 .distinct()
                 .map(
                         reason ->  {
-                            sentSnippetResult(code,"ERROR", reason);
-                            db.recordSnippet(username,exerciseId,code, true);
+                            sendSnippetResult(code,"ERROR", reason, 0);
                             return reason;
                         }
                 ).count() > 0) return; // quit if a restriction fires
         directlyExecuteCodeSnippet(exercise.preprocessSnippet(this, code), code);
-
     }
 
     public void directlyExecuteCodeSnippet(String code, String originalCode) {
@@ -118,34 +107,38 @@ public class JShellExerciseTool {
                 .thenAccept(results -> { // update history listeners
                     results.forEach(s -> {
                         if (s.status() == Snippet.Status.REJECTED) {
-                            sentSnippetResult(originalCode, "ERROR",""+s.exception());
-                            db.recordSnippet(username,exerciseId, originalCode,true);
+                            sendSnippetResult(originalCode, "ERROR",""+s.exception(), 0);
                             // TODO: get error messages working appropriately
                         } else {
-                            sentSnippetResult(originalCode, s.status().toString(), s.value());
-                            db.recordSnippet(username,exerciseId, originalCode,false);
+                            sendVariables();
+                            sendMethods();
+                            goals.values().stream()  // for each goal
+                                    .forEach(this::sendGoalStatus); // update client
+                            sendSnippetResult(originalCode,
+                                    s.status().toString(),
+                                    s.value(),
+                                    exercise.getGoalStructure().completionPercentage(this)._1
+                            );
                         }
                     });
                 }).thenRun(() -> {
-            sendVariables();
-            sendMethods();
-            goals.values().stream()  // for each goal
-                    .forEach(this::sendGoalStatus); // update client
         }).exceptionally(e -> {
             jshell.stop();
-            sentSnippetResult(originalCode, "ERROR", "Last statement went over time");
+            sendSnippetResult(originalCode, "ERROR", "Last statement went over time", 0);
             return null;
         });
     }
 
-    public void sentSnippetResult(String snippet, String status, String message) {
+    public void sendSnippetResult(String snippet, String status, String message, double goalCompletion) {
         messagingTemplate.convertAndSendToUser(username,
                 "/queue/exercises/"+exerciseId+"/result",
                 gson.toJson(Map.of(
                         "status", status,
                         "snippet", snippet,
-                        "message", message == null ? "" : message
+                        "message", message == null ? "" : message,
+                        "completion", goalCompletion
                         )));
+        db.recordSnippet(username, exerciseId, snippet, status, goalCompletion);
     }
 
     public void sendStdout(String message) {
