@@ -1,5 +1,6 @@
 package net.sourcedestination.codecafe.structure;
 
+import com.google.gson.Gson;
 import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition;
 import net.sourcedestination.codecafe.persistance.DBManager;
@@ -12,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +43,7 @@ public class ExerciseController {
     // exeriseId -> template name
     private Map<String, ExerciseDefinition> definitions = new HashMap<>();
     private Map<Tuple2<String,String>,JShellExerciseTool> toolCache = new HashMap<>();
+    private final Gson gson = new Gson();
 
     public final long DEFAULT_TIMEOUT = 100000;
 
@@ -108,6 +111,20 @@ public class ExerciseController {
         model.put("exerciseId", exerciseId);
         return "exercises/"+def.getTemplate()+".html";
     }
+
+
+    @GetMapping("/exercises/{exerciseId}/history")
+    @ResponseBody
+    public String viewExerciseHistory(
+                                  @PathVariable("exerciseId") String exerciseId,
+                                  Principal user) throws IOException {
+        var history = db.retrieveHistory(user.getName(), exerciseId);
+        return "{\n" +
+                "  \"data\": "
+                +gson.toJson(history) +
+                "}";
+    }
+
 
     @MessageMapping("/exercise/{exerciseId}/exec")
     public void executeSnippet(
