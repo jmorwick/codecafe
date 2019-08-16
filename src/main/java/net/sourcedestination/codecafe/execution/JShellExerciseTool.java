@@ -101,8 +101,8 @@ public class JShellExerciseTool {
         directlyExecuteCodeSnippet(exercise.preprocessSnippet(this, code), code);
     }
 
-    public void silentlyExecuteCodeSnippet(String code) {
-        synchronized(jshell) { jshell.eval(code); }
+    public List<SnippetEvent> silentlyExecuteCodeSnippet(String code) {
+        synchronized(jshell) { return jshell.eval(code); }
     }
 
     public void directlyExecuteCodeSnippet(String code, String originalCode) {
@@ -113,7 +113,11 @@ public class JShellExerciseTool {
                 .thenAccept(results -> { // update history listeners
                     results.forEach(s -> {
                         if (s.status() == Snippet.Status.REJECTED) {
-                            sendSnippetResult(originalCode, "ERROR",""+s.exception(), 0);
+                            sendSnippetResult(originalCode, "ERROR",
+                                    s.exception() == null ?
+                                            "submission did not meet specification" :
+                                            ""+s.exception(),
+                                    0);
                             // TODO: get error messages working appropriately
                         } else {
                             sendVariables();
