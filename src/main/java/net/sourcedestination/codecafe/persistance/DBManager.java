@@ -65,7 +65,6 @@ public class DBManager {
         try {
             var sql =
                     "SELECT * FROM snippets WHERE username == ? AND exercise == ? "+
-                            "AND status == 'VALID' " +
                             "AND id > COALESCE((SELECT MAX(id) FROM snippets WHERE username == ? "+
                             "AND exercise == ? AND reset == 1), 0);";
             var s = conn.prepareStatement(sql);
