@@ -18,88 +18,6 @@
                 </list>
             </constructor-arg>
         </bean>
-
-
-        <bean id="double-x" class="net.sourcedestination.codecafe.structure.exercises.ExpressionExercise">
-            <constructor-arg index="0" value="double-x"/>
-            <constructor-arg index="1" value="1000"/>
-            <constructor-arg index="2">
-                <map>
-                    <entry key="x" value="#{5}"/>
-                </map>
-            </constructor-arg>
-            <constructor-arg index="3" value="int"/>
-            <constructor-arg index="4">
-                <list>
-                    <bean class="net.sourcedestination.funcles.tuple.Pair">
-                        <constructor-arg><value>5</value></constructor-arg>
-                        <constructor-arg><value>10</value></constructor-arg>
-                    </bean>
-                </list>
-            </constructor-arg>
-            <constructor-arg index="5">
-                <list>
-                    <bean class="net.sourcedestination.funcles.tuple.Pair">
-                        <constructor-arg><value>15</value></constructor-arg>
-                        <constructor-arg><value>30</value></constructor-arg>
-                    </bean>
-                </list>
-            </constructor-arg>
-        </bean>
-
-
-        <bean id="add-two-numbers" class="net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition">
-            <constructor-arg index="0" value="add-two-numbers"/>
-            <constructor-arg index="1" value="1000"/>
-            <constructor-arg index="2" value="simple-method"/>
-            <constructor-arg index="3">
-                <list>
-                    <bean id="expressions-only" class="net.sourcedestination.codecafe.structure.restrictions.SnippetTypeWhiteList">
-                        <constructor-arg value="METHOD"/>
-                    </bean>
-                </list>
-            </constructor-arg>
-            <constructor-arg index="4">
-                <bean class="net.sourcedestination.codecafe.structure.goals.GoalStructure">
-                    <constructor-arg name="longDescription" value=""/>
-                    <constructor-arg name="shortDescription" value=""/>
-                    <constructor-arg name="subgoals"><list>
-                        <bean class="net.sourcedestination.codecafe.structure.goals.MethodUnitTest">
-                            <constructor-arg name="id"><list><value>test1</value></list></constructor-arg>
-                            <constructor-arg name="methodName" value="add2Numbers"/>
-                            <constructor-arg name="hiddenTest" value="false"/>
-                            <constructor-arg name="signature" value="(int,int)int"/>
-                            <constructor-arg name="output" value="3"/>
-                            <constructor-arg name="inputs" value="1,2"/>
-                        </bean>
-                        <bean class="net.sourcedestination.codecafe.structure.goals.MethodUnitTest">
-                            <constructor-arg name="id"><list><value>test2</value></list></constructor-arg>
-                            <constructor-arg name="methodName" value="add2Numbers"/>
-                            <constructor-arg name="hiddenTest" value="false"/>
-                            <constructor-arg name="signature" value="(int,int)int"/>
-                            <constructor-arg name="output" value="2"/>
-                            <constructor-arg name="inputs" value="0,2"/>
-                        </bean>
-                        <bean class="net.sourcedestination.codecafe.structure.goals.MethodUnitTest">
-                            <constructor-arg name="id"><list><value>test3</value></list></constructor-arg>
-                            <constructor-arg name="methodName" value="add2Numbers"/>
-                            <constructor-arg name="hiddenTest" value="false"/>
-                            <constructor-arg name="signature" value="(int,int)int"/>
-                            <constructor-arg name="output" value="-1"/>
-                            <constructor-arg name="inputs" value="4,-5"/>
-                        </bean>
-                        <bean class="net.sourcedestination.codecafe.structure.goals.MethodUnitTest">
-                            <constructor-arg name="id"><list><value>test4</value></list></constructor-arg>
-                            <constructor-arg name="methodName" value="add2Numbers"/>
-                            <constructor-arg name="hiddenTest" value="false"/>
-                            <constructor-arg name="signature" value="(int,int)int"/>
-                            <constructor-arg name="output" value="0"/>
-                            <constructor-arg name="inputs" value="1,-1"/>
-                        </bean>
-                    </list></constructor-arg>
-                </bean>
-            </constructor-arg>
-        </bean>
     /-->
     <bean id="noVowels" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
         <constructor-arg name="exerciseId" value="noVowels"/>
@@ -165,14 +83,20 @@
         </constructor-arg>
     </bean>
 
-    <bean id="gaussianPdf" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
-        <constructor-arg name="exerciseId" value="gaussian PDF Method"/>
-        <constructor-arg name="methodName" value="gaussianPdf"/>
+    <bean id="gaussianPDFExpression" class="net.sourcedestination.codecafe.structure.exercises.ExpressionExercise">
+        <constructor-arg name="exerciseId" value="gaussianPDFExpression"/>
         <constructor-arg name="timeout" value="1000"/>
-        <constructor-arg name="signature" value="(double,double,double)double"/>
+        <constructor-arg name="parameters">
+            <map>
+                <entry key="µ" value="1"/>
+                <entry key="σ" value="2"/>
+                <entry key="x" value="3"/>
+            </map>
+        </constructor-arg>
+        <constructor-arg name="targetType" value="double"/>
         <constructor-arg name="description">
             <bean id="outside-map" class="net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition" factory-method="loadTextFile">
-                <constructor-arg value="exercise-descriptions/gaussianPdf.html"/>
+                <constructor-arg value="exercise-descriptions/gaussianPDFExpression.html"/>
             </bean>
         </constructor-arg>
         <constructor-arg name="visibleTests">
@@ -204,5 +128,97 @@
             </list>
         </constructor-arg>
     </bean>
+
+    <bean id="gaussianPDFMethod" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <constructor-arg name="exerciseId" value="gaussianPDFMethod"/>
+        <constructor-arg name="methodName" value="gaussianPdf"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(double,double,double)double"/>
+        <constructor-arg name="description">
+            <bean id="outside-map" class="net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition" factory-method="loadTextFile">
+                <constructor-arg value="exercise-descriptions/gaussianPDFMethod.html"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1.0,2.0,3.0</value></constructor-arg>
+                    <constructor-arg><value>0.120985</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>3,2,4</value></constructor-arg>
+                    <constructor-arg><value>0.1760326</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>3,6,1</value></constructor-arg>
+                    <constructor-arg><value>0.06289720</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>9,6,4</value></constructor-arg>
+                    <constructor-arg><value>0.04698531</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1,2,5</value></constructor-arg>
+                    <constructor-arg><value>0.0269954832</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+
+    <bean id="addTwoNumbers" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <constructor-arg name="exerciseId" value="addTwoNumbers"/>
+        <constructor-arg name="methodName" value="addTwoNumbers"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(int,int)int"/>
+        <constructor-arg name="description">
+           <value>Write a method with two integer parameters that simply returns their sum (as an integer). </value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1,1</value></constructor-arg>
+                    <constructor-arg><value>2</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1,-1</value></constructor-arg>
+                    <constructor-arg><value>0</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>41,90</value></constructor-arg>
+                    <constructor-arg><value>131</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>0,432</value></constructor-arg>
+                    <constructor-arg><value>432</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>-5,-9</value></constructor-arg>
+                    <constructor-arg><value>-14</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>0,0</value></constructor-arg>
+                    <constructor-arg><value>0</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>51,-51</value></constructor-arg>
+                    <constructor-arg><value>0</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>124,-200</value></constructor-arg>
+                    <constructor-arg><value>-76</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
 
 </beans>

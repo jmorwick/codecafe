@@ -1,13 +1,15 @@
-<br>Last Error:
-<input type="text" class="js-message" size="80" disabled/>
-<br/>Code:
-<textarea rows="10" cols="40"></textarea>
-<input type="submit" class="js-sendcode" value="execute"/>
-
-<ol class="js-goals">
-    <li th:each="goal : ${goals}">
-        <span class="description" th:text="${goal}"></span>
-        <span class="progress"></span>
-        <span class="reason"></span>
-    </li>
-</ol>
+<h1 th:text="${exerciseId}"/>
+<hr/>
+<h2>Problem Description</h2>
+<span th:utext="${description}"/>
+<hr/>
+<h2>Instructions</h2>
+<p>Develop an expression in the box below and click 'execute' when you're ready
+    to test it. Check the goals below for results from running various tests over your
+    expression. Mouse over the descriptions after you execute your code for mode details
+    and mouse over the progress percentage for an explanation of why your code received that score.</p>
+<hr/>
+<section th:replace="components/codepad :: codepad"/>
+<section th:replace="components/messagebox :: messagebox"/>
+<section th:replace="components/goal :: goal" th:with="goal=${goal}"/>
+<section th:replace="components/history :: history"/>
