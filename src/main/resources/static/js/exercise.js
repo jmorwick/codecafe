@@ -76,6 +76,10 @@ function populateExercise(exercise, stompClient) {
             // TODO: report error on failure to send ajax message
             if(codepad.attr('clearonsend') != undefined) codepad.val('');
             exercise.find('.js-message').val('... evaluating submitted code snippet ...');
+            exercise.find('.js-sendcode').prop('disabled', true);
+            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/result', function (result) {
+                exercise.find('.js-sendcode').prop('disabled', false);
+            });
             resetGoals(exercise);
         });
 
