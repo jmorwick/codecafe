@@ -20,12 +20,14 @@ public class ExpressionExercise extends ExerciseDefinition {
     // TODO: get restrictions working for expressions only (despite preprocessing)
 
     public ExpressionExercise(String exerciseId,
+                              String description,
                               long timeout,
                               Map<String,Object> parameters,
                               String targetType,
                               Collection<Pair<String>> visibleTests,
                               Collection<Pair<String>> hiddenTests) {
         super(exerciseId,
+                description,
                 timeout,
                 "develop-an-expression",
                 List.of(new SnippetTypeWhiteList(Snippet.Kind.EXPRESSION)),
