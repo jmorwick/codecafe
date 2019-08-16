@@ -165,4 +165,44 @@
         </constructor-arg>
     </bean>
 
+    <bean id="gaussianPdf" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <constructor-arg name="exerciseId" value="gaussian PDF Method"/>
+        <constructor-arg name="methodName" value="gaussianPdf"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(double,double,double)double"/>
+        <constructor-arg name="description">
+            <bean id="outside-map" class="net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition" factory-method="loadTextFile">
+                <constructor-arg value="exercise-descriptions/gaussianPdf.html"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1.0,2.0,3.0</value></constructor-arg>
+                    <constructor-arg><value>0.120985</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>3,2,4</value></constructor-arg>
+                    <constructor-arg><value>0.1760326</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>3,6,1</value></constructor-arg>
+                    <constructor-arg><value>0.06289720</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>9,6,4</value></constructor-arg>
+                    <constructor-arg><value>0.04698531</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1,2,5</value></constructor-arg>
+                    <constructor-arg><value>0.0269954832</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
 </beans>
