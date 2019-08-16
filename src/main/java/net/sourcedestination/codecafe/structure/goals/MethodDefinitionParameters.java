@@ -23,13 +23,24 @@ public class MethodDefinitionParameters extends Goal {
         this.params = parseSignatureParameters(signature);
     }
 
+    @Override
     public String getType() { return "method-definition"; }
 
+    @Override
     public String getDescription() {
+        return "Method '"+methodName+"' has " +
+                (params.length == 0 ?
+                        "no parameters" :
+                        "parameters with types ("+ Arrays.toString(params)+")");
+    }
+
+    @Override
+    public String getLongDescription() {
         return "A method with the name '"+methodName+"' must be defined with " +
                 params.length + " parameters with types: "+ Arrays.toString(params)+".";
     }
 
+    @Override
     public Tuple2<Double,String> completionPercentage(JShellExerciseTool tool) {
         var js = tool.getShell();
 

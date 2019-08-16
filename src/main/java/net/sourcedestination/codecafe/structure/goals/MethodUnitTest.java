@@ -34,9 +34,16 @@ public class MethodUnitTest extends Goal {
         this.inputs = inputs;
     }
 
+    @Override
     public String getType() { return "unit-test"; }
 
+    @Override
     public String getDescription() {
+        return methodName+"("+inputs+") -> " + output;
+    }
+
+    @Override
+    public String getLongDescription() {
         return hiddenTest ? "<hidden test>" :
                 "The method '" + methodName + "' should return " + output +
                         " when given inputs: " + inputs;
@@ -45,6 +52,7 @@ public class MethodUnitTest extends Goal {
     public String getInputs() { return inputs; }
     public String getOutput() { return output; }
 
+    @Override
     public Tuple2<Double,String> completionPercentage(JShellExerciseTool tool) {
         var js = tool.getShell();
 

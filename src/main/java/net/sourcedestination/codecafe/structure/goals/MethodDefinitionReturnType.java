@@ -21,12 +21,21 @@ public class MethodDefinitionReturnType extends Goal {
         this.returnType = parseSignatureReturnType(signature);
     }
 
+    @Override
     public String getType() { return "method-definition"; }
 
+    @Override
     public String getDescription() {
-        return "A method with the name '"+methodName+"' must be defined with return type "+".";
+        return "Method '"+methodName+"' returns a(n) '"+returnType+"'";
     }
 
+    @Override
+    public String getLongDescription() {
+        return "A method with the name '"+methodName+"' must be defined with return type '"+
+                returnType+"'.";
+    }
+
+    @Override
     public Tuple2<Double,String> completionPercentage(JShellExerciseTool tool) {
         var js = tool.getShell();
 
