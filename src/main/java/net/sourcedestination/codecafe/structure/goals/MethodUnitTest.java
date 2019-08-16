@@ -75,9 +75,21 @@ public class MethodUnitTest extends Goal {
             return makeTuple(0.0, "wrong type of result");
 
         var actualTextOutput = js.varValue((VarSnippet)actualOutput.get(0).snippet());
-        if(!output.equals(actualTextOutput))
+        if(!valuesMatch(output, actualTextOutput))
             return makeTuple(0.25, "incorrect output: " + actualTextOutput);
 
         return makeTuple(1.0, "test passed!");
+    }
+
+    public boolean valuesMatch(String v1, String v2) {
+        if(v1.equals(v2)) return true;
+        try {
+            var d1 = Math.round(1000*Double.parseDouble(v1));
+            var d2 = Math.round(1000*Double.parseDouble(v2));
+            if(d1 == d2)  return true;
+        } catch(NumberFormatException e) {
+            return false;
+        }
+        return false;
     }
 }

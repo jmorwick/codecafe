@@ -61,11 +61,10 @@ public class DBManager {
         }
     }
 
-    public Stream<String> retrieveHistory(String username, String exercise) {
+    public List<Map<String,String>> retrieveHistory(String username, String exercise) {
         try {
             var sql =
-                    "SELECT snippet FROM snippets WHERE username == ? AND exercise == ? "+
-                            "AND status == 'VALID' " +
+                    "SELECT * FROM snippets WHERE username == ? AND exercise == ? "+
                             "AND id > COALESCE((SELECT MAX(id) FROM snippets WHERE username == ? "+
                             "AND exercise == ? AND reset == 1), 0);";
             var s = conn.prepareStatement(sql);
@@ -75,11 +74,17 @@ public class DBManager {
             s.setString(4, exercise);
             var rs = s.executeQuery();
             logger.info("executed history query");
-            var results = new ArrayList<String>();
-            while(rs.next()) results.add(rs.getString("snippet"));
-            return results.stream();
+            var results = new ArrayList<Map<String,String>>();
+            while(rs.next()) results.add(Map.of(
+                    "time", rs.getString("time"),
+                    "completion", (100*rs.getDouble("completion"))+"%",
+                    "snippet", "<pre>"+rs.getString("snippet")+"</pre>", // nasty, fix this with css later
+                    "status", rs.getString("status"),
+                    "result", ""
+            ));
+            return results;
         } catch(SQLException e) {
-            logger.info("ERROR logging code snippet: " + e);
+            logger.info("ERROR retrieving code snippet: " + e);
         }
         return null;
     }

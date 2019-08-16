@@ -37,16 +37,35 @@ function populateExercise(exercise, stompClient) {
 
     // load html for exercise
     exercise.load("/exercises/"+exercise.attr('id')+"/raw", function() {
-/*
+
         // connect all history listeners to websockets for their exercises
-        exercise.find('.js-history').each(function(i) {
+        exercise.find('.history').each(function(i) {
             var exerciseId = exercise.attr('id');
+            var table = $(this).children('table').DataTable( {
+                "order": [[ 0, "desc" ]],
+                "ajax": "/exercises/"+exerciseId+"/history",
+                "columns": [
+                    { "data": "time" },
+                    { "data": "completion" },
+                    { "data": "snippet" },
+                    { "data": "status" },
+                    { "data": "result"}
+                ]
+            } );
+
             stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/result', function (result) {
-                var hist = exercise.find('.js-history');
-                hist.append("\n"+result.body); // print result to terminal
+                var update = JSON.parse(result.body);
+                var date = new Date().toISOString();
+                table.row.add({
+                    'time': date.slice(0,10) + " " + date.slice(11,19),
+                    'completion': ''+(update.completion*100)+'%',
+                    'snippet': '<pre>'+update.snippet+'</pre>',
+                    'status': ''+update.status,
+                    'result': ''+update.message
+            }).draw(false);
             });
         });
-*/
+
         // link every execute button to ajax call for their exercises
         exercise.find('.js-sendcode').on('click', function(e) {
             var sendButton = $(this);
@@ -57,6 +76,10 @@ function populateExercise(exercise, stompClient) {
             // TODO: report error on failure to send ajax message
             if(codepad.attr('clearonsend') != undefined) codepad.val('');
             exercise.find('.js-message').val('... evaluating submitted code snippet ...');
+            exercise.find('.js-sendcode').prop('disabled', true);
+            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/result', function (result) {
+                exercise.find('.js-sendcode').prop('disabled', false);
+            });
             resetGoals(exercise);
         });
 
