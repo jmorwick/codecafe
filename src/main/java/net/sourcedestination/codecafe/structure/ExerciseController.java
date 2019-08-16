@@ -108,6 +108,7 @@ public class ExerciseController {
         }
 
         model.put("goal", def.getGoalStructure().toStateMap());
+        model.put("description", def.getDescription());
         model.put("exerciseId", exerciseId);
         return "exercises/"+def.getTemplate()+".html";
     }

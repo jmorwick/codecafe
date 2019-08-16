@@ -20,13 +20,14 @@ public class SimpleMethodExercise extends ExerciseDefinition {
     private String signature;
 
     public SimpleMethodExercise(String exerciseId,
+                                String description,
                                 String methodName,
                                 long timeout,
                                 String signature,
-                                String description,
                                 Collection<Pair<String>> visibleTests,
                                 Collection<Pair<String>> hiddenTests) {
         super(exerciseId,
+                description,
                 timeout,
                 "simple-method",
                 List.of(new SnippetTypeWhiteList(Snippet.Kind.METHOD)),
