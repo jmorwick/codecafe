@@ -37,7 +37,9 @@ public class MethodDefinitionParameters extends Goal {
     @Override
     public String getLongDescription() {
         return "A method with the name '"+methodName+"' must be defined with " +
-                params.length + " parameters with types: "+ Arrays.toString(params)+".";
+                params.length + " parameters with type" +
+                (params.length > 1 ? "s" : "") + // pluralize
+                ": "+ Arrays.toString(params)+".";
     }
 
     @Override

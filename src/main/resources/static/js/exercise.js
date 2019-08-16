@@ -129,6 +129,7 @@ function populateExercise(exercise, stompClient) {
             var goal = $(this);
             var goalId = goal.attr('id');
             var exerciseId = exercise.attr('id');
+            toggleGoalChildren(goal);
 
             stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/goals/'+goalId, function (message) {
                 var pmessage = JSON.parse(message.body);
