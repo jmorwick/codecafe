@@ -5,12 +5,28 @@
     <title>Title</title>
 </head>
 <body>
+
 <span th:if="${username != null}">
-    Welcome, <span th:text="${username}"/>, to Code Cafe!<hr/>
     <a href="/logout">Log Out</a>
 </span>
 <span th:unless="${username != null}">
-    Welcome to Code Cafe! <hr/> <a href="/login">Log In</a>
+    <a href="/login">Log In</a>
 </span>
+<hr/>
+<h1>Code Cafe @ MWSU</h1>
+<span th:if="${username != null}">
+    Welcome, <span th:text="${username}"/>, to Code Cafe!
+</span>
+<span th:unless="${username != null}">
+    Welcome to Code Cafe!
+</span>
+
+<h2>Available Exercises</h2>
+<ul>
+    <li th:each="exercise : ${exercises}">
+        <a th:href="@{/exercises/{exercise}(exercise=${exercise})}" th:text="${exercise}"/>
+    </li>
+</ul>
+
 </body>
 </html>
