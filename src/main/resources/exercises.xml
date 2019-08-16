@@ -293,4 +293,44 @@
     </bean>
 
 
+
+
+    <bean id="firstName" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <constructor-arg name="exerciseId" value="firstName"/>
+        <constructor-arg name="methodName" value="firstName"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(String)String"/>
+        <constructor-arg name="description">
+            <value>Given a string containing a full name (first name, then a space, then the last name), return only the first name. </value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Joseph Kendall-Morwick"</value></constructor-arg>
+                    <constructor-arg><value>"Joseph"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Ryne Sandberg"</value></constructor-arg>
+                    <constructor-arg><value>"Ryne"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Ada Lovelace"</value></constructor-arg>
+                    <constructor-arg><value>"Ada"</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Carol Danvers"</value></constructor-arg>
+                    <constructor-arg><value>"Carol"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Tony Stark"</value></constructor-arg>
+                    <constructor-arg><value>"Tony"</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
 </beans>
