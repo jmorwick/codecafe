@@ -7,7 +7,7 @@
         <span th:text="${goal.description}"/>
         <span class="longDescription" th:text="${goal.longDescription}"/>
     </span>
-    <span class="expand-arrow" onclick="toggleGoalChildren($(this).parent())"/>
+    <span th:if="${goal.children}" class="expand-arrow" onclick="toggleGoalChildren($(this).parent())"/>
     <ul th:if="${goal.children}">
         <li th:each="goal : ${goal.children}">
             <section th:replace="this :: goal" th:with="goal=${goal}"/>
