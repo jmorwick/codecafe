@@ -88,9 +88,8 @@ public class ExpressionExercise extends ExerciseDefinition {
     @Override
     public void initializeTool(JShellExerciseTool tool) {
         parameters.entrySet().stream()
-                .forEach(entry -> tool.directlyExecuteCodeSnippet(
-                        "var " + entry.getKey() + "=" + entry.getValue() + ";" ,
-                        entry.getValue().toString()));
+                .forEach(entry -> tool.silentlyExecuteCodeSnippet(
+                        "var " + entry.getKey() + "=" + entry.getValue() + ";"));
     }
 
     /** User's response should be a single expression. Convert it to a method for unit tests */

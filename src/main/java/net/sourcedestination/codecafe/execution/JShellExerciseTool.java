@@ -101,8 +101,11 @@ public class JShellExerciseTool {
         directlyExecuteCodeSnippet(exercise.preprocessSnippet(this, code), code);
     }
 
+    public void silentlyExecuteCodeSnippet(String code) {
+        synchronized(jshell) { jshell.eval(code); }
+    }
+
     public void directlyExecuteCodeSnippet(String code, String originalCode) {
-        logger.info("starting " + code);
         CompletableFuture.supplyAsync(() -> {
                 synchronized(jshell) { return jshell.eval(code); } }
         )
@@ -128,11 +131,8 @@ public class JShellExerciseTool {
         }).exceptionally(e -> {
             jshell.stop();
             sendSnippetResult(originalCode, "ERROR", "Last statement went over time", 0);
-            logger.info("stoppingz " + code);
             return null;
         });
-
-        logger.info("stopping " + code);
     }
 
     public void sendSnippetResult(String snippet, String status, String message, double goalCompletion) {
@@ -189,5 +189,6 @@ public class JShellExerciseTool {
     public synchronized void reset() {
         jshell.stop();
         jshell = buildJShell();
+        exercise.initializeTool(this);
     }
 }
