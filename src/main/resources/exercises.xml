@@ -88,9 +88,9 @@
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="parameters">
             <map>
-                <entry key="µ" value="#{1}"/>
-                <entry key="σ" value="#{2}"/>
-                <entry key="x" value="#{3}"/>
+                <entry key="µ" value="#{1.0}"/>
+                <entry key="σ" value="#{2.0}"/>
+                <entry key="x" value="#{3.0}"/>
             </map>
         </constructor-arg>
         <constructor-arg name="targetType" value="double"/>
