@@ -73,7 +73,6 @@ public class DBManager {
             s.setString(3, username);
             s.setString(4, exercise);
             var rs = s.executeQuery();
-            logger.info("executed history query");
             var results = new ArrayList<Map<String,String>>();
             while(rs.next()) results.add(Map.of(
                     "time", rs.getString("time"),
@@ -82,6 +81,8 @@ public class DBManager {
                     "status", rs.getString("status"),
                     "result", ""
             ));
+
+            logger.info("executed history query");
             return results;
         } catch(SQLException e) {
             logger.info("ERROR retrieving code snippet: " + e);

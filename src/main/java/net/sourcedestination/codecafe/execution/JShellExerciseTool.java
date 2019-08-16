@@ -85,7 +85,7 @@ public class JShellExerciseTool {
                 .build();
         return jshell;
     }
-    public synchronized void evaluateCodeSnippet(String code) {
+    public void evaluateCodeSnippet(String code) {
         if(jshell.sourceCodeAnalysis().sourceToSnippets(code).stream()
                 .flatMap(s -> restrictions.stream()
                         .filter(r -> r.apply(s, this))
@@ -102,7 +102,10 @@ public class JShellExerciseTool {
     }
 
     public void directlyExecuteCodeSnippet(String code, String originalCode) {
-        CompletableFuture.supplyAsync(() -> jshell.eval(code))
+        logger.info("starting " + code);
+        CompletableFuture.supplyAsync(() -> {
+                synchronized(jshell) { return jshell.eval(code); } }
+        )
                 .orTimeout(timeout, TimeUnit.MILLISECONDS)
                 .thenAccept(results -> { // update history listeners
                     results.forEach(s -> {
@@ -125,8 +128,11 @@ public class JShellExerciseTool {
         }).exceptionally(e -> {
             jshell.stop();
             sendSnippetResult(originalCode, "ERROR", "Last statement went over time", 0);
+            logger.info("stoppingz " + code);
             return null;
         });
+
+        logger.info("stopping " + code);
     }
 
     public void sendSnippetResult(String snippet, String status, String message, double goalCompletion) {
