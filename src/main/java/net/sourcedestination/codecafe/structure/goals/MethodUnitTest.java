@@ -39,7 +39,8 @@ public class MethodUnitTest extends Goal {
 
     @Override
     public String getDescription() {
-        return methodName+"("+inputs+") -> " + output;
+        return hiddenTest ? "<hidden test>" :
+                methodName+"("+inputs+") -> " + output;
     }
 
     @Override
