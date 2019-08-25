@@ -1,13 +1,14 @@
 <p>Java has a method that will give you the current time. You can call it by typing this in to the REPL:</p>
 <pre>import System.currentTimeMillis;
-    currentTimeMillis()</pre>
+currentTimeMillis()</pre>
 <p>The only problem... it gives you the current time as the number of milliseconds since midnight
     <a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a>, January first, 1970!
     Note that it also gives it to you as a long integer (because this number is too large to fit in to a
     normal integer).</p>
-<p>Assume the import statement has already been run so that you can call this method with a method call
-    expression (as in the second line of the example above). Your job is to develop a compound expression
-    that includes this method call expression as a subexpression and evaluates to the current hour (during
+<p>Assume the import statement has already been run and also the following line of code: </p>
+<pre>var time = currentTimeMillis();</pre>
+<p>Your job is to develop a compound expression
+    that includes a reference to this variable (<b>time</b>) and evaluates to the current hour (during
     daylight savings in the St. Joseph area). You can experiment with JShell to get it right or try it out
     directly here.</p>
 <p><strong>Note:</strong> in JShell, the hour should match the clock on your computer if you have the

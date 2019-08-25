@@ -18,7 +18,6 @@
                 </list>
             </constructor-arg>
         </bean>
-    /-->
     <bean id="noVowels" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
         <constructor-arg name="exerciseId" value="noVowels"/>
         <constructor-arg name="methodName" value="noVowels"/>
@@ -83,76 +82,49 @@
         </constructor-arg>
     </bean>
 
-
-    <bean id="whatHourIsIt" class="net.sourcedestination.codecafe.structure.exercises.ExpressionExercise">
-        <constructor-arg name="exerciseId" value="whatHourIsIt"/>
-        <constructor-arg name="timeout" value="1000"/>
-        <constructor-arg name="initializationCode">
-            <list>
-                <value>long currentTimeMillis() { return System.currentTimeMillis(); }</value>
-            </list>
-        </constructor-arg>
-        <constructor-arg name="targetType" value="int"/>
-        <constructor-arg name="description">
-            <bean id="outside-map" class="net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition" factory-method="loadTextFile">
-                <constructor-arg value="exercise-descriptions/whatHourIsIt.html"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg name="goals">
-            <bean class="net.sourcedestination.codecafe.structure.goals.GoalStructure">
-                <constructor-arg name="shortDescription" value=""/>
-                <constructor-arg name="longDescription" value="" />
-                <constructor-arg name="subgoals">
-                    <list>
-                        <bean class="net.sourcedestination.codecafe.structure.goals.ExpressionTest">
-                            <constructor-arg name="expectedOutput" value="#{2}"/>
-                            <constructor-arg name="initializationCode"
-                                             value="long currentTimeMillis() { return 1565984600627L; }"/>
-                            <constructor-arg name="hiddenTest" value="false"/>
-                            <constructor-arg name="shortDescription"
-                                             value="Check time at 2:43 on 8/16/2019"/>
-                            <constructor-arg name="id" value="test1"/>
-                        </bean>
-                        <bean class="net.sourcedestination.codecafe.structure.goals.ExpressionTest">
-                            <constructor-arg name="expectedOutput" value="#{6}"/>
-                            <constructor-arg name="initializationCode"
-                                             value="long currentTimeMillis() { return 1566948600000L; }"/>
-                            <constructor-arg name="hiddenTest" value="false"/>
-                            <constructor-arg name="shortDescription"
-                                             value="Start of the first online class"/>
-                            <constructor-arg name="id" value="test2"/>
-                        </bean>
-                        <bean class="net.sourcedestination.codecafe.structure.goals.ExpressionTest">
-                            <constructor-arg name="expectedOutput" value="#{10}"/>
-                            <constructor-arg name="initializationCode"
-                                             value="long currentTimeMillis() { return 1566834600000L; }"/>
-                            <constructor-arg name="hiddenTest" value="false"/>
-                            <constructor-arg name="shortDescription"
-                                             value="End of the first live class"/>
-                            <constructor-arg name="id" value="test3"/>
-                        </bean>
-                        <bean class="net.sourcedestination.codecafe.structure.goals.ExpressionTest">
-                            <constructor-arg name="expectedOutput" value="#{10}"/>
-                            <constructor-arg name="initializationCode"
-                                             value="long currentTimeMillis() { return 1566834600000L; }"/>
-                            <constructor-arg name="hiddenTest" value="true"/>
-                            <constructor-arg name="shortDescription"
-                                             value="Check time at 2:00 on 8/16/2019"/>
-                            <constructor-arg name="id" value="test4"/>
-                        </bean>
-                        <bean class="net.sourcedestination.codecafe.structure.goals.ExpressionTest">
-                            <constructor-arg name="expectedOutput" value="#{7}"/>
-                            <constructor-arg name="initializationCode"
-                                             value="long currentTimeMillis() { return 0L; }"/>
-                            <constructor-arg name="hiddenTest" value="true"/>
-                            <constructor-arg name="shortDescription"
-                                             value="Time at the UNIX epoch"/>
-                            <constructor-arg name="id" value="test5"/>
-                        </bean>
-                    </list>
-                </constructor-arg>
-            </bean>
-        </constructor-arg>
+    /-->
+    <bean id="whatHourIsIt" class="net.sourcedestination.codecafe.structure.exercises.MethodlikeExpressionExercise">
+    <constructor-arg name="exerciseId" value="whatHourIsIt"/>
+    <constructor-arg name="timeout" value="1000"/>
+    <constructor-arg name="parameters">
+        <map>
+            <entry key="time" value="#{1L}"/>
+        </map>
+    </constructor-arg>
+    <constructor-arg name="targetType" value="long"/>
+    <constructor-arg name="description">
+        <bean id="outside-map" class="net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition" factory-method="loadTextFile">
+            <constructor-arg value="exercise-descriptions/whatHourIsIt.html"/>
+        </bean>
+    </constructor-arg>
+            <constructor-arg name="visibleTests">
+                <list>
+                    <bean class="net.sourcedestination.funcles.tuple.Pair">
+                        <constructor-arg value="1565984600627L" />
+                        <constructor-arg value="2"/>
+                    </bean>
+                    <bean class="net.sourcedestination.funcles.tuple.Pair">
+                        <constructor-arg value="1566948600000L" />
+                        <constructor-arg value="6"/>
+                    </bean>
+                    <bean class="net.sourcedestination.funcles.tuple.Pair">
+                        <constructor-arg value="1566834600000L" />
+                        <constructor-arg value="10"/>
+                    </bean>
+                </list>
+            </constructor-arg>
+            <constructor-arg name="hiddenTests">
+                <list>
+                    <bean class="net.sourcedestination.funcles.tuple.Pair">
+                        <constructor-arg value="1566834600000L" />
+                        <constructor-arg value="10"/>
+                    </bean>
+                    <bean class="net.sourcedestination.funcles.tuple.Pair">
+                        <constructor-arg value="0L" />
+                        <constructor-arg value="7"/>
+                    </bean>
+                </list>
+            </constructor-arg>
     </bean>
 
     <bean id="gaussianPDFExpression" class="net.sourcedestination.codecafe.structure.exercises.MethodlikeExpressionExercise">
