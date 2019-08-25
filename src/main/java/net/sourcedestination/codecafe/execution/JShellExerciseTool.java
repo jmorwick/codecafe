@@ -195,4 +195,7 @@ public class JShellExerciseTool {
         jshell = buildJShell();
         exercise.initializeTool(this);
     }
+    public synchronized void stop() {
+        jshell.stop();
+    }
 }

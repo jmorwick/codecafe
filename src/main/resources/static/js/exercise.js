@@ -196,6 +196,8 @@ function populateExercise(exercise, stompClient) {
             var sendButton = $(this);
             var exerciseId = exercise.attr('id');
             stompClient.send("/app/exercise/"+exerciseId+"/reset", {}, "reset");
+            location.reload();
+            /*
             var codepad = sendButton.parent().find('textarea');
             codepad.val('');
             var variables = exercise.find('js-variables');
@@ -205,6 +207,7 @@ function populateExercise(exercise, stompClient) {
             var methods = exercise.find('.js-methods');
             $(methods).children().remove();
             // TODO: report error on failure to send ajax message
+             */
         });
     });
 };

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,7 @@ public class ExerciseController {
 
     // exeriseId -> template name
     private Map<String, ExerciseDefinition> definitions = new HashMap<>();
-    private Map<Tuple2<String,String>,JShellExerciseTool> toolCache = new HashMap<>();
+    private Map<Tuple2<String,String>,JShellExerciseTool> toolCache = new ConcurrentHashMap<>();
     private final Gson gson = new Gson();
 
     public final long DEFAULT_TIMEOUT = 100000;
@@ -156,7 +157,12 @@ public class ExerciseController {
             Principal user) {
         var username = user.getName();
         logger.info("User " + username + " on exercise " + exerciseId + " issued reset");
-        getTool(username, exerciseId).reset();
+
+        var id = makeTuple(username, exerciseId);
+        var tool = toolCache.get(id);
+        tool.stop();
+        toolCache.remove(id);
+        getTool(username, exerciseId); // regenerate tool
         //db.recordReset(username, exerciseId);
     }
 
