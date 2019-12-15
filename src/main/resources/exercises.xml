@@ -875,6 +875,71 @@
         </constructor-arg>
     </bean>
 
+    <bean id="exactChange" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <constructor-arg name="exerciseId" value="exactChange"/>
+        <constructor-arg name="methodName" value="exactChange"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(int,int,int,int,int)boolean"/>
+        <constructor-arg name="description">
+            <value>You hear the icecream truck driving down the street and you race to grab as much change from the
+            couch as you can and run out the door. When you get to the truck, you find out the driver is some
+            kind of weird jerk that demands exact change for service.
+
+            Write a method called exactChange that takes 4 integer values: priceOfIcecream (in cents), quarters, dimes,
+            nickels, and pennies. The first integer represents the price demanded by the weirdo truck driver, and the others
+            indicate how many of each type of coin you managed to scrounge up. Return true if you'll be able to purchase
+            the icecream with exact change and false otherwise. </value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>157,15,10,10,10</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>157,15,10,10,1</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>5,0,0,1,0</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>76,1,10,1,2</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>76,3,0,0,1</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>76,2,0,4,1</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>71,20,0,0,20</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>71,20,1,0,20</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>76,2,0,5,1</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>76,0,8,5,3</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
 
     <!-- incorporate https://codingbat.com/prob/p258263 /-->
     <!-- incorporate https://codingbat.com/prob/p257654 /-->
