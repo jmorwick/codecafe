@@ -257,6 +257,72 @@
         </constructor-arg>
     </bean>
 
+    <bean id="isLeapYear" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <!-- developed from https://codingbat.com/prob/p243129 /-->
+        <constructor-arg name="exerciseId" value="isLeapYear"/>
+        <constructor-arg name="methodName" value="isLeapYear"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(int)boolean"/>
+        <constructor-arg name="description">
+            <value>This method should return true if the given year is a leap year and false otherwise. Only positive
+                values will be used for years. Most years that are divisible by 4 are leap years, but there are
+                exceptions. Years that are divisible by 100 are not leap years, unless they are also divisible by 400,
+                in which case they are still a leap year! If we had a leap year every 4 years, it would over correct
+                and our calendars would fall out of sync. To correct for this, years divisible by 100 are not counted
+                as leap years (for instance, 1900 was not a leap year). However, this over corrects too much in the
+                other direction! To avoid over correcting, we still count years divisible by 400 as leap years (for
+                instance, 2000 was a leap year!)</value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1998</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>2001</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>2004</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>2100</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>2000</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1900</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>2123</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>2020</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>2200</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>2400</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
     <!-- incorporate https://codingbat.com/prob/p258263 /-->
     <!-- incorporate https://codingbat.com/prob/p257654 /-->
     <!-- incorporate https://codingbat.com/prob/p265699 /-->
