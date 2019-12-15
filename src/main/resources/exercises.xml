@@ -682,9 +682,51 @@
         </constructor-arg>
     </bean>
 
+    <bean id="countEvens" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <constructor-arg name="exerciseId" value="countEvens"/>
+        <constructor-arg name="methodName" value="countEvens"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(int)int"/>
+        <constructor-arg name="description">
+            <value>Write a method that adds up all of the even numbers from 1 to limit and returns it.</value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1</value></constructor-arg>
+                    <constructor-arg><value>0</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>2</value></constructor-arg>
+                    <constructor-arg><value>2</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>4</value></constructor-arg>
+                    <constructor-arg><value>6</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>5</value></constructor-arg>
+                    <constructor-arg><value>6</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>10</value></constructor-arg>
+                    <constructor-arg><value>30</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1000</value></constructor-arg>
+                    <constructor-arg><value>250500</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+
     <!-- incorporate https://codingbat.com/prob/p258263 /-->
     <!-- incorporate https://codingbat.com/prob/p257654 /-->
-    <!-- incorporate https://codingbat.com/prob/p227543 /-->
     <!-- incorporate https://codingbat.com/prob/p286501 /-->
     <!-- incorporate https://codingbat.com/prob/p203598 /-->
 
