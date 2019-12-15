@@ -724,11 +724,113 @@
         </constructor-arg>
     </bean>
 
+    <bean id="isPrime" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <!-- developed from https://codingbat.com/author/p286501 /-->
+        <constructor-arg name="exerciseId" value="isPrime"/>
+        <constructor-arg name="methodName" value="isPrime"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(int)boolean"/>
+        <constructor-arg name="description">
+            <value>Determine if the number is prime (an integer greater than 1 that is not divisible by any positive
+                integer other than 1 and itself).</value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>3</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>4</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>5</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>10</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>13</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>7793</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>7794</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>7795</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="calmDown" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <!-- developed from https://codingbat.com/author/p203598 /-->
+        <constructor-arg name="exerciseId" value="calmDown"/>
+        <constructor-arg name="methodName" value="calmDown"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(String)String"/>
+        <constructor-arg name="description">
+            <value>Develops a method that takes a string and returns a copy of it without any exclamation points.
+            </value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"NO!!! YOU'RE THE JERK!!!"</value></constructor-arg>
+                    <constructor-arg><value>"NO YOU'RE THE JERK"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Please be home by 10."</value></constructor-arg>
+                    <constructor-arg><value>"Please be home by 10."</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"One! Two! Three! Four!"</value></constructor-arg>
+                    <constructor-arg><value>"One Two Three Four"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Get home now!"</value></constructor-arg>
+                    <constructor-arg><value>"Get home now"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Are you there? Are you there?! Hello?"</value></constructor-arg>
+                    <constructor-arg><value>"Are you there? Are you there? Hello?"</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"!!!"</value></constructor-arg>
+                    <constructor-arg><value>""</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Yo:/? hi"</value></constructor-arg>
+                    <constructor-arg><value>"Yo:/? hi"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"!!1!!!1"</value></constructor-arg>
+                    <constructor-arg><value>"11"</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
 
     <!-- incorporate https://codingbat.com/prob/p258263 /-->
     <!-- incorporate https://codingbat.com/prob/p257654 /-->
-    <!-- incorporate https://codingbat.com/prob/p286501 /-->
-    <!-- incorporate https://codingbat.com/prob/p203598 /-->
 
     <!-- replace https://codingbat.com/prob/p184004 /-->
     <!-- replace https://codingbat.com/prob/p182873 /-->
