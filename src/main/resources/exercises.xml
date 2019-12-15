@@ -305,4 +305,73 @@
         </constructor-arg>
     </bean>
 
+
+    <bean id="bothEnds" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <constructor-arg name="exerciseId" value="bothEnds"/>
+        <constructor-arg name="methodName" value="bothEnds"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(String)String"/>
+        <constructor-arg name="description">
+            <value>Given a string containing at least two characters, return a new string consisting of the first and
+            last characers in the original string (in that order). </value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Java"</value></constructor-arg>
+                    <constructor-arg><value>"Ja"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Missouri Western"</value></constructor-arg>
+                    <constructor-arg><value>"Mn"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Hi"</value></constructor-arg>
+                    <constructor-arg><value>"Hi"</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Carol Danvers"</value></constructor-arg>
+                    <constructor-arg><value>"Cs"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Tony Stark"</value></constructor-arg>
+                    <constructor-arg><value>"Tk"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"aba"</value></constructor-arg>
+                    <constructor-arg><value>"aa"</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+
+    <!-- initials (Joseph Bentley Kendall-Morwick) -> "JBK" /-->
+    <!-- incorporate https://codingbat.com/prob/p208150 /-->
+    <!-- incorporate https://codingbat.com/prob/p258263 /-->
+    <!-- incorporate https://codingbat.com/prob/p257654 /-->
+    <!-- incorporate https://codingbat.com/prob/p265699 /-->
+    <!-- incorporate https://codingbat.com/prob/p292218 /-->
+    <!-- incorporate https://codingbat.com/prob/p246309 /-->
+    <!-- incorporate https://codingbat.com/prob/p272214 /-->
+    <!-- incorporate https://codingbat.com/prob/p244189 /-->
+    <!-- incorporate https://codingbat.com/prob/p227543 /-->
+    <!-- incorporate https://codingbat.com/prob/p286501 /-->
+    <!-- incorporate https://codingbat.com/prob/p203598 /-->
+
+    <!-- replace https://codingbat.com/prob/p184004 /-->
+    <!-- replace https://codingbat.com/prob/p182873 /-->
+    <!-- replace https://codingbat.com/prob/p113261 /-->
+    <!-- replace https://codingbat.com/prob/p170829 /-->
+    <!-- replace https://codingbat.com/prob/p142455 /-->
+    <!-- replace https://codingbat.com/prob/p155713 /-->
+    <!-- replace https://codingbat.com/prob/p136254 /-->
+    <!-- replace https://codingbat.com/prob/p191878 /-->
+
+    <!-- develop exercises for templates /-->
+
 </beans>
