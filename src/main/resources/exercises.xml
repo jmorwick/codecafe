@@ -349,10 +349,6 @@
                     <constructor-arg><value>89</value></constructor-arg>
                 </bean>
                 <bean class="net.sourcedestination.funcles.tuple.Pair">
-                    <constructor-arg><value></value></constructor-arg>
-                    <constructor-arg><value></value></constructor-arg>
-                </bean>
-                <bean class="net.sourcedestination.funcles.tuple.Pair">
                     <constructor-arg><value>100, 0, 0</value></constructor-arg>
                     <constructor-arg><value>40</value></constructor-arg>
                 </bean>
@@ -404,10 +400,66 @@
         </constructor-arg>
     </bean>
 
+
+    <bean id="highestBidder" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <!-- developed from https://codingbat.com/prob/p292218 /-->
+        <constructor-arg name="exerciseId" value="highestBidder"/>
+        <constructor-arg name="methodName" value="highestBidder"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(int,int,int)int"/>
+        <constructor-arg name="description">
+            <value>Three auction goers are bidding on a painting. Their bids are represented by bid1, bid2, and bid3
+                below. The highest bidder gets the painting! Return the value 1, 2, or 3 corresponding with the highest
+                bidder. In the case of a tie, return the smallest number from the tied bidders. Note that you can have
+                more than one if statement and more than one return statement in your program. Also note that your last
+                return statement should not be inside an if statement (with some exceptions that we'll see next week).
+            </value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>234, 325, 14</value></constructor-arg>
+                    <constructor-arg><value>2</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>124, 15, 52</value></constructor-arg>
+                    <constructor-arg><value>1</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>5000, 6000, 7000</value></constructor-arg>
+                    <constructor-arg><value>3</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>954, 954, 1500</value></constructor-arg>
+                    <constructor-arg><value>3</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>900, 4210, 4210</value></constructor-arg>
+                    <constructor-arg><value>2</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1,1,1</value></constructor-arg>
+                    <constructor-arg><value>1</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>20,20,0</value></constructor-arg>
+                    <constructor-arg><value>1</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1,2,3</value></constructor-arg>
+                    <constructor-arg><value>3</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
     <!-- incorporate https://codingbat.com/prob/p258263 /-->
     <!-- incorporate https://codingbat.com/prob/p257654 /-->
     <!-- incorporate https://codingbat.com/prob/p265699 /-->
-    <!-- incorporate https://codingbat.com/prob/p292218 /-->
     <!-- incorporate https://codingbat.com/prob/p246309 /-->
     <!-- incorporate https://codingbat.com/prob/p272214 /-->
     <!-- incorporate https://codingbat.com/prob/p227543 /-->
