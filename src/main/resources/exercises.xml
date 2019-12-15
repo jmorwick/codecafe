@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    
+
     <bean id="gaussianPDFMethod" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
         <constructor-arg name="exerciseId" value="gaussianPDFMethod"/>
         <constructor-arg name="methodName" value="gaussianPdf"/>
@@ -218,7 +218,45 @@
         </constructor-arg>
     </bean>
 
-    <!-- incorporate https://codingbat.com/prob/p208150 /-->
+    <bean id="getRenter" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <!-- developed from https://codingbat.com/prob/p208150 /-->
+        <constructor-arg name="exerciseId" value="getRenter"/>
+        <constructor-arg name="methodName" value="getRenter"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(String,String[],String[])String"/>
+        <constructor-arg name="description">
+            <value>Given a book title, an array of book titles, and an array of the names of renters of the books in the
+                previous arrays (array indices should match up), return the name of the renter of the given book. If the
+                book title is not recognized or if no one is renting the book, return null. Ignore case when comparing
+                book titles. If no one is renting the book the renters array should contain the value null for the given
+                book.</value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Snow Crash", new String[]{"Snow Crash", "I Robot", "Neuromancer", "The Hitchhiker's Guide to the Galaxy"}, new String[]{"Joey", null, "Jenny", "Jerry"}</value></constructor-arg>
+                    <constructor-arg><value>"Joey"</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Snow Crash", new String[]{"Reamde", "I Robot", "Neuromancer", "The Hitchhiker's Guide to the Galaxy"}, new String[]{"Joey", null, "Jenny", "Jerry"}</value></constructor-arg>
+                    <constructor-arg><value>null</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"the hitchhiker's guide to the galaxy", new String[]{"Snow Crash", "I Robot", "Neuromancer", "The Hitchhiker's Guide to the Galaxy"}, new String[]{"Joey", null, "Jenny", "Jerry"}</value></constructor-arg>
+                    <constructor-arg><value>"Jerry"</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"C",new String[]{"a","b","c"}, new String[]{"1","2","3"}</value></constructor-arg>
+                    <constructor-arg><value>"3"</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
     <!-- incorporate https://codingbat.com/prob/p258263 /-->
     <!-- incorporate https://codingbat.com/prob/p257654 /-->
     <!-- incorporate https://codingbat.com/prob/p265699 /-->
