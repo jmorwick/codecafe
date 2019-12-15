@@ -530,7 +530,6 @@
         </constructor-arg>
     </bean>
 
-
     <bean id="priceIsRight" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
         <!-- developed from https://codingbat.com/prob/p272214 /-->
         <constructor-arg name="exerciseId" value="priceIsRight"/>
@@ -611,9 +610,80 @@
         </constructor-arg>
     </bean>
 
+    <bean id="palindrome" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <constructor-arg name="exerciseId" value="palindrome"/>
+        <constructor-arg name="methodName" value="palindrome"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(String)boolean"/>
+        <constructor-arg name="description">
+            <value>A palindrome is any word or series of words that can be spelled the same way backward and forward.
+                Spaces are commonly ignored when considering whether a sentence is a palindrome or not.
+
+                Write a method that takes a string and returns true if it represents a palindrome, and false otherwise.
+                Don't try to solve the whole problem all at once. First get the method working on the first four test
+                cases, then try for the last two!
+            </value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"racecar"</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"racecars"</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"tacocat"</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"fool"</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"taco cat"</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"a man a plan a canal panama"</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"hi there"</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"radar"</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"dood"</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"a"</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>""</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"ab"</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
     <!-- incorporate https://codingbat.com/prob/p258263 /-->
     <!-- incorporate https://codingbat.com/prob/p257654 /-->
-    <!-- incorporate https://codingbat.com/prob/p265699 /-->
     <!-- incorporate https://codingbat.com/prob/p227543 /-->
     <!-- incorporate https://codingbat.com/prob/p286501 /-->
     <!-- incorporate https://codingbat.com/prob/p203598 /-->
