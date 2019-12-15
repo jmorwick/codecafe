@@ -828,6 +828,53 @@
         </constructor-arg>
     </bean>
 
+    <bean id="ultimateQuestion" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <constructor-arg name="exerciseId" value="ultimateQuestion"/>
+        <constructor-arg name="methodName" value="ultimateQuestion"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(int,int)boolean"/>
+        <constructor-arg name="description">
+            <value>Develop a method that takes two integers and returns true if one of them is 42 or their sum
+            is 42.</value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>42,0</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>10,42</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>45,12</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>21,21</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>42,0</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>40,2</value></constructor-arg>
+                    <constructor-arg><value>true</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>20,21</value></constructor-arg>
+                    <constructor-arg><value>false</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
 
     <!-- incorporate https://codingbat.com/prob/p258263 /-->
     <!-- incorporate https://codingbat.com/prob/p257654 /-->
