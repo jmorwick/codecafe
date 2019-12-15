@@ -400,7 +400,6 @@
         </constructor-arg>
     </bean>
 
-
     <bean id="highestBidder" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
         <!-- developed from https://codingbat.com/prob/p292218 /-->
         <constructor-arg name="exerciseId" value="highestBidder"/>
@@ -457,10 +456,83 @@
         </constructor-arg>
     </bean>
 
+    <bean id="bowlingRollScore" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <!-- developed from https://codingbat.com/prob/p246309 /-->
+        <constructor-arg name="exerciseId" value="bowlingRollScore"/>
+        <constructor-arg name="methodName" value="bowlingRollScore"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(char)int"/>
+        <constructor-arg name="description">
+            <value>Write  method for interpreting a single roll in a bowling score. This method returns an integer
+                (the score of the roll) and has one character parameter called roll indicating what happened on that
+                roll of the bowling ball.  A bowling score can be any of the digits 0 - 9, indicating the number of
+                pins knocked down, or a / (called a spare) or a X (called a strike), indicating all 10 pins were
+                knocked down. For those familiar with bowling, this method will ignore future and past rolls that may
+                impact the score of a spare or a strike. In each case, this method should simply return the score as
+                the number of pins knocked down. For an unrecognized character, the method should return 0.
+            </value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>'X'</value></constructor-arg>
+                    <constructor-arg><value>10</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>'/'</value></constructor-arg>
+                    <constructor-arg><value>10</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>'1'</value></constructor-arg>
+                    <constructor-arg><value>1</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>'2'</value></constructor-arg>
+                    <constructor-arg><value>2</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>'3'</value></constructor-arg>
+                    <constructor-arg><value>3</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>'!'</value></constructor-arg>
+                    <constructor-arg><value>0</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>'4'</value></constructor-arg>
+                    <constructor-arg><value>4</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>'5'</value></constructor-arg>
+                    <constructor-arg><value>5</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>'6'</value></constructor-arg>
+                    <constructor-arg><value>6</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>'7'</value></constructor-arg>
+                    <constructor-arg><value>7</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>'8'</value></constructor-arg>
+                    <constructor-arg><value>8</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>'9'</value></constructor-arg>
+                    <constructor-arg><value>9</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
     <!-- incorporate https://codingbat.com/prob/p258263 /-->
     <!-- incorporate https://codingbat.com/prob/p257654 /-->
     <!-- incorporate https://codingbat.com/prob/p265699 /-->
-    <!-- incorporate https://codingbat.com/prob/p246309 /-->
     <!-- incorporate https://codingbat.com/prob/p272214 /-->
     <!-- incorporate https://codingbat.com/prob/p227543 /-->
     <!-- incorporate https://codingbat.com/prob/p286501 /-->
