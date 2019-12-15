@@ -530,10 +530,90 @@
         </constructor-arg>
     </bean>
 
+
+    <bean id="priceIsRight" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <!-- developed from https://codingbat.com/prob/p272214 /-->
+        <constructor-arg name="exerciseId" value="priceIsRight"/>
+        <constructor-arg name="methodName" value="priceIsRight"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(int,int,int)int"/>
+        <constructor-arg name="description">
+            <value>On the show "The Price is Right", contestants bid on the price of an item up for bid. The winner is
+                the contestant who has the highest bid without going over the actual retail price of the item up for bid.
+                If there are only two contestants bidding and their bids are represented by bid1 and bid2 and the actual
+                retail price of the item up for bid is represented by actualRetailPrice, determine whether contestant 1
+                or contestant2 wins the bid by returning 1 when contestant 1 wins and 2 when contestant 2 wins.
+
+                Note that the contestants are not allowed to enter the same bid. If they do, return 0 to indicate there
+                is no winner. Likewise, if both contestants bid over the actual retail price of the item up for bid,
+                there will also be no winner (return the value 0 in this case).
+            </value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>15, 16, 20</value></constructor-arg>
+                    <constructor-arg><value>2</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>80, 40, 85</value></constructor-arg>
+                    <constructor-arg><value>1</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>199, 200, 510</value></constructor-arg>
+                    <constructor-arg><value>2</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>1, 2, 40</value></constructor-arg>
+                    <constructor-arg><value>2</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>900, 1, 850</value></constructor-arg>
+                    <constructor-arg><value>2</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>999, 1, 1000</value></constructor-arg>
+                    <constructor-arg><value>1</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>500, 501, 500</value></constructor-arg>
+                    <constructor-arg><value>1</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>35, 75, 65</value></constructor-arg>
+                    <constructor-arg><value>1</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>35, 75, 95</value></constructor-arg>
+                    <constructor-arg><value>2</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>100, 100, 900</value></constructor-arg>
+                    <constructor-arg><value>0</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>500, 501, 299</value></constructor-arg>
+                    <constructor-arg><value>0</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>501, 500, 299</value></constructor-arg>
+                    <constructor-arg><value>0</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>12, 42, 15</value></constructor-arg>
+                    <constructor-arg><value>1</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
     <!-- incorporate https://codingbat.com/prob/p258263 /-->
     <!-- incorporate https://codingbat.com/prob/p257654 /-->
     <!-- incorporate https://codingbat.com/prob/p265699 /-->
-    <!-- incorporate https://codingbat.com/prob/p272214 /-->
     <!-- incorporate https://codingbat.com/prob/p227543 /-->
     <!-- incorporate https://codingbat.com/prob/p286501 /-->
     <!-- incorporate https://codingbat.com/prob/p203598 /-->
