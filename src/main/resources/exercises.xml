@@ -323,13 +323,93 @@
         </constructor-arg>
     </bean>
 
+    <bean id="examScore" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <!-- developed from https://codingbat.com/prob/p244189 /-->
+        <constructor-arg name="exerciseId" value="examScore"/>
+        <constructor-arg name="methodName" value="examScore"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(int,int,int)int"/>
+        <constructor-arg name="description">
+            <value>In our section of CSC 184, there are some slightly complicated rules for how your weighted exam score
+                is determined. Check the syllabus for an explanation of these rules. Given scores on each of the three
+                exams (midterm, finalWritten, and finalPractical), determine what the overall exam score should be and
+                return it. Round values to the nearest point and return the score as an integer. Hint: Find the minimum
+                score and also find the weighted average of all the exam scores. This should be enough to calculate the
+                return value. Also, the Math.round method can make it a little easier to round to the nearest integer
+            </value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>54, 82, 64</value></constructor-arg>
+                    <constructor-arg><value>69</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>74, 98, 87</value></constructor-arg>
+                    <constructor-arg><value>89</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value></value></constructor-arg>
+                    <constructor-arg><value></value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>100, 0, 0</value></constructor-arg>
+                    <constructor-arg><value>40</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>0, 0, 100</value></constructor-arg>
+                    <constructor-arg><value>40</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>0, 100, 0</value></constructor-arg>
+                    <constructor-arg><value>40</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>100, 100, 100</value></constructor-arg>
+                    <constructor-arg><value>100</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>12,13,14</value></constructor-arg>
+                    <constructor-arg><value>13</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>0, 100, 50</value></constructor-arg>
+                    <constructor-arg><value>60</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>100,90,92</value></constructor-arg>
+                    <constructor-arg><value>95</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>90,100,98</value></constructor-arg>
+                    <constructor-arg><value>97</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>100,100,90</value></constructor-arg>
+                    <constructor-arg><value>98</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>99,99,100</value></constructor-arg>
+                    <constructor-arg><value>99</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>0, 0, 21</value></constructor-arg>
+                    <constructor-arg><value>8</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
     <!-- incorporate https://codingbat.com/prob/p258263 /-->
     <!-- incorporate https://codingbat.com/prob/p257654 /-->
     <!-- incorporate https://codingbat.com/prob/p265699 /-->
     <!-- incorporate https://codingbat.com/prob/p292218 /-->
     <!-- incorporate https://codingbat.com/prob/p246309 /-->
     <!-- incorporate https://codingbat.com/prob/p272214 /-->
-    <!-- incorporate https://codingbat.com/prob/p244189 /-->
     <!-- incorporate https://codingbat.com/prob/p227543 /-->
     <!-- incorporate https://codingbat.com/prob/p286501 /-->
     <!-- incorporate https://codingbat.com/prob/p203598 /-->
