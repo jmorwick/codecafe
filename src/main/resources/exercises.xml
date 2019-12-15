@@ -3,86 +3,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-
-    <!--
-        <bean id="playground" class="net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition">
-            <constructor-arg index="0" value="playground"/>
-            <constructor-arg index="1" value="1000"/>
-            <constructor-arg index="2" value="full"/>
-            <constructor-arg index="3">
-                <list>
-                </list>
-            </constructor-arg>
-            <constructor-arg index="4">
-                <list>
-                </list>
-            </constructor-arg>
-        </bean>
-    <bean id="noVowels" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
-        <constructor-arg name="exerciseId" value="noVowels"/>
-        <constructor-arg name="methodName" value="noVowels"/>
-        <constructor-arg name="timeout" value="1000"/>
-        <constructor-arg name="signature" value="(String)String"/>
-        <constructor-arg name="description">
-            <bean id="outside-map" class="net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition" factory-method="loadTextFile">
-                <constructor-arg value="exercise-descriptions/noVowels.html"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg name="visibleTests">
-            <list>
-                <bean class="net.sourcedestination.funcles.tuple.Pair">
-                    <constructor-arg><value>"Frankly, my dear, I don't give a damn."</value></constructor-arg>
-                    <constructor-arg><value>"Frnkl, m dr,  dn't gv  dmn."</value></constructor-arg>
-                </bean>
-                <bean class="net.sourcedestination.funcles.tuple.Pair">
-                    <constructor-arg><value>"I'm gonna make him an offer he can't refuse."</value></constructor-arg>
-                    <constructor-arg><value>"'m gnn mk hm n ffr h cn't rfs."</value></constructor-arg>
-                </bean>
-                <bean class="net.sourcedestination.funcles.tuple.Pair">
-                    <constructor-arg><value>"Toto, I've a feeling we're not in Kansas anymore."</value></constructor-arg>
-                    <constructor-arg><value>"Tt, 'v  flng w'r nt n Knss nmr."</value></constructor-arg>
-                </bean>
-                <bean class="net.sourcedestination.funcles.tuple.Pair">
-                    <constructor-arg><value>"Here's looking at you, kid."</value></constructor-arg>
-                    <constructor-arg><value>"Hr's lkng t , kd."</value></constructor-arg>
-                </bean>
-                <bean class="net.sourcedestination.funcles.tuple.Pair">
-                    <constructor-arg><value>"All right, Mr. DeMille, I'm ready for my close-up."</value></constructor-arg>
-                    <constructor-arg><value>"ll rght, Mr. DMll, 'm rd fr m cls-p."</value></constructor-arg>
-                </bean>
-            <bean class="net.sourcedestination.funcles.tuple.Pair">
-                <constructor-arg><value>"I love the smell of napalm in the morning."</value></constructor-arg>
-                <constructor-arg><value>" lv th smll f nplm n th mrnng."</value></constructor-arg>
-            </bean>
-            <bean class="net.sourcedestination.funcles.tuple.Pair">
-                <constructor-arg><value>"Fasten your seatbelts. It's going to be a bumpy night."</value></constructor-arg>
-                <constructor-arg><value>"Fstn r stblts. t's gng t b  bmp nght."</value></constructor-arg>
-            </bean>
-            </list>
-        </constructor-arg>
-        <constructor-arg name="hiddenTests">
-            <list>
-                <bean class="net.sourcedestination.funcles.tuple.Pair">
-                    <constructor-arg><value>"You talking to me?"</value></constructor-arg>
-                    <constructor-arg><value>" tlkng t m?"</value></constructor-arg>
-                </bean>
-                <bean class="net.sourcedestination.funcles.tuple.Pair">
-                    <constructor-arg><value>"What we've got here is failure to communicate."</value></constructor-arg>
-                    <constructor-arg><value>"Wht w'v gt hr s flr t cmmnct."</value></constructor-arg>
-                </bean>
-                <bean class="net.sourcedestination.funcles.tuple.Pair">
-                    <constructor-arg><value>"May the Force be with you."</value></constructor-arg>
-                    <constructor-arg><value>"M th Frc b wth ."</value></constructor-arg>
-                </bean>
-                <bean class="net.sourcedestination.funcles.tuple.Pair">
-                    <constructor-arg><value>"Go ahead, make my day."</value></constructor-arg>
-                    <constructor-arg><value>"G hd, mk m d."</value></constructor-arg>
-                </bean>
-            </list>
-        </constructor-arg>
-    </bean>
-
-    /-->
     <bean id="whatHourIsIt" class="net.sourcedestination.codecafe.structure.exercises.MethodlikeExpressionExercise">
     <constructor-arg name="exerciseId" value="whatHourIsIt"/>
     <constructor-arg name="timeout" value="1000"/>
@@ -213,7 +133,6 @@
         </constructor-arg>
     </bean>
 
-
     <bean id="addTwoNumbers" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
         <constructor-arg name="exerciseId" value="addTwoNumbers"/>
         <constructor-arg name="methodName" value="addTwoNumbers"/>
@@ -264,9 +183,6 @@
         </constructor-arg>
     </bean>
 
-
-
-
     <bean id="firstName" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
         <constructor-arg name="exerciseId" value="firstName"/>
         <constructor-arg name="methodName" value="firstName"/>
@@ -304,7 +220,6 @@
             </list>
         </constructor-arg>
     </bean>
-
 
     <bean id="bothEnds" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
         <constructor-arg name="exerciseId" value="bothEnds"/>
@@ -349,8 +264,50 @@
         </constructor-arg>
     </bean>
 
+    <bean id="initials" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+        <constructor-arg name="exerciseId" value="initials"/>
+        <constructor-arg name="methodName" value="initials"/>
+        <constructor-arg name="timeout" value="1000"/>
+        <constructor-arg name="signature" value="(String)String"/>
+        <constructor-arg name="description">
+            <value>Given a string containing a three-part full name where each part of the name is separated by spaces,
+                return a new string consisting of the initials for that person's name, all in upper-case, with a period
+                following each initial. </value>
+        </constructor-arg>
+        <constructor-arg name="visibleTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Philip Seymour Hoffman"</value></constructor-arg>
+                    <constructor-arg><value>"P.S.H."</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Jaime Lee Curtis"</value></constructor-arg>
+                    <constructor-arg><value>"J.L.C."</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Daniel dae Kim"</value></constructor-arg>
+                    <constructor-arg><value>"D.D.K."</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="hiddenTests">
+            <list>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Dark Wing Duck"</value></constructor-arg>
+                    <constructor-arg><value>"D.W.D."</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"Tommy Lee Jones"</value></constructor-arg>
+                    <constructor-arg><value>"T.L.J."</value></constructor-arg>
+                </bean>
+                <bean class="net.sourcedestination.funcles.tuple.Pair">
+                    <constructor-arg><value>"a b c"</value></constructor-arg>
+                    <constructor-arg><value>"A.B.C."</value></constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
 
-    <!-- initials (Joseph Bentley Kendall-Morwick) -> "JBK" /-->
     <!-- incorporate https://codingbat.com/prob/p208150 /-->
     <!-- incorporate https://codingbat.com/prob/p258263 /-->
     <!-- incorporate https://codingbat.com/prob/p257654 /-->
