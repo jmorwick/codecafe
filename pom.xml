@@ -17,6 +17,14 @@
         <version>2.1.6.RELEASE</version>
     </parent>
 
+    <distributionManagement>
+      <repository>
+        <id>github</id>
+        <name>codecafe</name>
+        <url>https://maven.pkg.github.com/jmorwick</url>
+      </repository>   
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
