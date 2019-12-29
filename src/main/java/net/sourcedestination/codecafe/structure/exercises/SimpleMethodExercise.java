@@ -122,14 +122,21 @@ public class SimpleMethodExercise extends ExerciseDefinition {
     public String getMethodName() { return methodName; }
     public String getSignature() { return  signature; }
 
-    @Override
-    public void initializeTool(LanguageExecutionTool t) {
+    public String getImports() {
+        String snippet = "";
         for(String c : imports) {
-            t.executeRawCode("import " + c + ";");
+            snippet += "import " + c + ";\n";
         }
         for(String c : staticImports) {
-            var result = t.executeRawCode("import static " + c + ";");
-            if(result.size() != 1 || result.get(0).getStatus() != SnippetExecutionEvent.ExecutionStatus.SUCCESS) {
+            snippet += "import static " + c + ";\n";
+        }
+        return snippet;
+    }
+
+    @Override
+    public void initializeTool(LanguageExecutionTool t) {
+        for(var result : t.executeRawCode(getImports())) {
+            if(result.getStatus() != SnippetExecutionEvent.ExecutionStatus.SUCCESS) {
                 throw new IllegalStateException("failed to initialize tool: " + result);
             }
         }

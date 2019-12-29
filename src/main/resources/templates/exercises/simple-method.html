@@ -3,14 +3,23 @@
 <h2>Problem Description</h2>
 <span th:utext="${description}"/>
 <hr/>
-<h2>Instructions</h2>
-<p>Develop your method in the box below and click 'execute' when you're ready
-to test it. Check the goals below for important details on the
-required name, parameter types, and return type of your method, as well as
-several example inputs with their expected outputs. Mouse over the descriptions
-and after you execute your code, mouse over the progress percentage for
-an explanation of why your code received that score.</p>
-<hr/>
+<section>
+    <h2>Instructions</h2>
+    <p>Develop your method in the box below and click 'execute' when you're ready
+    to test it. Check the goals below for important details on the
+    required name, parameter types, and return type of your method, as well as
+    several example inputs with their expected outputs. Mouse over the descriptions
+    and after you execute your code, mouse over the progress percentage for
+    an explanation of why your code received that score.</p>
+    <hr/>
+</section>
+
+<section th:if="${exercise.getImports().length() > 0}">
+    <h2>Imports</h2>
+    <p>Assume the following imports have been made:</p>
+    <pre th:utext="${exercise.getImports()}"/>
+</section>
+
 <section th:replace="components/codepad :: codepad"/>
 <section th:replace="components/messagebox :: messagebox"/>
 <section th:replace="components/goal :: goal" th:with="goal=${goal}"/>
