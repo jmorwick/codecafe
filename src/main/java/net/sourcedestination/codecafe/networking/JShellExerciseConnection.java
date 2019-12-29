@@ -49,9 +49,7 @@ public class JShellExerciseConnection implements ToolListener {
                         "status", event.getStatus(),
                         "snippet", event.getSnippet(),
                         "message", event.getResult() ,
-                        "completion", event.getGoalStates().stream()
-                                .mapToDouble(GoalState::getProgress).average()
-                                .getAsDouble()
+                        "completion", exercise.getGoalStructure().determineProgress(event)
                 )));
     }
 }

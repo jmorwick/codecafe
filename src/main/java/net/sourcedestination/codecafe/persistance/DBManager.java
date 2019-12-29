@@ -1,5 +1,8 @@
 package net.sourcedestination.codecafe.persistance;
 
+import net.sourcedestination.codecafe.execution.ToolListener;
+import net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition;
+import net.sourcedestination.codecafe.structure.goals.GoalState;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -30,6 +33,19 @@ public class DBManager {
         } catch(SQLException e) {
             logger.info("Couldn't connect to DB: " + e);
         }
+    }
+
+    public ToolListener getDBUpdater(String username, ExerciseDefinition exercise) {
+        return new ToolListener() {
+            @Override
+            public void accept(SnippetExecutionEvent event) {
+                recordSnippet(username,
+                        exercise.getId(),
+                        event.getSnippet(),
+                        ""+event.getStatus(),
+                        exercise.getGoalStructure().determineProgress(event));
+            }
+        };
     }
 
     public void recordSnippet(String username, String exercise, String code, String status, double completion) {

@@ -75,11 +75,12 @@ public class ExerciseController {
         // TODO: attempt to load execution history from DB
 
         logger.info("starting new jshell session for " + id);
+        var exercise = definitions.get(exerciseId);
         var newTool = new JShellJavaTool(DEFAULT_TIMEOUT);
         toolCache.put(id, newTool);
         listeners.put(newTool, List.of(
-                new JShellExerciseConnection(username, messagingTemplate, definitions.get(exerciseId))
-                // TODO: add in DB listener
+                new JShellExerciseConnection(username, messagingTemplate, exercise),
+                db.getDBUpdater(username, exercise)
         ));
         return newTool;
     }

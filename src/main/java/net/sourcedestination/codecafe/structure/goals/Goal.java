@@ -1,5 +1,7 @@
 package net.sourcedestination.codecafe.structure.goals;
 
+import net.sourcedestination.codecafe.persistance.SnippetExecutionEvent;
+
 import java.util.Map;
 
 public class Goal {
@@ -42,5 +44,13 @@ public class Goal {
                 "longDescription", getLongDescription(),
                 "children", false
         );
+    }
+
+    public double determineProgress(SnippetExecutionEvent event) {
+        for(GoalState gs : event.getGoalStates()) {
+            if(gs.getGoal() == this)
+                return gs.getProgress();
+        }
+        return 0.0;
     }
 }
