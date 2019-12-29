@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="gaussianPDFMethod" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+    <bean id="gaussianPdf" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
           factory-method="build">
         <constructor-arg name="methodName" value="gaussianPdf"/>
         <constructor-arg name="timeout" value="1000"/>
@@ -41,6 +41,10 @@
                 </bean>
             </list>
         </constructor-arg>
+        <constructor-arg name="imports"><list></list></constructor-arg>
+        <constructor-arg name="staticImports"><list>
+            <value>java.lang.Math.*</value>
+        </list></constructor-arg>
     </bean>
 
     <bean id="addTwoNumbers" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
