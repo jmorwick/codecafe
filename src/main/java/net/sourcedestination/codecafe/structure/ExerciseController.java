@@ -1,7 +1,9 @@
 package net.sourcedestination.codecafe.structure;
 
 import com.google.gson.Gson;
-import net.sourcedestination.codecafe.execution.JShellExerciseTool;
+import net.sourcedestination.codecafe.execution.JShellJavaTool;
+import net.sourcedestination.codecafe.execution.ToolListener;
+import net.sourcedestination.codecafe.networking.JShellExerciseConnection;
 import net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition;
 import net.sourcedestination.codecafe.persistance.DBManager;
 import net.sourcedestination.funcles.tuple.Tuple2;
@@ -20,10 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 
@@ -43,7 +45,8 @@ public class ExerciseController {
 
     // exeriseId -> template name
     private Map<String, ExerciseDefinition> definitions = new HashMap<>();
-    private Map<Tuple2<String,String>,JShellExerciseTool> toolCache = new ConcurrentHashMap<>();
+    private Map<Tuple2<String,String>, JShellJavaTool> toolCache = new ConcurrentHashMap<>();
+    private Map<JShellJavaTool, List<? extends ToolListener>> listeners = new ConcurrentHashMap<>();
     private final Gson gson = new Gson();
 
     public final long DEFAULT_TIMEOUT = 100000;
@@ -54,7 +57,7 @@ public class ExerciseController {
      * @param exerciseId
      * @return
      */
-    public synchronized JShellExerciseTool getTool(String username, String exerciseId) {
+    public synchronized JShellJavaTool getTool(String username, String exerciseId) {
         var id = makeTuple(username, exerciseId);
         if(toolCache.containsKey(id))
             return toolCache.get(id);
@@ -72,11 +75,12 @@ public class ExerciseController {
         // TODO: attempt to load execution history from DB
 
         logger.info("starting new jshell session for " + id);
-        var newTool = new JShellExerciseTool(username, exerciseId, db,
-                DEFAULT_TIMEOUT,
-                messagingTemplate,
-                definitions.get(exerciseId));
+        var newTool = new JShellJavaTool(DEFAULT_TIMEOUT);
         toolCache.put(id, newTool);
+        listeners.put(newTool, List.of(
+                new JShellExerciseConnection(username, messagingTemplate, definitions.get(exerciseId))
+                // TODO: add in DB listener
+        ));
         return newTool;
     }
 
@@ -129,16 +133,21 @@ public class ExerciseController {
 
 
     @MessageMapping("/exercise/{exerciseId}/exec")
-    public void executeSnippet(
+    @ResponseBody
+    public String executeSnippet(
             String code,
             @DestinationVariable("exerciseId") String exerciseId,
             Principal user) {
-
+        var exercise = definitions.get(exerciseId);
         var username = user.getName();
         logger.info("User " + username + " on exercise " + exerciseId + " executed: " + code);
-        getTool(username, exerciseId).evaluateCodeSnippet(code);
+        var tool = getTool(username, exerciseId);
+        var results = tool.executeUserCode(code, exercise, tool, listeners.get(tool));
+        var result = gson.toJson(results);
+        logger.info(result);
+        return result;
     }
-
+/*
     @MessageMapping("/exercise/{exerciseId}/stdin")
     public void sendDataToTool(
             String data,
@@ -149,6 +158,8 @@ public class ExerciseController {
         logger.info("User " + username + " on exercise " + exerciseId + " sent to stdin: " + data);
         getTool(username, exerciseId).writeToStdin(data);
     }
+
+ */
 
     @MessageMapping("/exercise/{exerciseId}/reset")
     public void resetTool(

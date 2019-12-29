@@ -1,9 +1,6 @@
 package net.sourcedestination.codecafe.structure.exercises;
 
-import jdk.jshell.Snippet;
-import net.sourcedestination.codecafe.execution.JShellExerciseTool;
 import net.sourcedestination.codecafe.structure.goals.*;
-import net.sourcedestination.codecafe.structure.restrictions.SnippetTypeWhiteList;
 import net.sourcedestination.funcles.tuple.Pair;
 
 import java.util.ArrayList;
@@ -19,35 +16,40 @@ public class SimpleMethodExercise extends ExerciseDefinition {
     private String methodName;
     private String signature;
 
-    public SimpleMethodExercise(String exerciseId,
+    public SimpleMethodExercise(String methodName,
                                 String description,
-                                String methodName,
-                                long timeout,
                                 String signature,
-                                Collection<Pair<String>> visibleTests,
-                                Collection<Pair<String>> hiddenTests) {
-        super(exerciseId,
+                                long timeout,
+                                Collection<? extends EvaluationGoal> evalGoals,
+                                Collection<ExecutionGoal> execGoals,
+                                GoalStructure goalStructure) {
+        super(methodName,
                 description,
                 timeout,
                 "simple-method",
-                List.of(new SnippetTypeWhiteList(Snippet.Kind.METHOD)),
-                convertToGoalStructure(methodName, signature, visibleTests, hiddenTests));
+                x->x,
+                evalGoals,
+                execGoals,
+                goalStructure);
 
         this.methodName = methodName;
         this.signature = signature;
     }
 
-    public String getMethodName() { return methodName; }
-    public String getSignature() { return  signature; }
-
-    public static GoalStructure convertToGoalStructure(
-            String methodName,
-            String signature,
-            Collection<Pair<String>> visibleTests,
-            Collection<Pair<String>> hiddenTests) {
+    public static SimpleMethodExercise build(String methodName,
+                                             String description,
+                                             String signature,
+                                             long timeout,
+                                             Collection<Pair<String>> visibleTests,
+                                             Collection<Pair<String>> hiddenTests) {
 
         int testNumber = 1;
-        List<Goal> visibleTestGoals = new ArrayList<>();
+        var evalGoals =
+                List.of(new MethodDefinitionName(methodName),
+                        new MethodDefinitionReturnType(methodName,signature),
+                        new MethodDefinitionParameters(methodName,signature));
+
+        List<ExecutionGoal> visibleTestGoals = new ArrayList<>();
         for(Pair<String> test : visibleTests) {
             logger.info("read test: " + test);
             var unitTest = new MethodUnitTest(
@@ -56,30 +58,46 @@ public class SimpleMethodExercise extends ExerciseDefinition {
             logger.info(unitTest.getInputs() + " -> " + unitTest.getOutput());
             visibleTestGoals.add(unitTest);
         }
-        List<Goal> hiddenTestGoals = new ArrayList<>();
+        List<ExecutionGoal> hiddenTestGoals = new ArrayList<>();
         for(Pair<String> test : hiddenTests)
             hiddenTestGoals.add(new MethodUnitTest(
                     "unit test " + (testNumber++),
                     methodName, true,  signature, test._2, test._1));
 
-        return new GoalStructure(
-                "All goals",
-                "Goals for expression submission",
-                new GoalStructure("Method Definition",
-                        "The header of the method is properly defined",
-                        new MethodDefinitionName(methodName),
-                        new MethodDefinitionReturnType(methodName,signature),
-                        new MethodDefinitionParameters(methodName,signature)),
-                new GoalStructure("Visible Tests", "Visible Tests",
-                        visibleTestGoals.toArray(new Goal[0])),
-                new GoalStructure("Hidden Tests", "Hidden Tests",
-                        hiddenTestGoals.toArray(new Goal[0]))
-        );    }
+        List<ExecutionGoal> allGoals = new ArrayList<>();
+        allGoals.addAll(visibleTestGoals);
+        allGoals.addAll(hiddenTestGoals);
 
+        return new SimpleMethodExercise(
+                methodName,
+                description,
+                signature,
+                timeout,
+                evalGoals,
+                allGoals,
+                new GoalStructure("All Goals", "All Goals",
+                        List.of(
+                                new GoalStructure("Method Definition",
+                                        "The header of the method is properly defined",
+                                        List.of(),
+                                        evalGoals
+                                ),
+                                new GoalStructure("Visible Tests", "Visible Tests",
+                                        List.of(),
+                                        visibleTestGoals
+                                ),
+                                new GoalStructure("Hidden Tests", "Hidden Tests",
+                                        List.of(),
+                                        hiddenTestGoals
+                                )
+                        ),
+                        List.of()
+                )
+        );
 
-    @Override
-    public String preprocessSnippet(JShellExerciseTool tool, String snippet) {
-        tool.reset();
-        return snippet;
     }
+
+    public String getMethodName() { return methodName; }
+    public String getSignature() { return  signature; }
+
 }

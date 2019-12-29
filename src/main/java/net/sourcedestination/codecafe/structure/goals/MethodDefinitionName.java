@@ -1,26 +1,24 @@
 package net.sourcedestination.codecafe.structure.goals;
 
-import net.sourcedestination.codecafe.execution.JShellExerciseTool;
-import net.sourcedestination.funcles.tuple.Tuple2;
+import jdk.jshell.Snippet;
 
-import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
+import java.util.List;
 
-public class MethodDefinitionName extends Goal {
+public class MethodDefinitionName extends EvaluationGoal<Snippet> {
 
     private final String methodName;
 
     public MethodDefinitionName(String methodName) {
-        super("define-method-named-"+methodName);
+        super(getId(methodName), "Define method '"+methodName+"'");
         this.methodName = methodName;
+    }
+
+    public static String getId(String methodName) {
+        return "define-method-named-"+methodName;
     }
 
     @Override
     public String getType() { return "method-definition"; }
-
-    @Override
-    public String getDescription() {
-        return "Define method '"+methodName+"'";
-    }
 
     @Override
     public String getLongDescription() {
@@ -28,14 +26,22 @@ public class MethodDefinitionName extends Goal {
     }
 
     @Override
-    public Tuple2<Double,String> completionPercentage(JShellExerciseTool tool) {
-        var js = tool.getShell();
+    public GoalState evaluateArtifacts(List<Snippet> snippets) {
+        if(snippets.size() != 1)
+            return new GoalState(this,
+                "only one method definition expected",
+                0,
+                true);
+        var methodSnippet = snippets.get(0);
+        if(methodSnippet.subKind() != Snippet.SubKind.METHOD_SUBKIND)
+            return new GoalState(this,
+                        "a method definition is expected",
+                        0,
+                        true);
 
-        // check method name exists
-        if(!js.methods().anyMatch(m -> m.name().equals(methodName)))
-            return makeTuple(0.0, "Method name is not correct");
-        else {
-            return makeTuple(1.0, "test passed!");
-        }
+        if(!methodSnippet.id().equals(methodName))
+            return new GoalState( this,"test passed!",1.0,false);
+        else
+            return new GoalState(this,"Method name is not correct",0.0,false);
     }
 }

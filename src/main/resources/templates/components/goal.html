@@ -1,11 +1,11 @@
 <section th:fragment="goal" th:attr="id=${goal.id}" class="js-goal">
     <span class="progress">
-        <span class="indicator" th:text="${goal.progress}"/>
-        <span class="reason" th:text="${goal.reason}"/>
+        <span class="indicator"></span>
+        <span class="reason"></span>
     </span>
     <span class="description">
-        <span th:text="${goal.description}"/>
-        <span class="longDescription" th:text="${goal.longDescription}"/>
+        <span th:text="${goal.id}"/>
+        <span class="longDescription" th:text="${goal.description}"/>
     </span>
     <span th:if="${goal.children}" class="expand-arrow" onclick="toggleGoalChildren($(this).parent())"/>
     <ul th:if="${goal.children}">

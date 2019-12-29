@@ -1,30 +1,35 @@
-package net.sourcedestination.codecafe.structure.restrictions;
+package net.sourcedestination.codecafe.structure.goals;
 
 import com.google.common.collect.Sets;
 import jdk.jshell.Snippet;
-import net.sourcedestination.codecafe.execution.JShellExerciseTool;
+import one.util.streamex.StreamEx;
 
+import java.util.List;
 import java.util.Set;
 
-public class SnippetTypeWhiteList implements Restriction {
+public class SnippetTypeWhiteList extends EvaluationGoal<Snippet> {
 
     private final Set<Snippet.Kind> kinds;
 
-    public SnippetTypeWhiteList(Snippet.Kind ... kinds) {
+    public SnippetTypeWhiteList(String id, Snippet.Kind ... kinds) {
+        super(id, "Snippets must be one of the following types: " + kinds);
         this.kinds = Sets.newHashSet(kinds);
     }
 
     @Override
-    public boolean test(Snippet s, JShellExerciseTool tool) {
-        if(s.subKind() == Snippet.SubKind.TEMP_VAR_EXPRESSION_SUBKIND)
-            return !kinds.contains(Snippet.Kind.EXPRESSION);
+    public GoalState evaluateArtifacts(List<Snippet> snippets) {
+        var offender = StreamEx.of(snippets)
+            .findFirst(s ->
+                    (s.subKind() != Snippet.SubKind.TEMP_VAR_EXPRESSION_SUBKIND && !kinds.contains(s.kind())) ||
+                    (s.subKind() != Snippet.SubKind.TEMP_VAR_EXPRESSION_SUBKIND && !kinds.contains(Snippet.Kind.EXPRESSION))
+        );
 
-        return !kinds.contains(s.kind());
-    }
-
-    @Override
-    public String getReason(Snippet s, JShellExerciseTool tool) {
-        // TODO: improve language
-        return "Snippet was a " + s.kind() + ", must be a " + kinds;
+        if(offender.isPresent())
+            return new GoalState(this,
+                "Snippet was a " + offender.get().kind() + ", must be a " + kinds,
+                0.0,
+                    true
+                );
+        else return new GoalState(this, "passed!", 1.0, false);
     }
 }

@@ -1,10 +1,18 @@
-package net.sourcedestination.codecafe.structure.restrictions;
+package net.sourcedestination.codecafe.structure.goals;
 
-import jdk.jshell.Snippet;
-import net.sourcedestination.codecafe.execution.JShellExerciseTool;
-import net.sourcedestination.funcles.predicate.Predicate2;
+import net.sourcedestination.codecafe.execution.LanguageEvaluationTool;
 
-public interface Restriction extends Predicate2<Snippet,JShellExerciseTool> {
-    /** explanation for a restricted snippet */
-    public String getReason(Snippet s, JShellExerciseTool tool);
+import java.util.List;
+
+public abstract class EvaluationGoal<A> extends Goal {
+
+    public EvaluationGoal(String id, String description) {
+        super(id, description);
+    }
+
+    public abstract GoalState evaluateArtifacts(List<A> artifacts);
+
+    public GoalState evaluateGoal(String source, LanguageEvaluationTool<A> tool) {
+        return evaluateArtifacts(tool.evaluateCode(source));
+    }
 }

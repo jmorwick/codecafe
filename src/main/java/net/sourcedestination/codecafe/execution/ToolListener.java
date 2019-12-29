@@ -1,4 +1,9 @@
 package net.sourcedestination.codecafe.execution;
 
-public class ToolListener {
+import net.sourcedestination.codecafe.persistance.SnippetExecutionEvent;
+
+import java.util.function.Consumer;
+
+public interface ToolListener extends Consumer<SnippetExecutionEvent> {
+
 }

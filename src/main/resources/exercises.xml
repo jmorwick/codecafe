@@ -3,8 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="gaussianPDFMethod" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
-        <constructor-arg name="exerciseId" value="gaussianPDFMethod"/>
+    <bean id="gaussianPDFMethod" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <constructor-arg name="methodName" value="gaussianPdf"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(double,double,double)double"/>
@@ -43,8 +43,8 @@
         </constructor-arg>
     </bean>
 
-    <bean id="addTwoNumbers" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
-        <constructor-arg name="exerciseId" value="addTwoNumbers"/>
+    <bean id="addTwoNumbers" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <constructor-arg name="methodName" value="addTwoNumbers"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(int,int)int"/>
@@ -93,8 +93,8 @@
         </constructor-arg>
     </bean>
 
-    <bean id="firstName" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
-        <constructor-arg name="exerciseId" value="firstName"/>
+    <bean id="firstName" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <constructor-arg name="methodName" value="firstName"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(String)String"/>
@@ -131,8 +131,8 @@
         </constructor-arg>
     </bean>
 
-    <bean id="bothEnds" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
-        <constructor-arg name="exerciseId" value="bothEnds"/>
+    <bean id="bothEnds" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <constructor-arg name="methodName" value="bothEnds"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(String)String"/>
@@ -174,8 +174,8 @@
         </constructor-arg>
     </bean>
 
-    <bean id="initials" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
-        <constructor-arg name="exerciseId" value="initials"/>
+    <bean id="initials" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <constructor-arg name="methodName" value="initials"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(String)String"/>
@@ -218,9 +218,9 @@
         </constructor-arg>
     </bean>
 
-    <bean id="getRenter" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+    <bean id="getRenter" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <!-- developed from https://codingbat.com/prob/p208150 /-->
-        <constructor-arg name="exerciseId" value="getRenter"/>
         <constructor-arg name="methodName" value="getRenter"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(String,String[],String[])String"/>
@@ -257,9 +257,9 @@
         </constructor-arg>
     </bean>
 
-    <bean id="isLeapYear" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+    <bean id="isLeapYear" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <!-- developed from https://codingbat.com/prob/p243129 /-->
-        <constructor-arg name="exerciseId" value="isLeapYear"/>
         <constructor-arg name="methodName" value="isLeapYear"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(int)boolean"/>
@@ -323,9 +323,9 @@
         </constructor-arg>
     </bean>
 
-    <bean id="examScore" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+    <bean id="examScore" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <!-- developed from https://codingbat.com/prob/p244189 /-->
-        <constructor-arg name="exerciseId" value="examScore"/>
         <constructor-arg name="methodName" value="examScore"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(int,int,int)int"/>
@@ -400,9 +400,9 @@
         </constructor-arg>
     </bean>
 
-    <bean id="highestBidder" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+    <bean id="highestBidder" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <!-- developed from https://codingbat.com/prob/p292218 /-->
-        <constructor-arg name="exerciseId" value="highestBidder"/>
         <constructor-arg name="methodName" value="highestBidder"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(int,int,int)int"/>
@@ -456,9 +456,9 @@
         </constructor-arg>
     </bean>
 
-    <bean id="bowlingRollScore" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+    <bean id="bowlingRollScore" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <!-- developed from https://codingbat.com/prob/p246309 /-->
-        <constructor-arg name="exerciseId" value="bowlingRollScore"/>
         <constructor-arg name="methodName" value="bowlingRollScore"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(char)int"/>
@@ -530,9 +530,9 @@
         </constructor-arg>
     </bean>
 
-    <bean id="priceIsRight" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+    <bean id="priceIsRight" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <!-- developed from https://codingbat.com/prob/p272214 /-->
-        <constructor-arg name="exerciseId" value="priceIsRight"/>
         <constructor-arg name="methodName" value="priceIsRight"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(int,int,int)int"/>
@@ -610,8 +610,8 @@
         </constructor-arg>
     </bean>
 
-    <bean id="palindrome" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
-        <constructor-arg name="exerciseId" value="palindrome"/>
+    <bean id="palindrome" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <constructor-arg name="methodName" value="palindrome"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(String)boolean"/>
@@ -682,8 +682,8 @@
         </constructor-arg>
     </bean>
 
-    <bean id="countEvens" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
-        <constructor-arg name="exerciseId" value="countEvens"/>
+    <bean id="countEvens" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <constructor-arg name="methodName" value="countEvens"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(int)int"/>
@@ -724,9 +724,9 @@
         </constructor-arg>
     </bean>
 
-    <bean id="isPrime" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+    <bean id="isPrime" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <!-- developed from https://codingbat.com/author/p286501 /-->
-        <constructor-arg name="exerciseId" value="isPrime"/>
         <constructor-arg name="methodName" value="isPrime"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(int)boolean"/>
@@ -776,9 +776,9 @@
         </constructor-arg>
     </bean>
 
-    <bean id="calmDown" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
+    <bean id="calmDown" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <!-- developed from https://codingbat.com/author/p203598 /-->
-        <constructor-arg name="exerciseId" value="calmDown"/>
         <constructor-arg name="methodName" value="calmDown"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(String)String"/>
@@ -828,8 +828,8 @@
         </constructor-arg>
     </bean>
 
-    <bean id="ultimateQuestion" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
-        <constructor-arg name="exerciseId" value="ultimateQuestion"/>
+    <bean id="ultimateQuestion" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <constructor-arg name="methodName" value="ultimateQuestion"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(int,int)boolean"/>
@@ -875,8 +875,8 @@
         </constructor-arg>
     </bean>
 
-    <bean id="exactChange" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise">
-        <constructor-arg name="exerciseId" value="exactChange"/>
+    <bean id="exactChange" class="net.sourcedestination.codecafe.structure.exercises.SimpleMethodExercise"
+          factory-method="build">
         <constructor-arg name="methodName" value="exactChange"/>
         <constructor-arg name="timeout" value="1000"/>
         <constructor-arg name="signature" value="(int,int,int,int,int)boolean"/>

@@ -1,16 +1,11 @@
 package net.sourcedestination.codecafe.structure.goals;
 
-import jdk.jshell.Snippet;
-import jdk.jshell.VarSnippet;
-import net.sourcedestination.codecafe.execution.JShellExerciseTool;
-import net.sourcedestination.funcles.tuple.Tuple2;
+import net.sourcedestination.codecafe.execution.JShellJavaTool;
+import net.sourcedestination.codecafe.persistance.SnippetExecutionEvent;
 
-import java.util.List;
 import java.util.logging.Logger;
 
-import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
-
-public class MethodUnitTest extends Goal {
+public class MethodUnitTest extends ExecutionGoal<JShellJavaTool> {
 
     private static final Logger logger = Logger.getLogger(MethodUnitTest.class.getCanonicalName());
 
@@ -26,7 +21,8 @@ public class MethodUnitTest extends Goal {
                           String signature,
                           String output,
                           String inputs) {
-        super(id);
+        super(id, hiddenTest ? "<hidden test>" :
+                methodName+"("+inputs+") -> " + output);
         this.hiddenTest = hiddenTest;
         this.methodName = methodName;
         this.signature = signature;
@@ -36,12 +32,6 @@ public class MethodUnitTest extends Goal {
 
     @Override
     public String getType() { return "unit-test"; }
-
-    @Override
-    public String getDescription() {
-        return hiddenTest ? "<hidden test>" :
-                methodName+"("+inputs+") -> " + output;
-    }
 
     @Override
     public String getLongDescription() {
@@ -54,35 +44,23 @@ public class MethodUnitTest extends Goal {
     public String getOutput() { return output; }
 
     @Override
-    public Tuple2<Double,String> completionPercentage(JShellExerciseTool tool) {
-        var js = tool.getShell();
-
-        // check method name exists
-        if(!js.methods().anyMatch(m -> m.name().equals(methodName)))
-            return makeTuple(0.0, "Method not properly defined");
-
-        // check method has correct signature
-        if(!js.methods().anyMatch(m -> m.name().equals(methodName) &&
-                m.signature().equals(signature)))
-            return makeTuple(0.0, "Method not properly defined");
-
+    public GoalState evaluateGoal(JShellJavaTool tool) {
         // check test
-        var actualOutput = js.eval(methodName+"("+inputs+")");
-        if(actualOutput.size() < 1)
-            return makeTuple(0.0, "no output received");
-        if(actualOutput.get(0).status() != Snippet.Status.VALID )
-            return makeTuple(0.0, "invalid result");
-        if(actualOutput.get(0).snippet().subKind() != Snippet.SubKind.TEMP_VAR_EXPRESSION_SUBKIND)
-            return makeTuple(0.0, "wrong type of result");
+        var actualOutput = tool.executeRawCode(methodName+"("+inputs+")");
+        if(actualOutput.size() != 1)
+            return new GoalState(this, "no output", 0, false);
+        if(actualOutput.get(0).getStatus() != SnippetExecutionEvent.ExecutionStatus.SUCCESS)
+            return new GoalState(this, "invalid result", 0, false);
 
-        var actualTextOutput = js.varValue((VarSnippet)actualOutput.get(0).snippet());
-        if(!valuesMatch(output, actualTextOutput))
-            return makeTuple(0.25, "incorrect output: " + actualTextOutput);
+        if(!valuesMatch(output, actualOutput.get(0).getResult()))
+            return new GoalState(this,"incorrect output: " + actualOutput.get(0).getResult(), 0.25, false);
 
-        return makeTuple(1.0, "test passed!");
+        return new GoalState(this, "test passed!", 1, false);
     }
 
     public boolean valuesMatch(String v1, String v2) {
+        assert v1 != null;
+        if(v2 == null) return false;
         if(v1.equals(v2)) return true;
         try {
             var d1 = Math.round(1000*Double.parseDouble(v1));

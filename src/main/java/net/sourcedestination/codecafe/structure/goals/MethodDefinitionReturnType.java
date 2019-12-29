@@ -1,11 +1,14 @@
 package net.sourcedestination.codecafe.structure.goals;
 
-import net.sourcedestination.codecafe.execution.JShellExerciseTool;
+import jdk.jshell.MethodSnippet;
+import jdk.jshell.Snippet;
 import net.sourcedestination.funcles.tuple.Tuple2;
+
+import java.util.List;
 
 import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 
-public class MethodDefinitionReturnType extends Goal {
+public class MethodDefinitionReturnType extends EvaluationGoal<Snippet> {
 
     private final String methodName;
     private final String returnType;
@@ -15,39 +18,42 @@ public class MethodDefinitionReturnType extends Goal {
     }
 
     public MethodDefinitionReturnType(String methodName, String signature) {
-        super("define-method-named-"+methodName+
-                "-with-return-type-"+parseSignatureReturnType(signature));
+        super(getId(methodName, signature),
+                "Method '"+methodName+"' returns a(n) '"+parseSignatureReturnType(signature)+"'");
         this.methodName = methodName;
         this.returnType = parseSignatureReturnType(signature);
+    }
+
+    public static String getId(String methodName, String signature) {
+        return "define-method-named-"+methodName+
+                "-with-return-type-"+parseSignatureReturnType(signature);
     }
 
     @Override
     public String getType() { return "method-definition"; }
 
     @Override
-    public String getDescription() {
-        return "Method '"+methodName+"' returns a(n) '"+returnType+"'";
-    }
-
-    @Override
     public String getLongDescription() {
-        return "A method with the name '"+methodName+"' must be defined with return type '"+
-                returnType+"'.";
+        return "A method with the name '"+methodName+"' must be defined with return type '"+ returnType+"'.";
     }
 
     @Override
-    public Tuple2<Double,String> completionPercentage(JShellExerciseTool tool) {
-        var js = tool.getShell();
+    public GoalState evaluateArtifacts(List<Snippet> snippets) {
+        if(snippets.size() != 1)
+            return new GoalState(this,
+                    "only one method definition expected",
+                    0,
+                    true);
 
-        // check method name exists
-        if(!js.methods().anyMatch(m -> m.name().equals(methodName)))
-            return makeTuple(0.0, "Method name is not correct");
-
-        // check method has correct return type
-        if(!js.methods().anyMatch(m -> m.name().equals(methodName) &&
-                parseSignatureReturnType(m.signature()).equals(returnType)))
-            return makeTuple(0.0, "incorrect return type, should be " + returnType);
-
-        return makeTuple(1.0, "test passed!");
+        if(snippets.get(0).subKind() != Snippet.SubKind.METHOD_SUBKIND)
+            return new GoalState(this,
+                        "a method definition is expected",
+                        0,
+                        true);
+        var methodSnippet = (MethodSnippet)snippets.get(0);
+        if(!parseSignatureReturnType(methodSnippet.signature()).equals(returnType))
+            return new GoalState( this,"test passed!",1.0,false);
+        else
+            return new GoalState(this,"incorrect return type, should be " + returnType,0.0,false);
     }
 }
