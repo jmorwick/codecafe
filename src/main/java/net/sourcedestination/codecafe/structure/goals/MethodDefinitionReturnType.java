@@ -2,11 +2,7 @@ package net.sourcedestination.codecafe.structure.goals;
 
 import jdk.jshell.MethodSnippet;
 import jdk.jshell.Snippet;
-import net.sourcedestination.funcles.tuple.Tuple2;
-
 import java.util.List;
-
-import static net.sourcedestination.funcles.tuple.Tuple.makeTuple;
 
 public class MethodDefinitionReturnType extends EvaluationGoal<Snippet> {
 
@@ -21,7 +17,7 @@ public class MethodDefinitionReturnType extends EvaluationGoal<Snippet> {
         super(getId(methodName, signature),
                 "Method '"+methodName+"' returns a(n) '"+parseSignatureReturnType(signature)+"'");
         this.methodName = methodName;
-        this.returnType = parseSignatureReturnType(signature);
+        this.returnType = parseSignatureReturnType(signature).trim();
     }
 
     public static String getId(String methodName, String signature) {
@@ -51,9 +47,11 @@ public class MethodDefinitionReturnType extends EvaluationGoal<Snippet> {
                         0,
                         true);
         var methodSnippet = (MethodSnippet)snippets.get(0);
-        if(!parseSignatureReturnType(methodSnippet.signature()).equals(returnType))
+        var actualReturnType = parseSignatureReturnType(methodSnippet.signature()).trim();
+        if(actualReturnType.equals(returnType))
             return new GoalState( this,"test passed!",1.0,false);
         else
-            return new GoalState(this,"incorrect return type, should be " + returnType,0.0,false);
+            return new GoalState(this,"incorrect return type, should be " + returnType +
+                    ", not " + actualReturnType,0.0,false);
     }
 }
