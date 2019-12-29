@@ -1,6 +1,8 @@
 package net.sourcedestination.codecafe.structure.exercises;
 
 import com.google.common.collect.ImmutableMap;
+import net.sourcedestination.codecafe.execution.LanguageEvaluationTool;
+import net.sourcedestination.codecafe.execution.LanguageExecutionTool;
 import net.sourcedestination.codecafe.structure.goals.ExecutionGoal;
 import net.sourcedestination.codecafe.structure.goals.EvaluationGoal;
 import net.sourcedestination.codecafe.structure.goals.GoalStructure;
@@ -50,6 +52,9 @@ public class ExerciseDefinition {
     public Stream<ExecutionGoal> getExecutionGoals() { return execGoals.values().stream(); }
     public Stream<EvaluationGoal> getEvaluationGoals() { return evalGoals.values().stream(); }
     public GoalStructure getGoalStructure() { return goalStructure; }
+
+    public void initializeTool(LanguageEvaluationTool tool) { }
+    public void initializeTool(LanguageExecutionTool tool) { }
 
     public static String loadTextFile(String fileName) throws IOException {
         var fileString = new BufferedReader(new InputStreamReader(

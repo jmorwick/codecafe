@@ -2,6 +2,7 @@ package net.sourcedestination.codecafe.structure;
 
 import com.google.gson.Gson;
 import net.sourcedestination.codecafe.execution.JShellJavaTool;
+import net.sourcedestination.codecafe.execution.LanguageExecutionTool;
 import net.sourcedestination.codecafe.execution.ToolListener;
 import net.sourcedestination.codecafe.networking.JShellExerciseConnection;
 import net.sourcedestination.codecafe.structure.exercises.ExerciseDefinition;
@@ -77,6 +78,7 @@ public class ExerciseController {
         logger.info("starting new jshell session for " + id);
         var exercise = definitions.get(exerciseId);
         var newTool = new JShellJavaTool(DEFAULT_TIMEOUT);
+        exercise.initializeTool((LanguageExecutionTool)newTool);
         toolCache.put(id, newTool);
         listeners.put(newTool, List.of(
                 new JShellExerciseConnection(username, messagingTemplate, exercise),

@@ -1,5 +1,8 @@
 package net.sourcedestination.codecafe.structure.exercises;
 
+import net.sourcedestination.codecafe.execution.LanguageEvaluationTool;
+import net.sourcedestination.codecafe.execution.LanguageExecutionTool;
+import net.sourcedestination.codecafe.persistance.SnippetExecutionEvent;
 import net.sourcedestination.codecafe.structure.goals.*;
 import net.sourcedestination.funcles.tuple.Pair;
 
@@ -13,8 +16,10 @@ public class SimpleMethodExercise extends ExerciseDefinition {
 
     private static final Logger logger = Logger.getLogger(SimpleMethodExercise.class.getCanonicalName());
 
-    private String methodName;
-    private String signature;
+    private final String methodName;
+    private final String signature;
+    private final Collection<String> imports;
+    private final Collection<String> staticImports;
 
     public SimpleMethodExercise(String methodName,
                                 String description,
@@ -22,7 +27,9 @@ public class SimpleMethodExercise extends ExerciseDefinition {
                                 long timeout,
                                 Collection<? extends EvaluationGoal> evalGoals,
                                 Collection<ExecutionGoal> execGoals,
-                                GoalStructure goalStructure) {
+                                GoalStructure goalStructure,
+                                Collection<String> imports,
+                                Collection<String> staticImports) {
         super(methodName,
                 description,
                 timeout,
@@ -34,7 +41,10 @@ public class SimpleMethodExercise extends ExerciseDefinition {
 
         this.methodName = methodName;
         this.signature = signature;
+        this.imports = imports;
+        this.staticImports = staticImports;
     }
+
 
     public static SimpleMethodExercise build(String methodName,
                                              String description,
@@ -42,6 +52,16 @@ public class SimpleMethodExercise extends ExerciseDefinition {
                                              long timeout,
                                              Collection<Pair<String>> visibleTests,
                                              Collection<Pair<String>> hiddenTests) {
+        return build(methodName, description, signature, timeout, visibleTests, hiddenTests, List.of(), List.of());
+    }
+    public static SimpleMethodExercise build(String methodName,
+                                             String description,
+                                             String signature,
+                                             long timeout,
+                                             Collection<Pair<String>> visibleTests,
+                                             Collection<Pair<String>> hiddenTests,
+                                             Collection<String> imports,
+                                             Collection<String> staticImports) {
 
         int testNumber = 1;
         var evalGoals =
@@ -92,12 +112,27 @@ public class SimpleMethodExercise extends ExerciseDefinition {
                                 )
                         ),
                         List.of()
-                )
+                ),
+                imports,
+                staticImports
         );
 
     }
 
     public String getMethodName() { return methodName; }
     public String getSignature() { return  signature; }
+
+    @Override
+    public void initializeTool(LanguageExecutionTool t) {
+        for(String c : imports) {
+            t.executeRawCode("import " + c + ";");
+        }
+        for(String c : staticImports) {
+            var result = t.executeRawCode("import static " + c + ";");
+            if(result.size() != 1 || result.get(0).getStatus() != SnippetExecutionEvent.ExecutionStatus.SUCCESS) {
+                throw new IllegalStateException("failed to initialize tool: " + result);
+            }
+        }
+    }
 
 }

@@ -65,6 +65,7 @@ public class JShellJavaTool implements LanguageEvaluationTool<Snippet>, Language
 
     @Override
     public synchronized List<SnippetExecutionEvent> executeRawCode(String code) {
+        logger.info("executing: " + code);
         var future = executor.submit(
                 () -> jshell.eval(code)
         );
