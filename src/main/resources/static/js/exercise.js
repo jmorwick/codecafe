@@ -131,16 +131,18 @@ function populateExercise(exercise, stompClient) {
             var exerciseId = exercise.attr('id');
             toggleGoalChildren(goal);
 
-            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/goals/'+goalId, function (message) {
+            stompClient.subscribe('/user/queue/exercises/'+exerciseId+'/goals', function (message) {
                 var pmessage = JSON.parse(message.body);
-                var progress = (100*pmessage['completion'])+'%';
-                var message = pmessage['message'];
-                var oldProgress = $(goal.find('span.progress')).html();
-                $(goal.find('span.indicator')).html(progress);
-                $(goal.find('span.progress')).attr('data-progress', progress);
-                $(goal.find('span.reason')).html(message);
-                if(oldProgress != progress)
-                    updateParentGoal(goal);
+                if(goalId == pmessage['id']) {
+                    var progress = (100 * pmessage['progress']) + '%';
+                    var message = pmessage['reason'];
+                    var oldProgress = $(goal.find('span.progress')).html();
+                    $(goal.find('span.indicator')).html(progress);
+                    $(goal.find('span.progress')).attr('data-progress', progress);
+                    $(goal.find('span.reason')).html(message);
+                    if (oldProgress != progress)
+                        updateParentGoal(goal);
+                }
             });
         });
 

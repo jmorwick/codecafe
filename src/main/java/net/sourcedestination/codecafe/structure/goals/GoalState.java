@@ -26,7 +26,7 @@ public class GoalState {
                 "id", goal.getId(),
                 "description", goal.getDescription(),
                 "longDescription", goal.getLongDescription(),
-                "progress", getProgress()+"%",
+                "progress", getProgress(),
                 "fatal", wasFatal(),
                 "reason", getReason()
         );

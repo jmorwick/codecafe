@@ -4,8 +4,8 @@
         <span class="reason"></span>
     </span>
     <span class="description">
-        <span th:text="${goal.id}"/>
-        <span class="longDescription" th:text="${goal.description}"/>
+        <span th:text="${goal.description}"/>
+        <span class="longDescription" th:text="${goal.longDescription}"/>
     </span>
     <span th:if="${goal.children}" class="expand-arrow" onclick="toggleGoalChildren($(this).parent())"/>
     <ul th:if="${goal.children}">

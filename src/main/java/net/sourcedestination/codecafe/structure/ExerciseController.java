@@ -144,7 +144,6 @@ public class ExerciseController {
         var tool = getTool(username, exerciseId);
         var results = tool.executeUserCode(code, exercise, tool, listeners.get(tool));
         var result = gson.toJson(results);
-        logger.info(result);
         return result;
     }
 /*
