@@ -80,6 +80,10 @@ public class JShellJavaTool implements LanguageEvaluationTool<Snippet>, Language
                     SnippetExecutionEvent.ExecutionStatus.RUNTIME_ERROR, "internal error"));
         }
 
+        for(var res : results)
+            if(res.status() != Snippet.Status.VALID)
+                return List.of(new SnippetExecutionEvent(code, SnippetExecutionEvent.ExecutionStatus.COMPILATION_ERROR, ""));
+
         if(results.size() > 0)
             return results.stream()
                 .map(se -> new SnippetExecutionEvent(code, SnippetExecutionEvent.ExecutionStatus.SUCCESS, se.value()))
