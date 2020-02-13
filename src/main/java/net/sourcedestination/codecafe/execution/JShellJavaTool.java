@@ -82,7 +82,8 @@ public class JShellJavaTool implements LanguageEvaluationTool<Snippet>, Language
 
         for(var res : results)
             if(res.status() != Snippet.Status.VALID)
-                return List.of(new SnippetExecutionEvent(code, SnippetExecutionEvent.ExecutionStatus.COMPILATION_ERROR, ""));
+                return List.of(new SnippetExecutionEvent(code, SnippetExecutionEvent.ExecutionStatus.COMPILATION_ERROR,
+                        "copy and paste your code in to jshell for a more detailed error message"));
 
         if(results.size() > 0)
             return results.stream()
