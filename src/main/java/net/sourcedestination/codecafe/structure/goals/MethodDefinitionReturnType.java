@@ -52,6 +52,6 @@ public class MethodDefinitionReturnType extends EvaluationGoal<Snippet> {
             return new GoalState( this,"test passed!",1.0,false);
         else
             return new GoalState(this,"incorrect return type, should be " + returnType +
-                    ", not " + actualReturnType,0.0,false);
+                    ", not " + actualReturnType,0.0,true);
     }
 }

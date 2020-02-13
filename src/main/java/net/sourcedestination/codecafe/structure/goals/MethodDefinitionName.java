@@ -50,6 +50,6 @@ public class MethodDefinitionName extends EvaluationGoal<Snippet> {
             return new GoalState( this,"test passed!",1.0,false);
         else
             return new GoalState(this,"Method name is not correct (should be "+methodName+", not " +
-                    newMethodName+")",0.0,false);
+                    newMethodName+")",0.0,true);
     }
 }

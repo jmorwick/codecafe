@@ -81,7 +81,7 @@ public class MethodDefinitionParameters extends EvaluationGoal<Snippet> {
             return new GoalState(this,mistakes,
                     (actualParams.length == params.length ? 0.25 : 0.0) + // 25% for right # of params
                             ((double)correct / actualParams.length)*0.5,          // 50% for correct param types
-                     false);
+                     true);
     }
 
 }
