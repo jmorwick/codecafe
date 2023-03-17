@@ -1,2 +1,2 @@
 # codecafe
-Aims to be a web application and framework for teaching programming fundamentals. Development will follow work on [this open source introductory programming book](https://github.com/jmorwick/cs1-java-book). Currently a work in progress in the early stages. 
+Aims to be a frame work for integrating interactive coding exercises in to online textbooks. Development will follow work on [this OER CS1 material](https://github.com/jmorwick/cs1-java-book). Currently a work in progress in the early stages. 
